@@ -3,6 +3,9 @@ import pyglet
 from pyglet.event import EVENT_HANDLED
 
 from .camera import Camera
+from .cube import Cube
+from .entity import Entity
+from .glyph import Glyph
 from .render import Render
 from .world import World
 
@@ -17,7 +20,15 @@ class Gameloop(object):
 
     def launch(self):
         self.world = World()
-        # self.world.init()
+        
+        entity = Entity()
+        entity.color = (255, 255, 000, 255)
+        entity.position = (0, 0, 0)
+        entity.geometry = Cube(10.0)
+        entity.glyph = Glyph.From_Geometry(entity)
+
+        self.world.add(entity)
+
         self.camera = Camera()
         self.render = Render()
         self.render.init()
@@ -37,7 +48,7 @@ class Gameloop(object):
     def update(self, dt):
         # scale dt such that the 'standard' framerate of 60fps gives dt=1.0
         dt *= 60
-        # prevent explosion when game is paused then restarted ffor any reason
+        # prevent explosion when game is paused then restarted for any reason
         dt = min(dt, 2)
         self.world.update()
         self.window.invalid = True
@@ -45,7 +56,8 @@ class Gameloop(object):
 
     def draw(self):
         self.window.clear()
-        self.camera.world_projection(self.window.width, self.window.height)
+        self.camera.world_projection_ortho(
+            self.window.width, self.window.height)
         self.camera.look_at()
         self.render.draw(self.world)
         self.clockdisplay.draw()
