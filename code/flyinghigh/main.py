@@ -1,31 +1,25 @@
-'''
-Project's top-level 'main()' function, does absolutely everything
-'''
 
 from . import startup
-startup # pylint
+startup
 
 import subprocess
 import sys
+
+import pyglet
 
 from .gameloop import Gameloop
 
 
 def run_game():
-    '''
-    run the game
-    '''
     try:
         gameloop = Gameloop()
-        gameloop.launch()
+        gameloop.init()
+        pyglet.app.run()
     finally:
-        gameloop.shutdown()
+        gameloop.stop()
 
 
 def profile(command):
-    '''
-    Run the game with a profiler, to see what's slow
-    '''
     import cProfile
     filename = 'profile.out'
     cProfile.runctx( command, globals(), locals(), filename=filename )
@@ -44,4 +38,8 @@ def main():
         profile('run_game()')
     else:
         run_game()
+
+
+if __name__ == '__main__':
+    main()
 
