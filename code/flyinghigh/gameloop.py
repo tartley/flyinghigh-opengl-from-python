@@ -1,5 +1,5 @@
 
-from pyglet import clock
+import pyglet
 from pyglet.event import EVENT_HANDLED
 from pyglet.window import Window
 
@@ -12,7 +12,7 @@ class Gameloop(object):
     def __init__(self):
         self.window = None
 
-    def init(self):
+    def start(self):
         self.world = World()
         self.world.init()
         populate(self.world)
@@ -26,30 +26,28 @@ class Gameloop(object):
         self.window.on_resize = self.render.resize
 
         self.render.init()
-        clock.schedule(self.update)
-        self.hud_fps = clock.ClockDisplay()
+        pyglet.clock.schedule(self.update)
+        self.hud_fps = pyglet.clock.ClockDisplay()
 
         self.window.set_visible()
+        pyglet.app.run()
 
 
     def update(self, dt):
         # scale dt such that the 'standard' framerate of 60fps gives dt=1.0
         dt *= 60.0
-        # don't attempt to compensate for framerate of less than 30fps. This
-        # guards against huge explosion when game is paused for any reason
-        # and then restarted
+        # prevent explosion when game is paused then restarted for any reason
         dt = min(dt, 2)
-        self.world.update()
+        self.world.update(dt)
         self.window.invalid = True
+
 
     def draw(self):
         self.window.clear()
         self.camera.world_projection(self.window.width, self.window.height)
         self.camera.look_at()
         self.render.draw(self.world)
-
         self.hud_fps.draw()
-
         return EVENT_HANDLED
 
     def stop(self):

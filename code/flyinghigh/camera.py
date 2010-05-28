@@ -13,6 +13,7 @@ class Camera(object):
         self.zoom = zoom
         self.angle = 0.0
 
+
     def world_projection(self, width, height):
         '''
         Screen's shortest dimension (usually height) will show exactly
@@ -21,20 +22,18 @@ class Camera(object):
         '''
         aspect = width / height
 
-        def getOrtho2DBounds():
-            left = bottom = -self.zoom
-            right = top = self.zoom
-            if width > height: # widescreen
-                left *= aspect
-                right *= aspect
-            elif width < height: # tallscreen
-                bottom /= aspect
-                top /= aspect
-            return left, right, bottom, top
+        left = bottom = -self.zoom
+        right = top = self.zoom
+        if width > height: # landscape
+            left *= aspect
+            right *= aspect
+        elif width < height: # portrait
+            bottom /= aspect
+            top /= aspect
 
         gl.glMatrixMode(gl.GL_PROJECTION)
         gl.glLoadIdentity()
-        glu.gluOrtho2D(*getOrtho2DBounds())
+        glu.gluOrtho2D(left, right, bottom, top)
 
 
     def look_at(self):
