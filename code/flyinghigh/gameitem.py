@@ -1,13 +1,18 @@
 
 class GameItem(object):
 
+    _next_id = 0
+
     def __init__(self, geometry, color):
+        self.id = GameItem._next_id
+        GameItem._next_id += 1
+
         self.position = (0, 0, 0)
         self.angle = 0.0
         self.geometry = geometry
         self.color = color
-        self.itemid = None
         self.glyph = None
+
 
     def update(self):
         pass

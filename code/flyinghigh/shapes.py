@@ -12,10 +12,10 @@ class Rect(object):
     @property
     def verts(self):
         return [
-            (-self.width/2, -self.height/2, 0),
-            (+self.width/2, -self.height/2, 0),
-            (+self.width/2, +self.height/2, 0),
-            (-self.width/2, +self.height/2, 0),
+            (-self.width/2, -self.height/2),
+            (+self.width/2, -self.height/2),
+            (+self.width/2, +self.height/2),
+            (-self.width/2, +self.height/2),
         ]
         
     @property
