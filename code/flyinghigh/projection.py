@@ -52,8 +52,8 @@ class Projection(object):
         glu.gluOrtho2D(*self._ortho_zoom_to_longest(zoom, aspect))
 
 
-    def world_3d(self):
-        fovy = 90.0
+    def world_3d(self, fov):
+        fovy = fov
         aspect = self.width / self.height
         zNear = 1.0
         zFar = 100.0

@@ -1,5 +1,5 @@
 
-from math import sin
+from math import cos, sin
 
 import pyglet
 from pyglet.event import EVENT_HANDLED
@@ -27,7 +27,7 @@ class Gameloop(object):
         populate(self.world)
 
         self.render = Render()
-        self.camera = Camera(position=(0, 0, 0), zoom=15.0)
+        self.camera = Camera(position=(0, 0, -10), zoom=15.0)
 
         self.window = Window(fullscreen=False, visible=False, resizable=True)
         # self.window.set_exclusive_mouse(True)
@@ -47,14 +47,17 @@ class Gameloop(object):
         dt = min(dt, 1/30.0)
         self.time += dt
         self.world.update(dt)
-        self.camera.position = (sin(self.time) * 5, 0, 0)
+        self.camera.position = (
+            sin(self.time * 2) * 20,
+            0,
+            -40 + cos(self.time * 3) * 20)
         self.window.invalid = True
 
 
     def draw(self):
         self.window.clear()
-        self.projection.world_ortho(self.camera.zoom)
-        self.camera.look_at_ortho()
+        self.projection.world_3d(45)
+        self.camera.look_at_3d()
         self.render.draw(self.world)
         self.projection.screen()
         self.camera.reset()

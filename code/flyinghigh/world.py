@@ -32,22 +32,22 @@ def populate(world):
     grey = (0.5, 0.5, 0.5, 1)
 
     wall = GameItem(Rect(30, 4), grey)
-    wall.position = (0, 11.5)
+    wall.position = (0, 11.5, 0)
     world.add(wall)
 
     wall = GameItem(Rect(4, 25), grey)
-    wall.position = (-15, 0)
+    wall.position = (-15, 0, 0)
     world.add(wall)
 
     wall = GameItem(Rect(4, 25), grey)
-    wall.position = (+15, 0)
+    wall.position = (+15, 0, 0)
     world.add(wall)
 
     bat = GameItem(Rect(8, 3), white)
-    bat.position = (0, -4, -10)
+    bat.position = (0, -4, +10)
     world.add(bat)
 
     ball = GameItem(Circle(3), white)
-    ball.position = (0, 4, -20)
+    ball.position = (0, 4, +20)
     world.add(ball)
 

@@ -18,11 +18,13 @@ class Glyph(object):
         self.glVerts = None
         self.glColors = None
         self.glIndices = None
+        self.dimensions = None
 
 
     def from_geometry(self, item):
         verts = item.geometry.verts
-        assert all(len(vert)==2 for vert in verts)
+        self.dimension = item.geometry.dimension
+        assert all(len(vert)==self.dimension for vert in verts)
         self.glVerts = flatten(verts, gl.GLfloat)
 
         colors = tuple(repeat(item.color, len(item.geometry.verts)))

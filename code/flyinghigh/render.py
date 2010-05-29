@@ -18,9 +18,15 @@ class Render(object):
     def draw(self, world):
         for item in world.items.itervalues():
             gl.glPushMatrix()
-            gl.glTranslatef(item.position[0], item.position[1], 0)
+
+            if len(item.position) == 2:
+                gl.glTranslatef(item.position[0]. item.position[1], 0)
+            else:
+                gl.glTranslatef(*item.position)
+
             gl.glRotatef(degrees(item.angle), 0, 0, 1)
-            gl.glVertexPointer(2, gl.GL_FLOAT, 0, item.glyph.glVerts)
+            gl.glVertexPointer(
+                item.glyph.dimension, gl.GL_FLOAT, 0, item.glyph.glVerts)
             gl.glColorPointer(4, gl.GL_FLOAT, 0, item.glyph.glColors)
             gl.glDrawElements(
                 gl.GL_TRIANGLES,
