@@ -5,10 +5,11 @@ import pyglet
 from pyglet.event import EVENT_HANDLED
 from pyglet.window import Window
 
-from .camera import Camera
 from .projection import Projection
 from .render import Render
 from .world import World, populate
+from ..camera import Camera
+from ..component.position import Position
 
 
 class Gameloop(object):
@@ -28,7 +29,7 @@ class Gameloop(object):
         populate(self.world)
 
         self.render = Render()
-        self.camera = Camera(position=(0, 0, -10))
+        self.camera = Camera(position=Position(0, 0, -10))
 
         self.window = Window(fullscreen=True, visible=False, resizable=True)
         # self.window.set_exclusive_mouse(True)
@@ -50,7 +51,7 @@ class Gameloop(object):
         self.world.update(dt)
 
         bearing = self.time + cos(self.time / 5 + 0.5) * 10
-        distance = 30 + cos(self.time) * 20
+        distance = 20 + cos(self.time) * 10
         elevation = sin(self.time)
 
         x1 = distance * sin(bearing)
@@ -60,7 +61,7 @@ class Gameloop(object):
         z2 = z1 * cos(elevation)
         y2 = distance * sin(elevation)
 
-        self.camera.position = (x2, y2, z2)
+        self.camera.position = Position(x2, y2, z2)
 
         self.window.invalid = True
 

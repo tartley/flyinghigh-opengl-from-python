@@ -2,8 +2,9 @@
 from random import randint, uniform
 
 from .gameitem import GameItem
-from .glyph import Glyph
-from .shapes import Rect, Circle, Cube
+from ..component.glyph import Glyph
+from ..component.position import Position
+from ..component.shapes import Cube
 
 
 class World(object):
@@ -35,6 +36,7 @@ def rand_color():
         uniform(0, 1),
     )
 
+
 def populate(world):
 
     grey = (0.5, 0.5, 0.5, 1)
@@ -42,7 +44,7 @@ def populate(world):
     for i in xrange(1, 150):
         rect = GameItem(Cube(1), rand_color())
         arena = 4
-        rect.position = (
+        rect.position = Position(
             randint(-arena, +arena),
             randint(-arena, +arena),
             randint(-arena, +arena),
