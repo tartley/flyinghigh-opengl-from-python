@@ -19,19 +19,23 @@ class Render(object):
         for item in world.items.itervalues():
             gl.glPushMatrix()
 
-            if len(item.position) == 2:
-                gl.glTranslatef(item.position[0]. item.position[1], 0)
+            position = item.position
+            if len(position) == 2:
+                gl.glTranslatef(position[0]. position[1], 0)
             else:
-                gl.glTranslatef(*item.position)
+                gl.glTranslatef(*position)
 
             gl.glRotatef(degrees(item.angle), 0, 0, 1)
+
+            glyph = item.glyph
             gl.glVertexPointer(
-                item.glyph.dimension, gl.GL_FLOAT, 0, item.glyph.glVerts)
-            gl.glColorPointer(4, gl.GL_FLOAT, 0, item.glyph.glColors)
+                glyph.dimension, gl.GL_FLOAT, 0, glyph.glVerts)
+            gl.glColorPointer(4, gl.GL_FLOAT, 0, glyph.glColors)
             gl.glDrawElements(
                 gl.GL_TRIANGLES,
-                len(item.glyph.glIndices),
+                len(glyph.glIndices),
                 gl.GL_UNSIGNED_BYTE,
-                item.glyph.glIndices)
+                glyph.glIndices)
+
             gl.glPopMatrix()
 

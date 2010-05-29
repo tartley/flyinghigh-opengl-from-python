@@ -5,8 +5,6 @@ from math import cos, pi, sin
 
 class Rect(object):
 
-    dimension = 3
-
     def __init__(self, width, height):
         self.width = width
         self.height = height
@@ -27,8 +25,7 @@ class Rect(object):
 
 class Circle(object):
 
-    dimension = 2
-    _NUM_POINTS = 16
+    _NUM_POINTS = 32
 
     def __init__(self, radius):
         self.radius = radius
@@ -38,7 +35,10 @@ class Circle(object):
         verts = []
         for n in xrange(0, self._NUM_POINTS):
             a = n * 2 * pi / self._NUM_POINTS
-            verts.append( (self.radius * cos(a), self.radius * sin(a)) )
+            verts.append(
+                (self.radius * cos(a),
+                self.radius * sin(a))
+            )
         return verts
 
     @property

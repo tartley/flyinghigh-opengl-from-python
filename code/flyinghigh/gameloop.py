@@ -27,9 +27,9 @@ class Gameloop(object):
         populate(self.world)
 
         self.render = Render()
-        self.camera = Camera(position=(0, 0, -10), zoom=15.0)
+        self.camera = Camera(position=(0, 0, -10))
 
-        self.window = Window(fullscreen=False, visible=False, resizable=True)
+        self.window = Window(fullscreen=True, visible=False, resizable=True)
         # self.window.set_exclusive_mouse(True)
         self.window.on_draw = self.draw
 
@@ -56,10 +56,10 @@ class Gameloop(object):
 
     def draw(self):
         self.window.clear()
-        self.projection.world_3d(45)
-        self.camera.look_at_3d()
+        self.projection.set_perspective(45)
+        self.camera.look_at()
         self.render.draw(self.world)
-        self.projection.screen()
+        self.projection.set_screen()
         self.camera.reset()
         self.clock_display.draw()
         return EVENT_HANDLED

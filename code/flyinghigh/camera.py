@@ -6,11 +6,11 @@ from OpenGL import GL as gl, GLU as glu
 
 class Camera(object):
 
-    def __init__(self, position, zoom):
+    def __init__(self, position):
         self.position = position
-        self.lookAt = (0, 0, 00)
-        self.zoom = zoom
+        self.lookAt = (0, 0, 0)
         self.angle = 0.0
+
 
     def look_at_ortho(self):
         gl.glMatrixMode(gl.GL_MODELVIEW)
@@ -21,7 +21,7 @@ class Camera(object):
             sin(self.angle), cos(self.angle), 0.0)
 
 
-    def look_at_3d(self):
+    def look_at(self):
         gl.glMatrixMode(gl.GL_MODELVIEW)
         gl.glLoadIdentity()
         glu.gluLookAt(
@@ -33,4 +33,5 @@ class Camera(object):
     def reset(self):
         gl.glMatrixMode(gl.GL_MODELVIEW)
         gl.glLoadIdentity()
+
 

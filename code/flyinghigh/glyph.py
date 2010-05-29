@@ -3,6 +3,10 @@ from itertools import chain, repeat
 from OpenGL import GL as gl
 
 
+VALID_VERT_LENS = (2, 3)
+VALID_COLOR_LENS = (3, 4)
+
+
 def flatten(seq, gltype):
     '''
     Convert a sequence of the form ((a, b, c), (d, e, f)...) into a flat
@@ -23,15 +27,17 @@ class Glyph(object):
 
     def from_geometry(self, item):
         verts = item.geometry.verts
-        self.dimension = item.geometry.dimension
-        assert all(len(vert)==self.dimension for vert in verts)
+        assert len(verts[0]) in VALID_VERT_LENS
         self.glVerts = flatten(verts, gl.GLfloat)
 
         colors = tuple(repeat(item.color, len(item.geometry.verts)))
-        assert len(colors[0]) in (3, 4)
+        assert len(colors) == len(verts)
+        assert len(colors[0]) in VALID_COLOR_LENS
         self.glColors = flatten(colors, gl.GLfloat)
 
         indices = item.geometry.indices
-        assert all(len(color)==len(colors[0]) for color in colors)
+        assert len(indices[0]) == 3
         self.glIndices = flatten(indices, gl.GLubyte)
+
+        self.dimension = len(verts[0])
 
