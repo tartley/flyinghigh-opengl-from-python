@@ -1,11 +1,11 @@
 
-from . import startup
+from .engine import startup
 startup
 
 import subprocess
 import sys
 
-from .gameloop import Gameloop
+from .engine.gameloop import Gameloop
 
 
 def run_game():
