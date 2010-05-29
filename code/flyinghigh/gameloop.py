@@ -10,6 +10,7 @@ from .projection import Projection
 from .render import Render
 from .world import World, populate
 
+
 class Gameloop(object):
 
     def __init__(self):
@@ -47,10 +48,20 @@ class Gameloop(object):
         dt = min(dt, 1/30.0)
         self.time += dt
         self.world.update(dt)
-        self.camera.position = (
-            sin(self.time * 2) * 20,
-            0,
-            -40 + cos(self.time * 3) * 20)
+
+        bearing = self.time + cos(self.time / 5 + 0.5) * 10
+        distance = 30 + cos(self.time) * 20
+        elevation = sin(self.time)
+
+        x1 = distance * sin(bearing)
+        z1 = distance * cos(bearing)
+
+        x2 = x1 * cos(elevation)
+        z2 = z1 * cos(elevation)
+        y2 = distance * sin(elevation)
+
+        self.camera.position = (x2, y2, z2)
+
         self.window.invalid = True
 
 

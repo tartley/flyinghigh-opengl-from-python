@@ -11,8 +11,13 @@ class Render(object):
         gl.glEnableClientState(gl.GL_COLOR_ARRAY)
         gl.glEnable(gl.GL_DEPTH_TEST)        
         gl.glEnable(gl.GL_POLYGON_SMOOTH)
-        gl.glEnable(gl.GL_BLEND)
+        gl.glDisable(gl.GL_BLEND)
         gl.glHint(gl.GL_POLYGON_SMOOTH_HINT, gl.GL_NICEST) 
+
+        gl.glCullFace(gl.GL_BACK)
+        gl.glEnable(gl.GL_CULL_FACE)
+
+        gl.glClearColor(0.4, 0.2, 0.1, 1)
 
 
     def draw(self, world):

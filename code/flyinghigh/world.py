@@ -1,8 +1,9 @@
+
 from random import randint, uniform
 
 from .gameitem import GameItem
 from .glyph import Glyph
-from .shapes import Rect, Circle
+from .shapes import Rect, Circle, Cube
 
 
 class World(object):
@@ -38,28 +39,13 @@ def populate(world):
 
     grey = (0.5, 0.5, 0.5, 1)
 
-    wall = GameItem(Rect(30, 2), grey)
-    wall.position = (0, 11.5, 0)
-    world.add(wall)
-
-    wall = GameItem(Rect(2, 25), grey)
-    wall.position = (-15, 0, 0)
-    world.add(wall)
-
-    wall = GameItem(Rect(2, 25), grey)
-    wall.position = (+15, 0, 0)
-    world.add(wall)
-
-    for i in xrange(1, 20):
-        rect = GameItem(Rect(randint(1, 20), 2), rand_color())
-        rect.position = (randint(-20, 20), randint(-10, 10), i * 3)
+    for i in xrange(1, 150):
+        rect = GameItem(Cube(1), rand_color())
+        arena = 4
+        rect.position = (
+            randint(-arena, +arena),
+            randint(-arena, +arena),
+            randint(-arena, +arena),
+        )
         world.add(rect)
-
-        rect = GameItem(Rect(2, randint(1, 20)), rand_color())
-        rect.position = (randint(-20, 20), randint(-10, 10), i * 3 + 1)
-        world.add(rect)
-
-    ball = GameItem(Circle(3), (1, 1, 1, 1))
-    ball.position = (0, 0, +20)
-    world.add(ball)
 

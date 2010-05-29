@@ -20,7 +20,38 @@ class Rect(object):
         
     @property
     def indices(self):
-        return [(0, 2, 1), (2, 0, 3)]
+        return [(0, 1, 2), (2, 3, 0)]
+
+
+
+class Cube(object):
+
+    def __init__(self, edge):
+        self.edge = edge
+
+    @property
+    def verts(self):
+        return [
+            (-self.edge/2, -self.edge/2, -self.edge/2),
+            (-self.edge/2, -self.edge/2, +self.edge/2),
+            (-self.edge/2, +self.edge/2, -self.edge/2),
+            (-self.edge/2, +self.edge/2, +self.edge/2),
+            (+self.edge/2, -self.edge/2, -self.edge/2),
+            (+self.edge/2, -self.edge/2, +self.edge/2),
+            (+self.edge/2, +self.edge/2, -self.edge/2),
+            (+self.edge/2, +self.edge/2, +self.edge/2),
+        ]
+
+    @property
+    def indices(self):
+        return [
+            (0, 1, 2), (2, 1, 3), # left
+            (4, 6, 5), (6, 7, 5), # right
+            (7, 3, 1), (1, 5, 7), # front
+            (0, 2, 6), (6, 4, 0), # back
+            (3, 7, 6), (6, 2, 3), # top
+            (1, 0, 4), (4, 5, 1), # bottom
+        ]
 
 
 class Circle(object):
