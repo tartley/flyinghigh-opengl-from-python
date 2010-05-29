@@ -1,16 +1,25 @@
 
+from math import sin
+
 import pyglet
 from pyglet.event import EVENT_HANDLED
 from pyglet.window import Window
 
 from .camera import Camera
+from .projection import Projection
 from .render import Render
 from .world import World, populate
 
 class Gameloop(object):
 
     def __init__(self):
+        self.camera = None
+        self.projection = None
+        self.render = None
+        self.time = 0.0
         self.window = None
+        self.world = None
+
 
     def start(self):
         self.world = World()
@@ -18,37 +27,40 @@ class Gameloop(object):
         populate(self.world)
 
         self.render = Render()
-        self.camera = Camera(zoom=10.0)
+        self.camera = Camera(position=(0, 0, 0), zoom=15.0)
 
-        self.window = Window(fullscreen=False, visible=False)
-        self.window.set_exclusive_mouse(True)
+        self.window = Window(fullscreen=False, visible=False, resizable=True)
+        # self.window.set_exclusive_mouse(True)
         self.window.on_draw = self.draw
-        self.window.on_resize = self.render.resize
 
+        self.projection = Projection(self.window.width, self.window.height)
+        self.window.on_resize = self.projection.resize
         self.render.init()
         pyglet.clock.schedule(self.update)
-        self.hud_fps = pyglet.clock.ClockDisplay()
+        self.clock_display = pyglet.clock.ClockDisplay()
 
         self.window.set_visible()
         pyglet.app.run()
 
 
     def update(self, dt):
-        # scale dt such that the 'standard' framerate of 60fps gives dt=1.0
-        dt *= 60.0
-        # prevent explosion when game is paused then restarted for any reason
-        dt = min(dt, 2)
+        dt = min(dt, 1/30.0)
+        self.time += dt
         self.world.update(dt)
+        self.camera.position = (sin(self.time) * 5, 0, 0)
         self.window.invalid = True
 
 
     def draw(self):
         self.window.clear()
-        self.camera.world_projection(self.window.width, self.window.height)
-        self.camera.look_at()
+        self.projection.world_ortho(self.camera.zoom)
+        self.camera.look_at_ortho()
         self.render.draw(self.world)
-        self.hud_fps.draw()
+        self.projection.screen()
+        self.camera.reset()
+        self.clock_display.draw()
         return EVENT_HANDLED
+
 
     def stop(self):
         if self.window:

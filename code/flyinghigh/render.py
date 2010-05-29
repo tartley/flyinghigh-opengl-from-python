@@ -15,19 +15,10 @@ class Render(object):
         gl.glHint(gl.GL_POLYGON_SMOOTH_HINT, gl.GL_NICEST) 
 
 
-    def resize(self, width, height):
-        gl.glViewport(0, 0, width, height)
-        gl.glMatrixMode(gl.GL_PROJECTION)
-        gl.glLoadIdentity()
-        gl.glOrtho(-width/2, width/2, -height/2, height/2, -1, 1)
-        gl.glMatrixMode(gl.GL_MODELVIEW)
-
-
     def draw(self, world):
         for item in world.items.itervalues():
             gl.glPushMatrix()
-            pos = item.position
-            gl.glTranslatef(pos[0], pos[1], 0)
+            gl.glTranslatef(item.position[0], item.position[1], 0)
             gl.glRotatef(degrees(item.angle), 0, 0, 1)
             gl.glVertexPointer(2, gl.GL_FLOAT, 0, item.glyph.glVerts)
             gl.glColorPointer(4, gl.GL_FLOAT, 0, item.glyph.glColors)
