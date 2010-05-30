@@ -5,9 +5,9 @@ from math import cos, pi, sin
 
 class Shape(object):
 
-    def __init__(self, vertices, indices):
+    def __init__(self, vertices, faces):
         self.vertices = vertices
-        self.indices = indices
+        self.faces = faces
 
 
 def Rectangle(width, height):
@@ -17,8 +17,8 @@ def Rectangle(width, height):
         (+width/2, +height/2),
         (-width/2, +height/2),
     ]
-    indices = [(0, 1, 2), (2, 3, 0)]
-    return Shape(vertices, indices)
+    faces = [[(0, 1, 2), (2, 3, 0)]]
+    return Shape(vertices, faces)
 
 
 def Circle(radius):
@@ -31,7 +31,8 @@ def Circle(radius):
         (0, n, n+1)
         for n in xrange(1, NUM_POINTS-1)
     ]
-    return Shape(verts, indices)
+    faces = [indices]
+    return Shape(verts, faces)
 
 
 def Cube(edge):
@@ -45,13 +46,13 @@ def Cube(edge):
         (+edge/2, +edge/2, -edge/2),
         (+edge/2, +edge/2, +edge/2),
     ]
-    indices = [
-        (0, 1, 2), (2, 1, 3), # left
-        (4, 6, 5), (6, 7, 5), # right
-        (7, 3, 1), (1, 5, 7), # front
-        (0, 2, 6), (6, 4, 0), # back
-        (3, 7, 6), (6, 2, 3), # top
-        (1, 0, 4), (4, 5, 1), # bottom
+    faces = [
+        [(0, 1, 2), (2, 1, 3)], # left
+        [(4, 6, 5), (6, 7, 5)], # right
+        [(7, 3, 1), (1, 5, 7)], # front
+        [(0, 2, 6), (6, 4, 0)], # back
+        [(3, 7, 6), (6, 2, 3)], # top
+        [(1, 0, 4), (4, 5, 1)], # bottom
     ]
-    return Shape(verts, indices)
+    return Shape(verts, faces)
 
