@@ -27,10 +27,10 @@ class Render(object):
             position = item.position
             if len(position) == 2:
                 gl.glTranslatef(position[0]. position[1], 0)
+                gl.glRotatef(degrees(item.angle), 0, 0, 1)
             else:
                 gl.glTranslatef(*position)
-
-            gl.glRotatef(degrees(item.angle), 0, 0, 1)
+                # TODO: 3D orientation
 
             glyph = item.glyph
             gl.glVertexPointer(

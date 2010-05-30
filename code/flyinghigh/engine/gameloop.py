@@ -8,7 +8,8 @@ from pyglet.window import Window
 from .projection import Projection
 from .render import Render
 from .world import World, populate
-from ..camera import Camera
+from .gameitem import GameItem
+from ..component.camera import Camera
 from ..component.position import Position
 
 
@@ -29,7 +30,8 @@ class Gameloop(object):
         populate(self.world)
 
         self.render = Render()
-        self.camera = Camera(position=Position(0, 0, -10))
+        self.camera = Camera(GameItem(position=Position(0, 0, -10)))
+        # TODO: the camera GameItem is never added to the world
 
         self.window = Window(fullscreen=True, visible=False, resizable=True)
         # self.window.set_exclusive_mouse(True)
@@ -61,7 +63,7 @@ class Gameloop(object):
         z2 = z1 * cos(elevation)
         y2 = distance * sin(elevation)
 
-        self.camera.position = Position(x2, y2, z2)
+        self.camera.item.position = Position(x2, y2, z2)
 
         self.window.invalid = True
 
