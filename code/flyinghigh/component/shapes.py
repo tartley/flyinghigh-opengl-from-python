@@ -3,14 +3,34 @@ from __future__ import division
 from math import cos, pi, sin
 
 
-class Rect(object):
 
-    def __init__(self, width, height):
-        self.width = width
-        self.height = height
+class Shape(object):
+
+    def __init__(self):
+        self._vertices = None
+        self._indices = None
 
     @property
     def verts(self):
+        if self._vertices is None:
+            self._vertices = self.get_verts()
+        return self._vertices
+
+    @property
+    def indices(self):
+        if self._indices is None:
+            self._indices = self.get_indices()
+        return self._indices
+
+
+class Rect(Shape):
+
+    def __init__(self, width, height):
+        Shape.__init__(self)
+        self.width = width
+        self.height = height
+
+    def get_verts(self):
         return [
             (-self.width/2, -self.height/2),
             (+self.width/2, -self.height/2),
@@ -18,19 +38,18 @@ class Rect(object):
             (-self.width/2, +self.height/2),
         ]
         
-    @property
-    def indices(self):
+    def get_indices(self):
         return [(0, 1, 2), (2, 3, 0)]
 
 
 
-class Cube(object):
+class Cube(Shape):
 
     def __init__(self, edge):
+        Shape.__init__(self)
         self.edge = edge
 
-    @property
-    def verts(self):
+    def get_verts(self):
         return [
             (-self.edge/2, -self.edge/2, -self.edge/2),
             (-self.edge/2, -self.edge/2, +self.edge/2),
@@ -42,8 +61,7 @@ class Cube(object):
             (+self.edge/2, +self.edge/2, +self.edge/2),
         ]
 
-    @property
-    def indices(self):
+    def get_indices(self):
         return [
             (0, 1, 2), (2, 1, 3), # left
             (4, 6, 5), (6, 7, 5), # right
@@ -54,15 +72,15 @@ class Cube(object):
         ]
 
 
-class Circle(object):
+class Circle(Shape):
 
     _NUM_POINTS = 32
 
     def __init__(self, radius):
+        Shape.__init__(self)
         self.radius = radius
 
-    @property
-    def verts(self):
+    def get_verts(self):
         verts = []
         for n in xrange(0, self._NUM_POINTS):
             a = n * 2 * pi / self._NUM_POINTS
@@ -72,8 +90,7 @@ class Circle(object):
             )
         return verts
 
-    @property
-    def indices(self):
+    def get_indices(self):
         return [
             (0, n, n+1)
             for n in xrange(1, self._NUM_POINTS-1)
