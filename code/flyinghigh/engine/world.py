@@ -18,9 +18,10 @@ class World(object):
     def add(self, item):
         self.items[item.id] = item
 
-    def update(self, _):
+    def update(self, dt):
         for item in self.items.itervalues():
-            item.update()
+            if hasattr(item, 'mover'):
+                item.mover.update(dt)
 
 
 

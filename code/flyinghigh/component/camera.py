@@ -9,8 +9,8 @@ from .position import Position
 
 class CameraBase(object):
 
-    def __init__(self, item):
-        self.item = item
+    def __init__(self):
+        self.item = None
 
     def reset(self):
         gl.glMatrixMode(gl.GL_MODELVIEW)
@@ -19,8 +19,8 @@ class CameraBase(object):
 
 class Camera(CameraBase):
 
-    def __init__(self, item):
-        super(Camera, self).__init__(item)
+    def __init__(self):
+        super(Camera, self).__init__()
         self.lookAt = Position(0, 0, 0)
 
     def look_at(self):
@@ -35,8 +35,8 @@ class Camera(CameraBase):
 
 class CameraOrtho(CameraBase):
 
-    def __init__(self, item):
-        super(CameraOrtho, self).__init__(item)
+    def __init__(self):
+        super(CameraOrtho, self).__init__()
         self.angle = 0.0
 
     def look_at(self):

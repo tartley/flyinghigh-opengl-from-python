@@ -22,6 +22,9 @@ class Render(object):
 
     def draw(self, world):
         for item in world.items.itervalues():
+            if not hasattr(item, 'glyph'):
+                continue
+
             gl.glPushMatrix()
 
             position = item.position
