@@ -12,9 +12,6 @@ class World(object):
     def __init__(self):
         self.items = {}
 
-    def init(self):
-        pass
-
     def add(self, item):
         self.items[item.id] = item
 
