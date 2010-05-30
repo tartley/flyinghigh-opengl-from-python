@@ -26,11 +26,12 @@ class Glyph(object):
 
 
     def from_geometry(self, item):
-        verts = item.geometry.verts
+        verts = item.geometry.vertices
+        num_verts = len(verts)
         assert len(verts[0]) in VALID_VERT_LENS
         self.glVerts = flatten(verts, gl.GLfloat)
 
-        colors = tuple(repeat(item.color, len(item.geometry.verts)))
+        colors = tuple(repeat(item.color, num_verts))
         assert len(colors) == len(verts)
         assert len(colors[0]) in VALID_COLOR_LENS
         self.glColors = flatten(colors, gl.GLfloat)
