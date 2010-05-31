@@ -26,7 +26,7 @@ class Render(object):
         gl.glCullFace(gl.GL_BACK)
         gl.glEnable(gl.GL_CULL_FACE)
 
-        gl.glClearColor(self.world.clearColor)
+        gl.glClearColor(*self.world.clearColor)
 
 
     def draw(self, world):

@@ -117,9 +117,9 @@ def CubeCluster(edge, cluster_edge, cube_count):
             b - cluster_edge / 2,
         ]
 
-        color = (0, 0, 0, 0)
+        color = (r / cluster_edge, g / cluster_edge, b / cluster_edge, 1)
         if any(x in [0, cluster_edge] for x in [r, g, b]):
-            color = (r / cluster_edge, g / cluster_edge, b / cluster_edge, 1)
+            color = (0, 0, 0, 0)
 
         shape.add(Cube(edge, color), Position(*pos))
         # TODO: shouldn't need to construct a new Cube every time, geom is same

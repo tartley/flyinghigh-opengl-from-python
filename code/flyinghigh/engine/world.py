@@ -1,7 +1,7 @@
 
 class World(object):
 
-    clearColor = (0.3, 0.7, 0.4, 1)
+    clearColor = (0.3, 0.3, 0.3, 1)
 
     def __init__(self):
         self.items = {}
