@@ -4,6 +4,12 @@ from math import degrees
 from OpenGL import GL as gl
 
 
+type_to_enum = {
+    gl.GLubyte: gl.GL_UNSIGNED_BYTE,
+    gl.GLushort: gl.GL_UNSIGNED_SHORT,
+    gl.GLuint: gl.GL_UNSIGNED_INT,
+}
+
 class Render(object):
 
     def init(self):
@@ -42,7 +48,7 @@ class Render(object):
             gl.glDrawElements(
                 gl.GL_TRIANGLES,
                 len(glyph.glIndices),
-                gl.GL_UNSIGNED_BYTE,
+                type_to_enum[glyph.index_type],
                 glyph.glIndices)
 
             gl.glPopMatrix()

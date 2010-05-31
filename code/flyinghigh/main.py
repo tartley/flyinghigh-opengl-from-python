@@ -5,13 +5,18 @@ startup
 import subprocess
 import sys
 
+import pyglet
+
 from .engine.gameloop import Gameloop
+from .populate_world import populate
 
 
 def run_game():
     try:
         gameloop = Gameloop()
-        gameloop.start()
+        gameloop.prepare()
+        populate(gameloop.world)
+        pyglet.app.run()
     finally:
         gameloop.stop()
 

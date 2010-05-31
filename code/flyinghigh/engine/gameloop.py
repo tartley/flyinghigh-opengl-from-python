@@ -5,7 +5,7 @@ from pyglet.window import Window
 
 from .projection import Projection
 from .render import Render
-from .world import World, populate
+from .world import World
 from .gameitem import GameItem
 from ..component.camera import Camera
 from ..component.wobblyorbit import WobblyOrbit
@@ -22,9 +22,8 @@ class Gameloop(object):
         self.world = None
 
 
-    def start(self):
+    def prepare(self):
         self.world = World()
-        populate(self.world)
 
         cam = GameItem(
             camera=Camera(),
@@ -46,7 +45,6 @@ class Gameloop(object):
 
         self.window.set_visible()
         self.world.update(0.0)
-        pyglet.app.run()
 
 
     def update(self, dt):

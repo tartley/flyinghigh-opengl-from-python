@@ -1,13 +1,57 @@
 from __future__ import division
 
+from itertools import chain
 from math import cos, pi, sin
+
+from .position import Position
 
 
 class Shape(object):
 
-    def __init__(self, vertices, faces):
-        self.vertices = vertices
+    def __init__(self, vertices, faces, color):
+        self.vertices = [Position(*v) for v in vertices]
         self.faces = faces
+
+
+class CompositeShape(object):
+
+    def __init__(self):
+        self.children = set()
+
+    def add(self, child, offset=None):
+        if offset is None:
+            offset = Position(0, 0, 0)
+        self.children.add((child, offset))
+
+    @property
+    def vertices(self):
+        newverts = []
+        for shape, offset in self.children:
+            for vert in shape.vertices:
+                newverts.append(
+                    Position(
+                        vert.x + offset.x,
+                        vert.y + offset.y,
+                        vert.z + offset.z,
+                    )
+                )
+        return newverts
+        #return chain(
+        #    add_offset(child.vertices, offset) for child, offset in self.children)
+
+    @property
+    def faces(self):
+        newfaces = []
+        index_offset = 0
+        for shape, _ in self.children:
+            for face in shape.faces:
+                newface = []
+                for index in face:
+                    newface.append(index + index_offset)
+                newfaces.append(newface)
+            index_offset += len(shape.vertices)
+        return newfaces
+        # return chain.from_iterable(shape.faces for shape, _ in self.children)
 
 
 def Rectangle(width, height):
