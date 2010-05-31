@@ -8,7 +8,7 @@ from ..shapes import CompositeShape, Shape
 
 class testCompositeShape(TestCase):
 
-    def testVerts(self):
+    def testCompositeShape(self):
         VERTS1 = [(1, 2, 3), (4, 5, 6), (7, 8, 9), (10, 11, 12)]
         FACES1 = [ [0, 1, 2], [1, 2, 3] ]
         RED = (1, 0, 0)
@@ -34,6 +34,7 @@ class testCompositeShape(TestCase):
         )
 
         self.assertEquals(list(composite.colors), [RED] * 4 + [BLUE] * 4)
+
 
 if __name__ == '__main__':
     main()

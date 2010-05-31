@@ -113,6 +113,16 @@ def CubeCluster(edge, cluster_edge, cube_count):
 
         shape.add(Cube(edge, color), Position(*pos))
 
+    shape.add(Cube(2, (0.55, 0.55, 0.55, 1)), Position(0, 0, 0))
+    shape.add(Cube(1, (0.6, 0.6, 0.6, 1)), Position(1, 0, 0))
+    shape.add(Cube(1, (0.6, 0.6, 0.6, 1)), Position(0, 1, 0))
+    shape.add(Cube(1, (0.6, 0.6, 0.6, 1)), Position(0, 0, 1))
+    shape.add(Cube(1, (0.6, 0.6, 0.6, 1)), Position(-1, 0, 0))
+    shape.add(Cube(1, (0.6, 0.6, 0.6, 1)), Position(0, -1, 0))
+    shape.add(Cube(1, (0.6, 0.6, 0.6, 1)), Position(0, 0, -1))
+
+    shape.add(Cube(cluster_edge, (0.1, 0.1, 0.1, 0.4)), Position(0, 0, 0))
+
     return shape
 
 

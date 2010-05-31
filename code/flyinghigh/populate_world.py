@@ -8,9 +8,10 @@ from .component.shapes import CubeCluster
 
 
 def populate(world):
+    shape = CubeCluster(1.0, 80, 9000)
     item = GameItem(
         position=Position(0, 0, 0),
-        shape=CubeCluster(1.0, 64, 9000),
+        shape=shape,
         glyph=Glyph(),
     )
     item.glyph.from_shape(item)

@@ -17,11 +17,13 @@ construct composite geometry (eg. many cubes in a single glyph)
 
 --CURRENT--
 
-refactorings
-
-tests
-
-color generating objects. SolidColor, Gradient
+REFACTOR
+    color is not part of a shape. Should be passed in to composite.add()
+    then we can re-use the same Cube instance within a CubeCluster
+    Must CompositeShapes be nestable?
+    color generating objects. SolidColor, Gradient?
+    use generators for compositeShape properties
+    use generators when creating glyph
 
 Add manual normals
 

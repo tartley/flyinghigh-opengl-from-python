@@ -20,7 +20,7 @@ class Render(object):
         gl.glEnableClientState(gl.GL_COLOR_ARRAY)
         gl.glEnable(gl.GL_DEPTH_TEST)        
         gl.glEnable(gl.GL_POLYGON_SMOOTH)
-        gl.glDisable(gl.GL_BLEND)
+        gl.glEnable(gl.GL_BLEND)
         gl.glHint(gl.GL_POLYGON_SMOOTH_HINT, gl.GL_NICEST) 
 
         gl.glCullFace(gl.GL_BACK)
