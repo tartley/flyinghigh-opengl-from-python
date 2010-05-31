@@ -1,38 +1,18 @@
 
-from random import choice, randint, uniform
+from __future__ import division
 
 from .engine.gameitem import GameItem
 from .component.glyph import Glyph
 from .component.position import Position
-from .component.shapes import CompositeShape, Cube
+from .component.shapes import CubeCluster
 
-
-def rand_color():
-    return (
-        uniform(0, 1),
-        uniform(0, 1),
-        uniform(0, 1),
-        1,
-    )
 
 def populate(world):
-
-    shape = CompositeShape()
-    unitcube = Cube(1)
-    for i in xrange(200):
-        pos = [
-            randint(-4, +4),
-            randint(-4, +4),
-            randint(-4, +4),
-        ]
-        shape.add(unitcube, Position(*pos))      
-
     item = GameItem(
         position=Position(0, 0, 0),
-        geometry=shape,
-        color=rand_color(),
+        shape=CubeCluster(1.0, 64, 9000),
         glyph=Glyph(),
     )
-    item.glyph.from_geometry(item)
+    item.glyph.from_shape(item)
     world.add(item)
 

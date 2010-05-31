@@ -42,19 +42,19 @@ class Glyph(object):
         self.dimensions = None
 
 
-    def from_geometry(self, item):
-        verts = list(item.geometry.vertices)
+    def from_shape(self, item):
+        verts = tuple(item.shape.vertices)
         num_verts = len(verts)
         assert len(verts[0]) in VALID_VERT_LENS
         self.glVerts = gl_array(verts, gl.GLfloat)
 
-        colors = tuple(repeat(item.color, num_verts))
+        colors = tuple(item.shape.colors)
         assert len(colors) == len(verts)
         assert len(colors[0]) in VALID_COLOR_LENS
         self.glColors = gl_array(colors, gl.GLfloat)
 
         indices = tuple(chain.from_iterable(
-            triangulate(face) for face in item.geometry.faces))
+            triangulate(face) for face in item.shape.faces))
         assert len(indices[0]) == 3
         self.index_type = gl.GLubyte
         if len(indices) > 65536:

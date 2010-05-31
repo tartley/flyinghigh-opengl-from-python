@@ -13,7 +13,7 @@ class WobblyOrbit(object):
         self.age += dt
 
         bearing = self.age + cos(self.age / 5 + 0.5) * 10
-        distance = 20 + cos(self.age) * 10
+        distance = 80 + cos(self.age) * 10
         elevation = sin(self.age)
 
         x1 = distance * sin(bearing)
