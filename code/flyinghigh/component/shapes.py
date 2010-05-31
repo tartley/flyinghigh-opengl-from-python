@@ -8,7 +8,7 @@ from .position import Position
 
 class Shape(object):
 
-    def __init__(self, vertices, faces, color):
+    def __init__(self, vertices, faces):
         self.vertices = [Position(*v) for v in vertices]
         self.faces = faces
 
