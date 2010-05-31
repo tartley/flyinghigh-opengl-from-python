@@ -2,7 +2,7 @@ from __future__ import division
 
 from itertools import chain
 from math import cos, pi, sin
-from random import uniform
+from random import randint, uniform
 
 from .position import Position
 
@@ -58,9 +58,8 @@ class CompositeShape(object):
     @property
     def colors(self):
         for shape, _ in self.children:
-            for face in shape.faces:
-                for vert in face:
-                    yield shape.color
+            for vertex in shape.vertices:
+                yield shape.color
 
 
 def Rectangle(width, height, color):
@@ -109,16 +108,20 @@ def Cube(edge, color):
 def CubeCluster(edge, cluster_edge, cube_count):
     shape = CompositeShape()
     for i in xrange(cube_count):
-        r = uniform(0, 1)
-        g = uniform(0, 1)
-        b = uniform(0, 1)
+        r = randint(0, cluster_edge)
+        g = randint(0, cluster_edge)
+        b = randint(0, cluster_edge)
         pos = [
-            r * cluster_edge - cluster_edge / 2,
-            g * cluster_edge - cluster_edge / 2,
-            b * cluster_edge - cluster_edge / 2,
+            r - cluster_edge / 2,
+            g - cluster_edge / 2,
+            b - cluster_edge / 2,
         ]
-        # TODO: should we need to construct a new Cube every time,
-        # just to pass in the same geometry?
-        shape.add(Cube(edge, (r, g, b, 1)), Position(*pos))
+
+        color = (0, 0, 0, 0)
+        if any(x in [0, cluster_edge] for x in [r, g, b]):
+            color = (r / cluster_edge, g / cluster_edge, b / cluster_edge, 1)
+
+        shape.add(Cube(edge, color), Position(*pos))
+        # TODO: shouldn't need to construct a new Cube every time, geom is same
     return shape
 
