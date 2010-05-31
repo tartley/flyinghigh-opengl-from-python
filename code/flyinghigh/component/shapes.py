@@ -17,7 +17,7 @@ def Rectangle(width, height):
         (+width/2, +height/2),
         (-width/2, +height/2),
     ]
-    faces = [[(0, 1, 2), (2, 3, 0)]]
+    faces = [[0, 1, 2, 3]]
     return Shape(vertices, faces)
 
 
@@ -27,11 +27,7 @@ def Circle(radius):
     for n in xrange(0, NUM_POINTS):
         a = n * 2 * pi / NUM_POINTS
         verts.append( (radius * cos(a), radius * sin(a)) )
-    indices = [
-        (0, n, n+1)
-        for n in xrange(1, NUM_POINTS-1)
-    ]
-    faces = [indices]
+    faces = [[n for n in xrange(0, NUM_POINTS)]]
     return Shape(verts, faces)
 
 
@@ -47,12 +43,12 @@ def Cube(edge):
         (+edge/2, +edge/2, +edge/2),
     ]
     faces = [
-        [(0, 1, 2), (2, 1, 3)], # left
-        [(4, 6, 5), (6, 7, 5)], # right
-        [(7, 3, 1), (1, 5, 7)], # front
-        [(0, 2, 6), (6, 4, 0)], # back
-        [(3, 7, 6), (6, 2, 3)], # top
-        [(1, 0, 4), (4, 5, 1)], # bottom
+        [0, 1, 3, 2], # left
+        [4, 6, 7, 5], # right
+        [7, 3, 1, 5], # front
+        [0, 2, 6, 4], # back
+        [3, 7, 6, 2], # top
+        [1, 0, 4, 5], # bottom
     ]
     return Shape(verts, faces)
 

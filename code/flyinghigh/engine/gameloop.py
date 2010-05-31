@@ -8,7 +8,6 @@ from .render import Render
 from .world import World, populate
 from .gameitem import GameItem
 from ..component.camera import Camera
-from ..component.position import Position
 from ..component.wobblyorbit import WobblyOrbit
 
 

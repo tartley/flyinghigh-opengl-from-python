@@ -1,4 +1,3 @@
---CURRENT--
 Create minimal 3d gameloop application, with cube
 
 REFACTOR
@@ -10,12 +9,20 @@ GEOMETRY PHASE 1
 Create a cube.
 Create a quick clump of interpenetrating cubes.
 
-Have object rotate
+Have camera move
+
+Automatically triangulate convex faces
+
+--CURRENT--
+
+construct composite geometry (eg. many cubes in a single glyph)
+
+Add manual normals
 
 SHADERS PHASE 1
 Integrate shaders:
     std vertex
-    pixel shader uses vertex colors, with per-pixel lighting.
+    pixel shader uses vertex colors, with per-pixel lighting using normals
 
 INNER LOOP PHASE 1
 Compile it in C.
@@ -28,8 +35,16 @@ Write first draft essay about compiled inner loops
 Find way to automate conversion of essays into slides (rst2s5?)
 
 GEOMETRY PHASE 2
-clump of cuboids: Remove faces that are totally embedded.
+Automatically calculate normals
+Cube cluster generated from pixels of small bitmaps. Invader! Mario! etc.
+Cube cluster with borders on the cubes: general method to add borders 2 shapes
+Automatically triangulate concave faces (needs glu triangulate code)
 Add to the geometry while it is being displayed
+
+REFACTOR
+Consider sharing cube geometry between many gameitems (check out huge startup
+cost of creating all those cube glyphs. Oh, they can't share color arrays.
+But can they share vertex and index arrays and normals?
 
 SHADERS PHASE 2
 Allow each entity to specify its own shaders.

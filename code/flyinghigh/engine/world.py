@@ -33,18 +33,22 @@ def rand_color():
 
 def populate(world):
 
-    for i in xrange(1, 150):
-        item = GameItem(
-            geometry=Cube(1),
-            color=rand_color(),
-            position=Position(
-                randint(-4, +4),
-                randint(-4, +4),
-                randint(-4, +4),
-            ),
-            glyph=Glyph(),
-        )
-        item.glyph.from_geometry(item)
+    for i in xrange(60):
+        for dim in [0, 1, 2]:
+            for value in [-4, 4]:
+                pos = [
+                    randint(-4, +4),
+                    randint(-4, +4),
+                    randint(-4, +4),
+                ]
+                pos[dim] = value
+                item = GameItem(
+                    geometry=Cube(1),
+                    color=rand_color(),
+                    position=Position(*pos),
+                    glyph=Glyph(),
+                )
+                item.glyph.from_geometry(item)
 
-        world.add(item)
+                world.add(item)
 
