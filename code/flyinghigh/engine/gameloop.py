@@ -3,10 +3,11 @@ import pyglet
 from pyglet.event import EVENT_HANDLED
 from pyglet.window import Window
 
+from .gameitem import GameItem
 from .projection import Projection
 from .render import Render
+from .shader import FragmentShader, ShaderError, ShaderProgram, VertexShader
 from .world import World
-from .gameitem import GameItem
 from ..component.camera import Camera
 from ..component.wobblyorbit import WobblyOrbit
 
@@ -42,6 +43,11 @@ class Gameloop(object):
         self.render.init()
         pyglet.clock.schedule(self.update)
         self.clock_display = pyglet.clock.ClockDisplay()
+
+        vs = VertexShader('flyinghigh\shaders\standard.vert')
+        fs = FragmentShader('flyinghigh\shaders\standard.frag')
+        shader = ShaderProgram(vs, fs)
+        shader.use()
 
         self.world.update(0.0)
         self.window.set_visible()
