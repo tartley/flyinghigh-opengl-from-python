@@ -1,4 +1,4 @@
-from math import cos, sin
+from math import cos, sin, pi
 
 from .position import Position
 
@@ -12,9 +12,9 @@ class WobblyOrbit(object):
     def update(self, dt):
         self.age += dt
 
-        bearing = self.age + cos(self.age / 5 + 0.5) * 10
-        distance = 80 + cos(self.age) * 10
-        elevation = sin(self.age)
+        bearing = cos(self.age / 5 - pi/2) * 10
+        distance = 80 + sin(self.age / 3) * 75
+        elevation = sin(self.age) * cos(self.age / 3) * pi / 2
 
         x1 = distance * sin(bearing)
         z1 = distance * cos(bearing)

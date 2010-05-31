@@ -1,8 +1,7 @@
 from __future__ import division
 
-from itertools import chain
 from math import cos, pi, sin
-from random import randint, uniform
+from random import randint
 
 from .position import Position
 
@@ -27,19 +26,9 @@ class CompositeShape(object):
 
     @property
     def vertices(self):
-        newverts = []
-        for shape, offset in self.children:
-            for vert in shape.vertices:
-                newverts.append(
-                    Position(
-                        vert.x + offset.x,
-                        vert.y + offset.y,
-                        vert.z + offset.z,
-                    )
-                )
-        return newverts
-        #return chain(
-        #    add_offset(child.vertices, offset) for child, offset in self.children)
+        return (vert + offset
+                for shape, offset in self.children
+                for vert in shape.vertices)
 
     @property
     def faces(self):
@@ -57,9 +46,9 @@ class CompositeShape(object):
 
     @property
     def colors(self):
-        for shape, _ in self.children:
-            for vertex in shape.vertices:
-                yield shape.color
+        return (shape.color
+                for shape, _ in self.children
+                for _ in shape.vertices)
 
 
 def Rectangle(width, height, color):
@@ -111,17 +100,30 @@ def CubeCluster(edge, cluster_edge, cube_count):
         r = randint(0, cluster_edge)
         g = randint(0, cluster_edge)
         b = randint(0, cluster_edge)
+
+        color = (r / cluster_edge, g / cluster_edge, b / cluster_edge, 1)
+        if any(x in [0, cluster_edge] for x in [r, g, b]):
+            color = (0, 0, 0, 1)
+
         pos = [
             r - cluster_edge / 2,
             g - cluster_edge / 2,
             b - cluster_edge / 2,
         ]
 
-        color = (r / cluster_edge, g / cluster_edge, b / cluster_edge, 1)
-        if any(x in [0, cluster_edge] for x in [r, g, b]):
-            color = (0, 0, 0, 0)
-
         shape.add(Cube(edge, color), Position(*pos))
-        # TODO: shouldn't need to construct a new Cube every time, geom is same
+
+    return shape
+
+
+def CubeCross(edge):
+    shape = CompositeShape()
+    shape.add(Cube(2, (1, 1, 1, 0.5)), Position(0, 0, 0))
+    shape.add(Cube(1, (1, 1, 1, 0.5)), Position(1, 0, 0))
+    shape.add(Cube(1, (1, 1, 1, 0.5)), Position(0, 1, 0))
+    shape.add(Cube(1, (1, 1, 1, 0.5)), Position(0, 0, 1))
+    shape.add(Cube(1, (1, 1, 1, 0.5)), Position(-1, 0, 0))
+    shape.add(Cube(1, (1, 1, 1, 0.5)), Position(0, -1, 0))
+    shape.add(Cube(1, (1, 1, 1, 0.5)), Position(0, 0, -1))
     return shape
 
