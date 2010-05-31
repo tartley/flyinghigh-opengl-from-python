@@ -38,7 +38,7 @@ class Gameloop(object):
 
         self.projection = Projection(self.window.width, self.window.height)
         self.window.on_resize = self.projection.resize
-        self.render = Render()
+        self.render = Render(self.world)
         self.render.init()
         pyglet.clock.schedule(self.update)
         self.clock_display = pyglet.clock.ClockDisplay()

@@ -13,9 +13,15 @@ Have camera move
 
 Automatically triangulate convex faces
 
+construct composite geometry (eg. many cubes in a single glyph)
+
 --CURRENT--
 
-construct composite geometry (eg. many cubes in a single glyph)
+refactorings
+
+tests
+
+color generating objects. SolidColor, Gradient
 
 Add manual normals
 

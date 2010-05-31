@@ -12,6 +12,9 @@ type_to_enum = {
 
 class Render(object):
 
+    def __init__(self, world):
+        self.world = world
+
     def init(self):
         gl.glEnableClientState(gl.GL_VERTEX_ARRAY)
         gl.glEnableClientState(gl.GL_COLOR_ARRAY)
@@ -23,7 +26,7 @@ class Render(object):
         gl.glCullFace(gl.GL_BACK)
         gl.glEnable(gl.GL_CULL_FACE)
 
-        gl.glClearColor(0.4, 0.2, 0.1, 1)
+        gl.glClearColor(self.world.clearColor)
 
 
     def draw(self, world):
