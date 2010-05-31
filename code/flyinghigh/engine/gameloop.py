@@ -27,13 +27,13 @@ class Gameloop(object):
 
         cam = GameItem(
             camera=Camera(),
-            mover=WobblyOrbit(),
+            move=WobblyOrbit(),
         )
         self.camera = cam.camera
         self.world.add(cam)
 
         self.window = Window(fullscreen=True, visible=False, resizable=True)
-        # self.window.set_exclusive_mouse(True)
+        self.window.set_exclusive_mouse(True)
         self.window.on_draw = self.draw
 
         self.projection = Projection(self.window.width, self.window.height)
@@ -43,8 +43,8 @@ class Gameloop(object):
         pyglet.clock.schedule(self.update)
         self.clock_display = pyglet.clock.ClockDisplay()
 
-        self.window.set_visible()
         self.world.update(0.0)
+        self.window.set_visible()
 
 
     def update(self, dt):

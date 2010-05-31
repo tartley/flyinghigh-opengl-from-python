@@ -11,6 +11,6 @@ class World(object):
 
     def update(self, dt):
         for item in self.items.itervalues():
-            if hasattr(item, 'mover'):
-                item.mover.update(dt)
+            if hasattr(item, 'move'):
+                item.position = item.move(dt)
 

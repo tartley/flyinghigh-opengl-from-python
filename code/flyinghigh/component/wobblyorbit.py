@@ -6,10 +6,9 @@ from .position import Position
 class WobblyOrbit(object):
 
     def __init__(self):
-        self.item = None
         self.age = 0.0
 
-    def update(self, dt):
+    def __call__(self, dt):
         self.age += dt
 
         bearing = cos(self.age / 5 - pi/2) * 10
@@ -23,5 +22,5 @@ class WobblyOrbit(object):
         z2 = z1 * cos(elevation)
         y2 = distance * sin(elevation)
 
-        self.item.position = Position(x2, y2, z2)
+        return Position(x2, y2, z2)
         
