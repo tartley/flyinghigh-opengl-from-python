@@ -1,10 +1,10 @@
-from itertools import chain, repeat
+from itertools import chain
 
 from OpenGL import GL as gl
 
 
 VALID_VERT_LENS = (2, 3)
-VALID_COLOR_LENS = (3, 4)
+VALID_COLOR_LEN = 4
 
 
 def gl_array(seq, gltype):
@@ -34,34 +34,57 @@ def triangulate(face):
 
 class Glyph(object):
 
+    # todo: generalise this to 2d as well
+    dimension = 3
+
     def __init__(self):
         self.glVerts = None
         self.glColors = None
         self.glIndices = None
         self.index_type = None
-        self.dimensions = None
 
 
-    def from_shape(self, item):
-        verts = tuple(item.shape.vertices)
+    def _get_glverts(self, shape):
+        verts = tuple(shape.vertices)
         num_verts = len(verts)
         assert len(verts[0]) in VALID_VERT_LENS
-        self.glVerts = gl_array(verts, gl.GLfloat)
+        x = gl_array(verts, gl.GLfloat)
+        return x
 
-        colors = tuple(item.shape.colors)
-        assert len(colors) == len(verts)
-        assert len(colors[0]) in VALID_COLOR_LENS
-        self.glColors = gl_array(colors, gl.GLfloat)
 
+    def _get_glcolors(self, shape):
+        colors = tuple(shape.colors)
+        assert len(colors) == len(self.glVerts) / self.dimension
+        assert len(colors[0]) == VALID_COLOR_LEN
+        return gl_array(colors, gl.GLfloat)
+
+
+    def _get_index_type(self, num_indices):
+        index_type = gl.GLubyte
+        if num_indices > 65535:
+            index_type = gl.GLuint
+        elif num_indices > 255:
+            index_type = gl.GLushort
+        return index_type
+
+
+    def _get_glindices(self, shape):
         indices = tuple(chain.from_iterable(
-            triangulate(face) for face in item.shape.faces))
+            triangulate(face) for face in shape.faces))
         assert len(indices[0]) == 3
-        self.index_type = gl.GLubyte
-        if len(indices) > 65536:
-            self.index_type = gl.GLuint
-        elif len(indices) > 256:
-            self.index_type = gl.GLushort
-        self.glIndices = gl_array(indices, self.index_type)
+        self.index_type = self._get_index_type(len(indices))
+        return gl_array(indices, self.index_type)
 
-        self.dimension = len(verts[0])
+
+    def _get_glnormals(self, shape):
+        normals = []
+        
+        return gl_array(normals, gl.GLfloat)
+
+
+    def from_shape(self, shape):
+        self.glVerts = self._get_glverts(shape)
+        self.glColors = self._get_glcolors(shape)
+        self.glIndices = self._get_glindices(shape)
+        self.glNormals = self._get_glnormals(shape)
 

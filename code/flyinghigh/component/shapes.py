@@ -10,6 +10,7 @@ class Shape(object):
 
     def __init__(self, vertices, faces, color):
         self.vertices = [Position(*v) for v in vertices]
+        self.dimension = len(self.vertices[0])
         self.faces = faces
         self.color = color
 
@@ -20,6 +21,8 @@ class CompositeShape(object):
         self.children = []
 
     def add(self, child, offset=None):
+        # too late to figure out how to do it otherwise
+        assert child.dimension == 3
         if offset is None:
             offset = Position(0, 0, 0)
         self.children.append((child, offset))

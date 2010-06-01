@@ -18,6 +18,7 @@ class Render(object):
     def init(self):
         gl.glEnableClientState(gl.GL_VERTEX_ARRAY)
         gl.glEnableClientState(gl.GL_COLOR_ARRAY)
+        gl.glEnableClientState(gl.GL_NORMAL_ARRAY)
         gl.glEnable(gl.GL_DEPTH_TEST)        
         gl.glEnable(gl.GL_POLYGON_SMOOTH)
         gl.glEnable(gl.GL_BLEND)
@@ -48,6 +49,7 @@ class Render(object):
             gl.glVertexPointer(
                 glyph.dimension, gl.GL_FLOAT, 0, glyph.glVerts)
             gl.glColorPointer(4, gl.GL_FLOAT, 0, glyph.glColors)
+            gl.glNormalPointer(gl.GL_FLOAT, 0, glyph.glNormals)
             gl.glDrawElements(
                 gl.GL_TRIANGLES,
                 len(glyph.glIndices),

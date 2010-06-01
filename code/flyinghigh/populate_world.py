@@ -14,6 +14,5 @@ def populate(world):
         shape=shape,
         glyph=Glyph(),
     )
-    item.glyph.from_shape(item)
     world.add(item)
 

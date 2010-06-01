@@ -15,22 +15,30 @@ Automatically triangulate convex faces
 
 construct composite geometry (eg. many cubes in a single glyph)
 
---CURRENT--
-
-REFACTOR
-    color is not part of a shape. Should be passed in to composite.add()
-    then we can re-use the same Cube instance within a CubeCluster
-    Must CompositeShapes be nestable?
-    color generating objects. SolidColor, Gradient?
-    use generators for compositeShape properties
-    use generators when creating glyph
-
-Add manual normals
-
 SHADERS PHASE 1
 Integrate shaders:
     std vertex
     pixel shader uses vertex colors, with per-pixel lighting using normals
+
+--CURRENT--
+
+REFACTOR
+    color should not be part of a shape. Should be passed in to composite.add()?
+    then we can re-use the same Cube instance within a CubeCluster
+    Must CompositeShapes be nestable?
+    use generators for compositeShape properties
+    use generators when creating glyph
+
+REFACTOR
+    color generators. SolidColor, Gradient.
+    try glBlendFunc(GL_ONE_MINUS_SRC_ALPHA)
+
+GEOMETRY PHASE 1
+generate normals. This implies expanding number of vertices (one copy per
+face it participates in) and ditching indices (resulting indices would be
+simply `xrange(num_verts)`.)
+
+SHADERS: multiple colored lights
 
 INNER LOOP PHASE 1
 Compile it in C.
