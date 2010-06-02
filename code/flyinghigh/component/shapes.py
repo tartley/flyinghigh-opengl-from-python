@@ -1,5 +1,6 @@
 from __future__ import division
 
+from itertools import repeat
 from math import cos, pi, sin
 from random import randint
 
@@ -14,6 +15,9 @@ class Shape(object):
         self.faces = faces
         self.color = color
 
+    @property
+    def colors(self):
+        return repeat(self.color, len(self.vertices))
 
 class CompositeShape(object):
 

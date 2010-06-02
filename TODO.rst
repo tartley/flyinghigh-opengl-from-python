@@ -22,21 +22,39 @@ Integrate shaders:
 
 --CURRENT--
 
+SHADERS
+combine fragment color and texture, see:
+    http://www.lighthouse3d.com/opengl/glsl/index.php?textureComb
+
+Automatically calculate normals
+    Faces of a shape come in two flavours. A flat shape, composed of a
+    coplanar ring of vertices describing its edge. Or curved surfaces,
+    in which vertices with fixed normals, colors, etc, are re-used by more
+    than one triangle. A single shape may be a composite of both such faces
+    (eg. a ring with a curved outer and inner surface, but flat top and
+    bottom.)
+
+    The glyph should take note of this
+    flag when generating arrays. The decision affects both whether indices
+    are generated, and the state of other arrays. Vertex positions need to be
+    duplicated, with different normals. Length of color array will change
+    similarly. Might be two different glyph classes.
+
+    Also, the Render system should take note of this. For flat faces, use
+    glDrawArrays (contiguous arrays), and for curved surfaces, use
+    glDrawElements (indexed arrays).
+
 REFACTOR
-    color should not be part of a shape. Should be passed in to composite.add()?
+    color should not be part of a shape. Should be passed to composite.add()?
     then we can re-use the same Cube instance within a CubeCluster
-    Must CompositeShapes be nestable?
+    CompositeShapes should be nestable
     use generators for compositeShape properties
     use generators when creating glyph
 
-REFACTOR
-    color generators. SolidColor, Gradient.
-    try glBlendFunc(GL_ONE_MINUS_SRC_ALPHA)
 
-GEOMETRY PHASE 1
+GEOMETRY
 generate normals. This implies expanding number of vertices (one copy per
-face it participates in) and ditching indices (resulting indices would be
-simply `xrange(num_verts)`.)
+face it participates in) and ditching indices
 
 SHADERS: multiple colored lights
 
@@ -46,16 +64,28 @@ Measure performance.
 
 PRESENTATION PHASE 1
 Write first draft essay about procedural geometry
+Find way to automate conversion of essays into slides (rst2s5?)
 Write first draft essay about shaders
 Write first draft essay about compiled inner loops
-Find way to automate conversion of essays into slides (rst2s5?)
+Section about 'composition instead of inheritance'?
+
+REFACTOR
+    color generators. SolidColor, Gradient.
+    try glBlendFunc(GL_ONE_MINUS_SRC_ALPHA)
+
+REFACTOR: opengl3
+    Convert to using vertex buffer objects, if they are available, but do
+    not rely on them. Then we should get improved performance on newer hardware
+    but fall back to client side arrays on older hardware.
+
+    Review Mike's 'canonical opengl3 application', from his old pycon talk.
 
 GEOMETRY PHASE 2
-Automatically calculate normals
 Cube cluster generated from pixels of small bitmaps. Invader! Mario! etc.
 Cube cluster with borders on the cubes: general method to add borders 2 shapes
-Automatically triangulate concave faces (needs glu triangulate code)
+Automatically triangulate *concave* faces (needs glu triangulate code)
 Add to the geometry while it is being displayed
+Generic 'modify geometry' while it is being displayed.
 
 REFACTOR
 Consider sharing cube geometry between many gameitems (check out huge startup
@@ -87,5 +117,5 @@ SHADERS PHASE 3
 Add single texture
 
 SKYBOX
-Add one
+Add a real one
 
