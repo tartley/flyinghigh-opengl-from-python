@@ -9,9 +9,9 @@ from .component.shapes import CompositeShape, Cube, CubeCross, CubeCluster, Shap
 
 def populate(world):
     shape = CompositeShape()
-    shape = CubeCluster(1.0, 80, 1600)
+    shape = CubeCluster(1.0, 80, 8000)
     shape.add(CubeCross())
-    #shape.add(Cube(80, (0.1, 0.1, 0.1, 0.4)), Vec3(0, 0, 0))
+    shape.add(Cube(80, (0.1, 0.1, 0.1, 0.4)), Vec3(0, 0, 0))
 
     item = GameItem(
         position=Vec3(0, 0, 0),

@@ -1,20 +1,13 @@
-varying vec3 normal;
-varying vec3 light_direction;
+
+uniform sampler2D texture;
 
 void main()
 {
-	// Defining The Material Colors
-	const vec4 ambient = vec4(0.1, 0.0, 0.0, 1.0);
-	const vec4 diffuse = vec4(1.0, 0.0, 0.0, 1.0);
+    vec4 texel;
+    vec3 rgb;
 
-	// Scaling The Input Vector To Length 1
-	vec3 norm_normal = normalize(normal);
-	vec3 norm_light_direction = normalize(light_direction);
-
-	// Calculating The Diffuse Term And Clamping It To [0;1]
-	float diffuse = clamp(dot(norm_normal, norm_light_direction), 0.0, 1.0);
-
-	// Calculating The Final Color
-	gl_FragColor = ambient + diffuse_color * diffuse;
+    texel = texture2D(texture, gl_TexCoord[0].st);
+    rgb = mix(gl_Color.rgb, texel.rgb, texel.a);
+    gl_FragColor = vec4(rgb, gl_Color.a);
 }
 
