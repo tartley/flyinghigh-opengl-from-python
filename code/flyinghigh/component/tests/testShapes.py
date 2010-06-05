@@ -1,7 +1,7 @@
 
 from unittest2 import TestCase, main
 
-from ..position import Position
+from ...geometry.vec3 import Vec3
 from ..shapes import CompositeShape, Shape
 
 
@@ -19,8 +19,8 @@ class testCompositeShape(TestCase):
         BLUE = (0, 0, 1)
         s2 = Shape(VERTS2, FACES2, BLUE)
 
-        OFFSET1 = Position(100, 200, 300)
-        OFFSET2 = Position(400, 500, 600)
+        OFFSET1 = Vec3(100, 200, 300)
+        OFFSET2 = Vec3(400, 500, 600)
         composite = CompositeShape()
         composite.add(s1, OFFSET1)
         composite.add(s2, OFFSET2)

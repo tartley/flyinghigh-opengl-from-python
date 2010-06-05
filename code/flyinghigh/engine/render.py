@@ -47,14 +47,14 @@ class Render(object):
 
             glyph = item.glyph
             gl.glVertexPointer(
-                glyph.dimension, gl.GL_FLOAT, 0, glyph.glVerts)
-            gl.glColorPointer(4, gl.GL_FLOAT, 0, glyph.glColors)
-            gl.glNormalPointer(gl.GL_FLOAT, 0, glyph.glNormals)
+                glyph.dimension, gl.GL_FLOAT, 0, glyph.glvertices)
+            gl.glColorPointer(4, gl.GL_FLOAT, 0, glyph.glcolors)
+            gl.glNormalPointer(gl.GL_FLOAT, 0, glyph.glnormals)
             gl.glDrawElements(
                 gl.GL_TRIANGLES,
-                len(glyph.glIndices),
+                len(glyph.glindices),
                 type_to_enum[glyph.index_type],
-                glyph.glIndices)
+                glyph.glindices)
 
             gl.glPopMatrix()
 

@@ -1,23 +1,22 @@
 from __future__ import division
 
-from itertools import repeat
 from math import cos, pi, sin
 from random import randint
 
-from .position import Position
+from ..geometry.vec3 import Vec3
 
 
 class Shape(object):
 
     def __init__(self, vertices, faces, color):
-        self.vertices = [Position(*v) for v in vertices]
+        self.vertices = [Vec3(*v) for v in vertices]
         self.dimension = len(self.vertices[0])
         self.faces = faces
         self.color = color
 
     @property
     def colors(self):
-        return repeat(self.color, len(self.vertices))
+        return [self.color for _ in xrange(len(self.vertices))]
 
 class CompositeShape(object):
 
@@ -25,17 +24,16 @@ class CompositeShape(object):
         self.children = []
 
     def add(self, child, offset=None):
-        # too late to figure out how to do it otherwise
         assert child.dimension == 3
         if offset is None:
-            offset = Position(0, 0, 0)
+            offset = Vec3(0, 0, 0)
         self.children.append((child, offset))
 
     @property
     def vertices(self):
-        return (vert + offset
+        return [vert + offset
                 for shape, offset in self.children
-                for vert in shape.vertices)
+                for vert in shape.vertices]
 
     @property
     def faces(self):
@@ -49,13 +47,12 @@ class CompositeShape(object):
                 newfaces.append(newface)
             index_offset += len(shape.vertices)
         return newfaces
-        # return chain.from_iterable(shape.faces for shape, _ in self.children)
 
     @property
     def colors(self):
-        return (shape.color
+        return [shape.color
                 for shape, _ in self.children
-                for _ in shape.vertices)
+                for _ in shape.vertices]
 
 
 def Rectangle(width, height, color):
@@ -80,15 +77,16 @@ def Circle(radius, color):
 
 
 def Cube(edge, color):
+    e2 = edge/2
     verts = [
-        (-edge/2, -edge/2, -edge/2),
-        (-edge/2, -edge/2, +edge/2),
-        (-edge/2, +edge/2, -edge/2),
-        (-edge/2, +edge/2, +edge/2),
-        (+edge/2, -edge/2, -edge/2),
-        (+edge/2, -edge/2, +edge/2),
-        (+edge/2, +edge/2, -edge/2),
-        (+edge/2, +edge/2, +edge/2),
+        (-e2, -e2, -e2),
+        (-e2, -e2, +e2),
+        (-e2, +e2, -e2),
+        (-e2, +e2, +e2),
+        (+e2, -e2, -e2),
+        (+e2, -e2, +e2),
+        (+e2, +e2, -e2),
+        (+e2, +e2, +e2),
     ]
     faces = [
         [0, 1, 3, 2], # left
@@ -118,29 +116,29 @@ def CubeCluster(edge, cluster_edge, cube_count):
             b - cluster_edge / 2,
         ]
 
-        shape.add(Cube(edge, color), Position(*pos))
+        shape.add(Cube(edge, color), Vec3(*pos))
 
-    shape.add(Cube(2, (0.55, 0.55, 0.55, 1)), Position(0, 0, 0))
-    shape.add(Cube(1, (0.6, 0.6, 0.6, 1)), Position(1, 0, 0))
-    shape.add(Cube(1, (0.6, 0.6, 0.6, 1)), Position(0, 1, 0))
-    shape.add(Cube(1, (0.6, 0.6, 0.6, 1)), Position(0, 0, 1))
-    shape.add(Cube(1, (0.6, 0.6, 0.6, 1)), Position(-1, 0, 0))
-    shape.add(Cube(1, (0.6, 0.6, 0.6, 1)), Position(0, -1, 0))
-    shape.add(Cube(1, (0.6, 0.6, 0.6, 1)), Position(0, 0, -1))
+    shape.add(Cube(2, (0.55, 0.55, 0.55, 1)), Vec3(0, 0, 0))
+    shape.add(Cube(1, (0.6, 0.6, 0.6, 1)), Vec3(1, 0, 0))
+    shape.add(Cube(1, (0.6, 0.6, 0.6, 1)), Vec3(0, 1, 0))
+    shape.add(Cube(1, (0.6, 0.6, 0.6, 1)), Vec3(0, 0, 1))
+    shape.add(Cube(1, (0.6, 0.6, 0.6, 1)), Vec3(-1, 0, 0))
+    shape.add(Cube(1, (0.6, 0.6, 0.6, 1)), Vec3(0, -1, 0))
+    shape.add(Cube(1, (0.6, 0.6, 0.6, 1)), Vec3(0, 0, -1))
 
-    shape.add(Cube(cluster_edge, (0.1, 0.1, 0.1, 0.4)), Position(0, 0, 0))
+    shape.add(Cube(cluster_edge, (0.1, 0.1, 0.1, 0.4)), Vec3(0, 0, 0))
 
     return shape
 
 
 def CubeCross(edge):
     shape = CompositeShape()
-    shape.add(Cube(2, (1, 1, 1, 0.5)), Position(0, 0, 0))
-    shape.add(Cube(1, (1, 1, 1, 0.5)), Position(1, 0, 0))
-    shape.add(Cube(1, (1, 1, 1, 0.5)), Position(0, 1, 0))
-    shape.add(Cube(1, (1, 1, 1, 0.5)), Position(0, 0, 1))
-    shape.add(Cube(1, (1, 1, 1, 0.5)), Position(-1, 0, 0))
-    shape.add(Cube(1, (1, 1, 1, 0.5)), Position(0, -1, 0))
-    shape.add(Cube(1, (1, 1, 1, 0.5)), Position(0, 0, -1))
+    shape.add(Cube(2, (1, 1, 1, 0.5)), Vec3(0, 0, 0))
+    shape.add(Cube(1, (1, 1, 1, 0.5)), Vec3(1, 0, 0))
+    shape.add(Cube(1, (1, 1, 1, 0.5)), Vec3(0, 1, 0))
+    shape.add(Cube(1, (1, 1, 1, 0.5)), Vec3(0, 0, 1))
+    shape.add(Cube(1, (1, 1, 1, 0.5)), Vec3(-1, 0, 0))
+    shape.add(Cube(1, (1, 1, 1, 0.5)), Vec3(0, -1, 0))
+    shape.add(Cube(1, (1, 1, 1, 0.5)), Vec3(0, 0, -1))
     return shape
 

@@ -1,6 +1,6 @@
 from math import cos, sin, pi
 
-from .position import Position
+from ..geometry.vec3 import Vec3
 
 
 class WobblyOrbit(object):
@@ -22,5 +22,5 @@ class WobblyOrbit(object):
         z2 = z1 * cos(elevation)
         y2 = distance * sin(elevation)
 
-        return Position(x2, y2, z2)
+        return Vec3(x2, y2, z2)
         
