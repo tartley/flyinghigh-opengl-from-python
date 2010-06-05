@@ -4,6 +4,9 @@ from math import degrees
 from OpenGL import GL as gl
 
 
+vertex_components = 3
+color_components = 4
+
 type_to_enum = {
     gl.GLubyte: gl.GL_UNSIGNED_BYTE,
     gl.GLushort: gl.GL_UNSIGNED_SHORT,
@@ -47,8 +50,8 @@ class Render(object):
 
             glyph = item.glyph
             gl.glVertexPointer(
-                glyph.dimension, gl.GL_FLOAT, 0, glyph.glvertices)
-            gl.glColorPointer(4, gl.GL_FLOAT, 0, glyph.glcolors)
+                vertex_components, gl.GL_FLOAT, 0, glyph.glvertices)
+            gl.glColorPointer(color_components, gl.GL_FLOAT, 0, glyph.glcolors)
             gl.glNormalPointer(gl.GL_FLOAT, 0, glyph.glnormals)
             gl.glDrawElements(
                 gl.GL_TRIANGLES,

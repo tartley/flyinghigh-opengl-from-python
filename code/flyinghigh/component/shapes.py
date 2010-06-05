@@ -1,5 +1,6 @@
 from __future__ import division
 
+from itertools import chain
 from math import cos, pi, sin
 from random import randint
 
@@ -10,7 +11,6 @@ class Shape(object):
 
     def __init__(self, vertices, faces, color):
         self.vertices = [Vec3(*v) for v in vertices]
-        self.dimension = len(self.vertices[0])
         self.faces = faces
         self.color = color
 
@@ -22,37 +22,45 @@ class CompositeShape(object):
 
     def __init__(self):
         self.children = []
+        self._vertices = None
+        self._colors = None
+        self._faces = None
 
     def add(self, child, offset=None):
-        assert child.dimension == 3
         if offset is None:
             offset = Vec3(0, 0, 0)
         self.children.append((child, offset))
 
     @property
     def vertices(self):
-        return [vert + offset
+        if self._vertices is None:
+            self._vertices = [
+                vert + offset
                 for shape, offset in self.children
                 for vert in shape.vertices]
+        return self._vertices
 
     @property
     def faces(self):
-        newfaces = []
-        index_offset = 0
-        for shape, _ in self.children:
-            for face in shape.faces:
-                newface = []
-                for index in face:
-                    newface.append(index + index_offset)
-                newfaces.append(newface)
-            index_offset += len(shape.vertices)
-        return newfaces
+        if self._faces is None:
+            newfaces = []
+            index_offset = 0
+            for shape, _ in self.children:
+                for face in shape.faces:
+                    newface = []
+                    for index in face:
+                        newface.append(index + index_offset)
+                    newfaces.append(newface)
+                index_offset += len(shape.vertices)
+            self._faces = newfaces
+        return self._faces
 
     @property
     def colors(self):
-        return [shape.color
-                for shape, _ in self.children
-                for _ in shape.vertices]
+        if self._colors is None:
+            self._colors = list(
+                chain.from_iterable(shape.colors for shape, _ in self.children))
+        return self._colors
 
 
 def Rectangle(width, height, color):
@@ -118,6 +126,11 @@ def CubeCluster(edge, cluster_edge, cube_count):
 
         shape.add(Cube(edge, color), Vec3(*pos))
 
+    return shape
+
+
+def CubeCross():
+    shape = CompositeShape()
     shape.add(Cube(2, (0.55, 0.55, 0.55, 1)), Vec3(0, 0, 0))
     shape.add(Cube(1, (0.6, 0.6, 0.6, 1)), Vec3(1, 0, 0))
     shape.add(Cube(1, (0.6, 0.6, 0.6, 1)), Vec3(0, 1, 0))
@@ -125,20 +138,5 @@ def CubeCluster(edge, cluster_edge, cube_count):
     shape.add(Cube(1, (0.6, 0.6, 0.6, 1)), Vec3(-1, 0, 0))
     shape.add(Cube(1, (0.6, 0.6, 0.6, 1)), Vec3(0, -1, 0))
     shape.add(Cube(1, (0.6, 0.6, 0.6, 1)), Vec3(0, 0, -1))
-
-    shape.add(Cube(cluster_edge, (0.1, 0.1, 0.1, 0.4)), Vec3(0, 0, 0))
-
-    return shape
-
-
-def CubeCross(edge):
-    shape = CompositeShape()
-    shape.add(Cube(2, (1, 1, 1, 0.5)), Vec3(0, 0, 0))
-    shape.add(Cube(1, (1, 1, 1, 0.5)), Vec3(1, 0, 0))
-    shape.add(Cube(1, (1, 1, 1, 0.5)), Vec3(0, 1, 0))
-    shape.add(Cube(1, (1, 1, 1, 0.5)), Vec3(0, 0, 1))
-    shape.add(Cube(1, (1, 1, 1, 0.5)), Vec3(-1, 0, 0))
-    shape.add(Cube(1, (1, 1, 1, 0.5)), Vec3(0, -1, 0))
-    shape.add(Cube(1, (1, 1, 1, 0.5)), Vec3(0, 0, -1))
     return shape
 
