@@ -36,7 +36,7 @@ class testGlyph(TestCase):
                 [0, 1, 2, 3],
                 [0, 1, 4, 5],
             ],
-            color = (0.1, 0.2, 0.3, 0.4),
+            color = (11, 22, 33, 44)
         )
 
     def test_get_num_glvertices(self):
@@ -95,9 +95,9 @@ class testGlyph(TestCase):
         glyph.from_shape(shape)
 
         actual = glyph.glcolors
-        self.assertTrue(isinstance(actual, gl.GLfloat * (8 * 4)))
-        self.assertEqual(type(actual), gl.GLfloat * (8 * 4))
-        expected_values = [(0.1, 0.2, 0.3, 0.4) for _ in xrange(8)]
+        self.assertTrue(isinstance(actual, gl.GLubyte * (8 * 4)))
+        self.assertEqual(type(actual), gl.GLubyte * (8 * 4))
+        expected_values = [(11, 22, 33, 44) for _ in xrange(8)]
         expected_values = chain(*expected_values)
         for a, e in zip(actual, expected_values):
             self.assertAlmostEqual(a, e, places=7)
