@@ -87,11 +87,11 @@ class Glyph(object):
 
 
     def _get_glnormals(self, shape):
-        normals = []
-        for face in shape.faces:
-            normal = _get_normal(shape.vertices, face)
-            for index in face:
-                normals.append(normal)
+        face_normals = (_get_normal(shape.vertices, face)
+                        for face in shape.faces)
+        normals = (normal
+                   for face, normal in zip(shape.faces, face_normals)
+                   for index in face)
 
         return _glarray(gl.GLfloat, chain(*normals), self.num_glvertices * 3) 
 
