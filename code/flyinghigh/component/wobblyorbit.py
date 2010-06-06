@@ -27,7 +27,7 @@ class WobblyOrbit(object):
         x1 = distance * sin(bearing)
         z1 = distance * cos(bearing)
 
-        # then elevate above the x = z = 0 plane
+        # then elevate above the y=0 plane
         elevation = sin(self.age) * cos(self.age / 3) * pi / 2
         x2 = x1 * cos(elevation)
         z2 = z1 * cos(elevation)
