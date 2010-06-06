@@ -66,11 +66,12 @@ class Glyph(object):
     dimension = 3
 
     def __init__(self):
+        self.num_glvertices = None
         self.glvertices = None
+        self.index_type = None
+        self.glindices = None
         self.glcolors = None
         self.glnormals = None
-        self.glindices = None
-        self.index_type = None
 
 
     def _get_num_glvertices(self, faces):
@@ -82,7 +83,6 @@ class Glyph(object):
         for face in shape.faces:
             for index, vertexnum in enumerate(face):
                 vertices.append(shape.vertices[vertexnum])
-
         return _glarray(gl.GLfloat, chain(*vertices), self.num_glvertices * 3) 
 
 
@@ -92,7 +92,6 @@ class Glyph(object):
         normals = (normal
                    for face, normal in zip(shape.faces, face_normals)
                    for index in face)
-
         return _glarray(gl.GLfloat, chain(*normals), self.num_glvertices * 3) 
 
 
@@ -101,7 +100,6 @@ class Glyph(object):
         for face in shape.faces:
             for index, vertexnum in enumerate(face):
                 colors.append(shape.colors[vertexnum])
-
         return _glarray(gl.GLfloat, chain(*colors), self.num_glvertices * 4) 
 
 
@@ -114,7 +112,6 @@ class Glyph(object):
                 face_indices.append(index + face_offset)
             indices.extend(chain(*_triangulate(face_indices)))
             face_offset += len(face)
-
         return _glarray(self.index_type, indices, len(indices))
 
 
@@ -123,7 +120,6 @@ class Glyph(object):
         self.glvertices = self._get_glvertices(shape)
         self.index_type = _get_index_type(self.num_glvertices)
         self.glindices = self._get_glindices(shape)
-        self.glnormals = self._get_glnormals(shape)
         self.glcolors = self._get_glcolors(shape)
-
+        self.glnormals = self._get_glnormals(shape)
 

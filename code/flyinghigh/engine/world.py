@@ -1,4 +1,7 @@
 
+from ..component.glyph import Glyph
+
+
 class World(object):
 
     clearColor = (0.3, 0.3, 0.3, 1)
@@ -9,7 +12,8 @@ class World(object):
     def add(self, item):
         self.items[item.id] = item
 
-        if hasattr(item, 'glyph'):
+        if hasattr(item, 'shape'):
+            item.glyph = Glyph()
             item.glyph.from_shape(item.shape)
 
 
