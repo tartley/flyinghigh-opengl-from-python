@@ -42,7 +42,7 @@ class Projection(object):
 
     def set_perspective(self, fovy):
         aspect = self.width / self.height
-        zNear = 1.0
+        zNear = 0.1
         zFar = 200.0
         gl.glMatrixMode(gl.GL_PROJECTION)
         gl.glLoadIdentity()
