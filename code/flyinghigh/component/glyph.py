@@ -100,7 +100,7 @@ class Glyph(object):
         for face in shape.faces:
             for index, vertexnum in enumerate(face):
                 colors.append(shape.colors[vertexnum])
-        return _glarray(gl.GLfloat, chain(*colors), self.num_glvertices * 4) 
+        return _glarray(gl.GLubyte, chain(*colors), self.num_glvertices * 4) 
 
 
     def _get_glindices(self, shape):

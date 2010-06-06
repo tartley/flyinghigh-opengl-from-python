@@ -113,7 +113,11 @@ def RgbCubeCluster(edge, cluster_edge, cube_count):
         r = randint(1, cluster_edge-1)
         g = randint(1, cluster_edge-1)
         b = randint(1, cluster_edge-1)
-        color = (r / cluster_edge, g / cluster_edge, b / cluster_edge, 1)
+        color = (
+            int(r / cluster_edge * 255),
+            int(g / cluster_edge * 255),
+            int(b / cluster_edge * 255),
+            255)
         pos = [
             r - cluster_edge / 2,
             g - cluster_edge / 2,
@@ -125,7 +129,7 @@ def RgbCubeCluster(edge, cluster_edge, cube_count):
 
 def CubeLattice(edge, cluster_edge, freq):
     shape = CompositeShape()
-    black = (0, 0, 0, 1)
+    black = (0, 0, 0, 255)
     for i in xrange(int(-cluster_edge/2), int(+cluster_edge/2+1), freq):
         for j in xrange(int(-cluster_edge/2), int(+cluster_edge/2+1), freq):
             shape.add(Cube(edge, black), Vec3(i, j, -cluster_edge/2))
@@ -139,12 +143,15 @@ def CubeLattice(edge, cluster_edge, freq):
 
 def CubeCross():
     shape = CompositeShape()
-    shape.add(Cube(2, (0.55, 0.55, 0.55, 1)), Vec3(0, 0, 0))
-    shape.add(Cube(1, (0.6, 0.6, 0.6, 1)), Vec3(1, 0, 0))
-    shape.add(Cube(1, (0.6, 0.6, 0.6, 1)), Vec3(0, 1, 0))
-    shape.add(Cube(1, (0.6, 0.6, 0.6, 1)), Vec3(0, 0, 1))
-    shape.add(Cube(1, (0.6, 0.6, 0.6, 1)), Vec3(-1, 0, 0))
-    shape.add(Cube(1, (0.6, 0.6, 0.6, 1)), Vec3(0, -1, 0))
-    shape.add(Cube(1, (0.6, 0.6, 0.6, 1)), Vec3(0, 0, -1))
+    center_color = (150, 150, 150, 255)
+    shape.add(Cube(2, center_color), Vec3(0, 0, 0))
+
+    outer_color = (170, 170, 170, 255)
+    shape.add(Cube(1, outer_color), Vec3(1, 0, 0))
+    shape.add(Cube(1, outer_color), Vec3(0, 1, 0))
+    shape.add(Cube(1, outer_color), Vec3(0, 0, 1))
+    shape.add(Cube(1, outer_color), Vec3(-1, 0, 0))
+    shape.add(Cube(1, outer_color), Vec3(0, -1, 0))
+    shape.add(Cube(1, outer_color), Vec3(0, 0, -1))
     return shape
 

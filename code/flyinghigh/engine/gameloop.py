@@ -33,7 +33,8 @@ class Gameloop(object):
         self.camera = cam.camera
         self.world.add(cam)
 
-        self.window = Window(fullscreen=True, visible=False, resizable=True)
+        self.window = Window(
+            vsync=True, fullscreen=True, visible=False, resizable=True)
         self.window.set_exclusive_mouse(True)
         self.window.on_draw = self.draw
 

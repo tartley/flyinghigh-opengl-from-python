@@ -51,7 +51,8 @@ class Render(object):
             glyph = item.glyph
             gl.glVertexPointer(
                 vertex_components, gl.GL_FLOAT, 0, glyph.glvertices)
-            gl.glColorPointer(color_components, gl.GL_FLOAT, 0, glyph.glcolors)
+            gl.glColorPointer(
+                color_components, gl.GL_UNSIGNED_BYTE, 0, glyph.glcolors)
             gl.glNormalPointer(gl.GL_FLOAT, 0, glyph.glnormals)
             gl.glDrawElements(
                 gl.GL_TRIANGLES,
