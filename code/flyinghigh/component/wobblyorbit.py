@@ -9,7 +9,7 @@ class WobblyOrbit(object):
         self.age = 0.0
         self.position = None
 
-    def __call__(self, dt):
+    def __call__(self, time, dt):
         # time moves slower when camera is near the origin
         if (
             self.position and

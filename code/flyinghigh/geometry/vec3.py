@@ -151,8 +151,8 @@ class Vec3(namedtuple('Vec3Base', 'x y z')):
         )
 
 
-Origin = Vec3(0, 0, 0)
-XAxis = Vec3(1, 0, 0)
-YAxis = Vec3(0, 1, 0)
-ZAxis = Vec3(0, 0, 1)
+Origin = Vec3(0.0, 0.0, 0.0)
+XAxis = Vec3(1.0, 0.0, 0.0)
+YAxis = Vec3(0.0, 1.0, 0.0)
+ZAxis = Vec3(0.0, 0.0, 1.0)
 

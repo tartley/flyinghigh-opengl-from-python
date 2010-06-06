@@ -2,23 +2,29 @@
 from __future__ import division
 
 from .engine.gameitem import GameItem
-from .geometry.vec3 import Vec3
+from .geometry.vec3 import Vec3, Origin, XAxis
 from .geometry.orientation import Orientation
+from .component.spinner import Spinner
 from .component.shapes import CompositeShape, Cube, CubeCross, CubeLattice, RgbCubeCluster
 
 
 def populate(world):
+    darkgrey = (20, 20, 20, 80)
     shape = CompositeShape()
     shape.add(RgbCubeCluster(1.0, 60, 11500))
     shape.add(CubeLattice(1.0, 40, 10))
-    darkgrey = (20, 20, 20, 80)
-    shape.add(Cube(40, darkgrey), Vec3(0, 0, 0))
-    shape.add(CubeCross())
+    shape.add(Cube(40, darkgrey))
     world.add( GameItem(
-        position=Vec3(0, 0, 0),
+        position=Origin,
         shape=shape,
-        orientation=Orientation((1, 1, 0)),
     ) )
+    world.add( GameItem(
+        position=Origin,
+        shape=CubeCross(),
+        orientation=Orientation(XAxis),
+        spin=Spinner(),
+    ) )
+    shape.add(CubeCross())
 
 def populate2(world):
     red = (255, 0, 0, 127)

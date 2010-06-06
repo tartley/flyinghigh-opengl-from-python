@@ -4,7 +4,7 @@ from itertools import chain
 from math import cos, pi, sin
 from random import randint
 
-from ..geometry.vec3 import Vec3
+from ..geometry.vec3 import Vec3, Origin
 
 
 class Shape(object):
@@ -28,7 +28,7 @@ class CompositeShape(object):
 
     def add(self, child, offset=None):
         if offset is None:
-            offset = Vec3(0, 0, 0)
+            offset = Origin
         self.children.append((child, offset))
 
     @property
@@ -144,7 +144,7 @@ def CubeLattice(edge, cluster_edge, freq):
 def CubeCross():
     shape = CompositeShape()
     center_color = (150, 150, 150, 255)
-    shape.add(Cube(2, center_color), Vec3(0, 0, 0))
+    shape.add(Cube(2, center_color))
 
     outer_color = (170, 170, 170, 255)
     shape.add(Cube(1, outer_color), Vec3(1, 0, 0))

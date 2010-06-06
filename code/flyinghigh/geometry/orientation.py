@@ -53,7 +53,7 @@ class Orientation(object):
         '''
         value of self.right is always derived from self.forward and self.up
         '''
-        return self.up.cross(self.forward)
+        return self.up.cross(self.forward).normalize()
 
 
     def __repr__(self):
@@ -79,7 +79,7 @@ class Orientation(object):
         '''
         rotate about the 'forward' axis
         '''
-        self.up = self.up.rotate(self.forward, angle)
+        self.up = self.up.rotate(self.forward, angle).normalize()
         self.right = self._get_right()
 
 
@@ -87,7 +87,7 @@ class Orientation(object):
         '''
         rotate about the *down* axis (so that +ve angle yaws to the right)
         '''
-        self.forward = self.forward.rotate(self.up, -angle)
+        self.forward = self.forward.rotate(self.up, -angle).normalize()
         self.right = self._get_right()
 
 
@@ -95,8 +95,8 @@ class Orientation(object):
         '''
         rotate about the 'right' axis
         '''
-        self.forward = self.forward.rotate(self.right, angle)
-        self.up = self.up.rotate(self.right, angle)
+        self.forward = self.forward.rotate(self.right, angle).normalize()
+        self.up = self.up.rotate(self.right, angle).normalize()
 
 
     @property

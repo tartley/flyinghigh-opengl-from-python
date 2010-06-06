@@ -8,6 +8,7 @@ class World(object):
 
     def __init__(self):
         self.items = {}
+        self.time = 0.0
 
     def add(self, item):
         self.items[item.id] = item
@@ -18,7 +19,10 @@ class World(object):
 
 
     def update(self, dt):
+        self.time += dt
         for item in self.items.itervalues():
             if hasattr(item, 'move'):
-                item.position = item.move(dt)
+                item.position = item.move(self.time, dt)
+            if hasattr(item, 'spin'):
+                item.orientation = item.spin(self.time, dt)
 
