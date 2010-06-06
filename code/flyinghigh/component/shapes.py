@@ -107,25 +107,33 @@ def Cube(edge, color):
     return Shape(verts, faces, color)
 
 
-def CubeCluster(edge, cluster_edge, cube_count):
+def RgbCubeCluster(edge, cluster_edge, cube_count):
     shape = CompositeShape()
     for i in xrange(cube_count):
-        r = randint(0, cluster_edge)
-        g = randint(0, cluster_edge)
-        b = randint(0, cluster_edge)
-
+        r = randint(1, cluster_edge-1)
+        g = randint(1, cluster_edge-1)
+        b = randint(1, cluster_edge-1)
         color = (r / cluster_edge, g / cluster_edge, b / cluster_edge, 1)
-        if any(x in [0, cluster_edge] for x in [r, g, b]):
-            color = (0, 0, 0, 1)
-
         pos = [
             r - cluster_edge / 2,
             g - cluster_edge / 2,
             b - cluster_edge / 2,
         ]
-
         shape.add(Cube(edge, color), Vec3(*pos))
+    return shape
 
+
+def CubeLattice(edge, cluster_edge, freq):
+    shape = CompositeShape()
+    black = (0, 0, 0, 1)
+    for i in xrange(int(-cluster_edge/2), int(+cluster_edge/2+1), freq):
+        for j in xrange(int(-cluster_edge/2), int(+cluster_edge/2+1), freq):
+            shape.add(Cube(edge, black), Vec3(i, j, -cluster_edge/2))
+            shape.add(Cube(edge, black), Vec3(i, j, +cluster_edge/2))
+            shape.add(Cube(edge, black), Vec3(i, -cluster_edge/2, j))
+            shape.add(Cube(edge, black), Vec3(i, +cluster_edge/2, j))
+            shape.add(Cube(edge, black), Vec3(-cluster_edge/2, i, j))
+            shape.add(Cube(edge, black), Vec3(+cluster_edge/2, i, j))
     return shape
 
 
