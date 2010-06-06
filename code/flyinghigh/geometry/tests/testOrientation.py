@@ -73,7 +73,16 @@ class testOrientation(TestCase):
         o.pitch(pi/2)
         self.assertEqual(o, Orientation(YAxis))
 
+    def testMatrix(self):
+        o = Orientation((1, 2, 3))
+        expected = [
+            o.right.x,   o.right.y,   o.right.z,   0,
+            o.up.x,      o.up.y,      o.up.z,      0,
+            o.forward.x, o.forward.y, o.forward.z, 0,
+            0,           0,           0,           1,
+        ]
+        self.assertEqual(o.matrix, expected)
+
 if __name__ == '__main__':
     main()
-
 

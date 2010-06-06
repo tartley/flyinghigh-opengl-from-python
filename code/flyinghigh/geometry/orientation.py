@@ -99,6 +99,12 @@ class Orientation(object):
         self.up = self.up.rotate(self.right, angle)
 
 
-    def get_matrix(self):
-        return 
+    @property
+    def matrix(self):
+        return [
+            self.right.x,   self.right.y,   self.right.z,   0,
+            self.up.x,      self.up.y,      self.up.z,      0,
+            self.forward.x, self.forward.y, self.forward.z, 0,
+            0,              0,              0,              1,
+        ]
 

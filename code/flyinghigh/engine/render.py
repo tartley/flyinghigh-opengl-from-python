@@ -46,7 +46,8 @@ class Render(object):
                 gl.glRotatef(degrees(item.angle), 0, 0, 1)
             else:
                 gl.glTranslatef(*position)
-                # TODO: 3D orientation
+                if hasattr(item, 'orientation'):
+                    gl.glMultMatrixf(item.orientation.matrix)
 
             glyph = item.glyph
             gl.glVertexPointer(
