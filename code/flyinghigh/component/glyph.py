@@ -2,6 +2,8 @@ from itertools import chain
 
 from OpenGL import GL as gl
 
+from ..geometry.face import get_normal
+
 
 def _print_array(name, array):
     print name
@@ -30,21 +32,6 @@ def _glarray(gltype, seq, length):
     '''
     arraytype = gltype * length
     return arraytype(*seq)
-
-
-def _get_normal(vertices, face):
-    '''
-    Given a face, takes the first three vertices, calculates the cross-product
-    of the two vectors defined by them. This is a vector at right angles to the
-    face - the normal. Note that the direction of the normal will be reversed
-    if the face's winding is reversed.
-    '''
-    v0 = vertices[face[0]]
-    v1 = vertices[face[1]]
-    v2 = vertices[face[2]]
-    a = v0 - v1
-    b = v2 - v1
-    return b.cross(a)
 
 
 def _triangulate(face):
@@ -87,7 +74,7 @@ class Glyph(object):
 
 
     def _get_glnormals(self, shape):
-        face_normals = (_get_normal(shape.vertices, face)
+        face_normals = (get_normal(shape.vertices, face)
                         for face in shape.faces)
         normals = (normal
                    for face, normal in zip(shape.faces, face_normals)
