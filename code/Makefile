@@ -9,28 +9,36 @@ PACKAGE := flyinghigh
 VERSION := `python -c "from ${PACKAGE}.version import version; print version"`
 RUN = run.py
 
+
 clean:
 	rm -rf build dist tags pip-log.txt
 	-find ${PACKAGE} -name '*.py[oc]' -o -name '*.orig' -exec rm {} \;
 .PHONY: clean
 
+
 tags:
 	ctags -R ${PACKAGE}
 .PHONY: tags
 
+
 stats:
-	find ${PACKAGE} -name '*.py' | grep -v '/tests/' | xargs wc -l | sort -g
-	find ${PACKAGE} -name '*.py' | grep '/tests/' | xargs wc -l | sort -g
+	@echo -n 'product: '
+	@find ${PACKAGE} -name '*.py' | grep -v "/tests/" | xargs cat | grep -cve "^\W*$$"
+	@echo -n 'tests: '
+	@find ${PACKAGE} -name '*.py' | grep "/tests/" | xargs cat | grep -cve "^\W*$$"
 .PHONY: stats
+
 
 profile:
 	python -O -m cProfile -o profile.out ${RUN}
 	runsnake profile.out
 .PHONY: profile
 
+
 alltests:
 	nosetests ${PACKAGE}
 .PHONY: alltests
+
 
 py2exe:
 	rm -rf dist/${PACKAGE}
