@@ -4,7 +4,7 @@ from itertools import chain
 from math import cos, pi, sin
 from random import randint
 
-from ..geometry.vec3 import Vec3, Origin
+from ..geometry.vec3 import Vec3, Origin, XAxis, YAxis, ZAxis
 
 
 class Shape(object):
@@ -147,11 +147,11 @@ def CubeCross():
     shape.add(Cube(2, center_color))
 
     outer_color = (170, 170, 170, 255)
-    shape.add(Cube(1, outer_color), Vec3(1, 0, 0))
-    shape.add(Cube(1, outer_color), Vec3(0, 1, 0))
-    shape.add(Cube(1, outer_color), Vec3(0, 0, 1))
-    shape.add(Cube(1, outer_color), Vec3(-1, 0, 0))
-    shape.add(Cube(1, outer_color), Vec3(0, -1, 0))
-    shape.add(Cube(1, outer_color), Vec3(0, 0, -1))
+    shape.add(Cube(1, outer_color), XAxis)
+    shape.add(Cube(1, outer_color), YAxis)
+    shape.add(Cube(1, outer_color), ZAxis)
+    shape.add(Cube(1, outer_color), -XAxis)
+    shape.add(Cube(1, outer_color), -YAxis)
+    shape.add(Cube(1, outer_color), -ZAxis)
     return shape
 

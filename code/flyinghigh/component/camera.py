@@ -4,7 +4,7 @@ from math import sin, cos
 
 from OpenGL import GL as gl, GLU as glu
 
-from ..geometry.vec3 import Vec3
+from ..geometry.vec3 import Origin
 
 
 class CameraBase(object):
@@ -21,7 +21,7 @@ class Camera(CameraBase):
 
     def __init__(self):
         super(Camera, self).__init__()
-        self.lookAt = Vec3(0, 0, 0)
+        self.lookAt = Origin
 
     def look_at(self):
         position = self.item.position

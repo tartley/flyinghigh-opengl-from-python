@@ -2,8 +2,8 @@
 
 class SlowMo(object):
     '''
-    Defines a region of space, if the camera is within it, then time passes
-    more slowly
+    Defines a region of space, if the position of the given item is within it,
+    then time passes more slowly
     '''
     def __init__(self, edge, rate):
         self.edge = edge

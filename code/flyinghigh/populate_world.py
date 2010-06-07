@@ -15,14 +15,14 @@ def populate(world):
     world.add( GameItem(
         position=Origin,
         shape=CubeCross(),
-        spin=Spinner(speed=1),
+        spin=Spinner(speed=3),
     ) )
     world.add( GameItem(
         position=Origin,
         shape=RgbCubeCluster(1.0, 60, 11500),
-        spin=Spinner(speed=0.05),
+        spin=Spinner(speed=1),
     ) )
-    edge = 32
+    edge = 48
     darkgrey = (20, 20, 20, 80)
     shape = CompositeShape()
     shape.add(CubeLattice(1.0, edge, 8))
@@ -36,7 +36,7 @@ def populate(world):
 def populate2(world):
     red = (255, 0, 0, 127)
     world.add( GameItem(
-        position=Vec3(0, 0, 0),
+        position=Origin,
         shape=Cube(2, red),
         orientation=Orientation((1, 1, 0)),
     ) )
