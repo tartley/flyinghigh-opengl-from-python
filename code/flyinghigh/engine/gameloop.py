@@ -6,7 +6,7 @@ from pyglet.window import Window
 from .gameitem import GameItem
 from .projection import Projection
 from .render import Render
-from .shader import FragmentShader, ShaderError, ShaderProgram, VertexShader
+from .shader import FragmentShader, ShaderProgram, VertexShader
 from .world import World
 from ..component.camera import Camera
 from ..component.wobblyorbit import WobblyOrbit
@@ -18,7 +18,6 @@ class Gameloop(object):
         self.camera = None
         self.projection = None
         self.render = None
-        self.time = 0.0
         self.window = None
         self.world = None
 
@@ -56,7 +55,6 @@ class Gameloop(object):
 
     def update(self, dt):
         dt = min(dt, 1/30.0)
-        self.time += dt
         self.world.update(dt)
         self.window.invalid = True
 

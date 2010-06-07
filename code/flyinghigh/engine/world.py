@@ -1,4 +1,6 @@
 
+import operator
+
 from ..component.glyph import Glyph
 
 
@@ -17,8 +19,21 @@ class World(object):
             item.glyph = Glyph()
             item.glyph.from_shape(item.shape)
 
+        if hasattr(item, 'camera'):
+            self.camera = item
+
+    def product(self, *args):
+        return reduce(operator.mul, list(*args), 1)
+
+    def _get_rate(self):
+        rate = self.product(
+            item.slowmo(self.camera.position)
+            for item in self.items.itervalues()
+            if hasattr(item, 'slowmo'))
+        return rate
 
     def update(self, dt):
+        dt *= self._get_rate()
         self.time += dt
         for item in self.items.itervalues():
             if hasattr(item, 'move'):

@@ -2,29 +2,36 @@
 from __future__ import division
 
 from .engine.gameitem import GameItem
-from .geometry.vec3 import Vec3, Origin, XAxis
+from .geometry.vec3 import Vec3, Origin
 from .geometry.orientation import Orientation
+from .component.slowmo import SlowMo
 from .component.spinner import Spinner
-from .component.shapes import CompositeShape, Cube, CubeCross, CubeLattice, RgbCubeCluster
+from .component.shapes import (
+    CompositeShape, Cube, CubeCross, CubeLattice, RgbCubeCluster,
+)
 
 
 def populate(world):
-    darkgrey = (20, 20, 20, 80)
-    shape = CompositeShape()
-    shape.add(RgbCubeCluster(1.0, 60, 11500))
-    shape.add(CubeLattice(1.0, 40, 10))
-    shape.add(Cube(40, darkgrey))
-    world.add( GameItem(
-        position=Origin,
-        shape=shape,
-    ) )
     world.add( GameItem(
         position=Origin,
         shape=CubeCross(),
-        orientation=Orientation(XAxis),
-        spin=Spinner(),
+        spin=Spinner(speed=1),
     ) )
-    shape.add(CubeCross())
+    world.add( GameItem(
+        position=Origin,
+        shape=RgbCubeCluster(1.0, 60, 11500),
+        spin=Spinner(speed=0.05),
+    ) )
+    edge = 32
+    darkgrey = (20, 20, 20, 80)
+    shape = CompositeShape()
+    shape.add(CubeLattice(1.0, edge, 8))
+    shape.add(Cube(edge, darkgrey))
+    world.add( GameItem(
+        position=Origin,
+        shape=shape,
+        slowmo=SlowMo(edge, 0.2),
+    ) )
 
 def populate2(world):
     red = (255, 0, 0, 127)
