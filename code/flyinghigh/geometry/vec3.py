@@ -1,4 +1,5 @@
 
+from __future__ import division
 from collections import namedtuple
 from math import acos, cos, sin, sqrt
 
@@ -22,6 +23,9 @@ class Vec3(namedtuple('Vec3Base', 'x y z')):
 
     # __hash__ is inherited from tuple, and depends on all of x, y, z
 
+    def __neg__(self):
+        return Vec3(-self.x, -self.y, -self.z)
+
     def __add__(self, other):
         ox, oy, oz = other
         return Vec3(
@@ -29,9 +33,6 @@ class Vec3(namedtuple('Vec3Base', 'x y z')):
             self.y + oy,
             self.z + oz,
         )
-
-    def __neg__(self):
-        return Vec3(-self.x, -self.y, -self.z)
 
     def __radd__(self, other):
         return self.__add__(other)
@@ -45,6 +46,15 @@ class Vec3(namedtuple('Vec3Base', 'x y z')):
 
     def __rsub__(self, other):
         return Vec3(*other).__sub__(self)
+
+    def __mul__(self, scalar):
+        return Vec3(self.x * scalar, self.y * scalar, self.z * scalar)
+
+    def __rmul__(self, scalar):
+        return self.__mul__(scalar)
+
+    def __div__(self, scalar):
+        return Vec3(self.x / scalar, self.y / scalar, self.z / scalar)
 
     @property
     def length(self):

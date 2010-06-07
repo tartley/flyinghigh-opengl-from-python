@@ -2,7 +2,7 @@
 from math import sqrt, pi
 from unittest2 import TestCase, main
 
-from ..vec3 import Vec3, EPSILON
+from ..vec3 import EPSILON, Origin, Vec3
 
 
 class testVec3(TestCase):
@@ -79,11 +79,25 @@ class testVec3(TestCase):
         self.assertEqual(Vec3(1, 2, 3) + Vec3(10, 20, 30), (11, 22, 33))
         self.assertEqual(Vec3(1, 2, 3) +     (10, 20, 30), (11, 22, 33))
         self.assertEqual(    (1, 2, 3) + Vec3(10, 20, 30), (11, 22, 33))
+        self.assertRaises(TypeError, lambda: Vec3(1, 2, 3) + 4)
+        self.assertRaises(TypeError, lambda: 4 + Vec3(1, 2, 3))
 
     def testSub(self):
         self.assertEquals(Vec3(11, 22, 33) - Vec3(10, 20, 30), (1, 2, 3))
         self.assertEquals(Vec3(11, 22, 33) -     (10, 20, 30), (1, 2, 3))
         self.assertEquals(    (11, 22, 33) - Vec3(10, 20, 30), (1, 2, 3))
+        self.assertRaises(TypeError, lambda: Vec3(1, 2, 3) - 4)
+        self.assertRaises(TypeError, lambda: 4 - Vec3(1, 2, 3))
+
+    def testMul(self):
+        self.assertEquals(Vec3(1, 2, 3) * 10, Vec3(10, 20, 30))
+        self.assertEquals(10 * Vec3(1, 2, 3), Vec3(10, 20, 30))
+
+    def testDiv(self):
+        self.assertEquals(Vec3(10, 20, 30) / 10, Vec3(1, 2, 3))
+        self.assertEquals(Vec3(2, 0, 0) / 3, Vec3(0.6666666666666667, 0, 0))
+        self.assertRaises(ZeroDivisionError, lambda: Vec3(1, 2, 3) / 0)
+        self.assertRaises(TypeError, lambda: 3 / Vec3(1, 2, 3))
 
     def testCrossProduct(self):
         a = Vec3(1, 0, 0)
