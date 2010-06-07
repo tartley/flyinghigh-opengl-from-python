@@ -2,7 +2,7 @@
 from unittest2 import TestCase, main
 
 from ...geometry.vec3 import Vec3
-from ..shapes import CompositeShape, Shape
+from ..shapes import CompositeShape, Geometry, Shape
 
 
 

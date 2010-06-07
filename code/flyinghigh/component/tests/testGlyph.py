@@ -24,14 +24,14 @@ class testGlyph(TestCase):
         # two orthogonal squares share one common edge
         # create shape using generators, to make sure that works
         return Shape(
-            vertices = (v for v in [
+            vertices = [
                 (0, 0, 0), #v0
                 (1, 0, 0), #v1
                 (1, 1, 0), #v2
                 (0, 1, 0), #v3
                 (1, 0, 1), #v4
                 (0, 0, 1), #v5
-            ]),
+            ],
             faces = [
                 [0, 1, 2, 3],
                 [0, 1, 4, 5],

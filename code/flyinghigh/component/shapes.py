@@ -23,9 +23,16 @@ class Geometry(object):
 class Shape(object):
 
     def __init__(self, vertices, faces, color):
-        self.vertices = [Vec3(*v) for v in vertices]
-        self.faces = faces
+        self.geometry = Geometry(vertices, faces)
         self.color = color
+
+    @property
+    def vertices(self):
+        return self.geometry.vertices
+
+    @property
+    def faces(self):
+        return self.geometry.faces
 
     @property
     def colors(self):

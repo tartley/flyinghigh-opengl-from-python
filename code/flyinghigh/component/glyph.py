@@ -5,24 +5,6 @@ from OpenGL import GL as gl
 from ..geometry.face import get_normal
 
 
-def _print_array(name, array):
-    print name
-    print '\n'.join(
-        '%s %s' % (i, element)
-        for i, element in enumerate(array))
-
-
-def _get_index_type(num_indices):
-    '''
-    return the numeric GL type needed to store the given number of values
-    '''
-    if num_indices < 256:
-        index_type = gl.GLubyte
-    elif num_indices < 65536:
-        index_type = gl.GLushort
-    else:
-        index_type = gl.GLuint
-    return index_type
 
 
 def _glarray(gltype, seq, length):
@@ -61,7 +43,7 @@ class Glyph(object):
         self.glnormals = None
 
 
-    def _get_num_glvertices(self, faces):
+    def _get_num_glvertices(_, faces):
         return len(list(chain(*faces)))
 
 
@@ -73,13 +55,29 @@ class Glyph(object):
         return _glarray(gl.GLfloat, chain(*vertices), self.num_glvertices * 3) 
 
 
-    def _get_glnormals(self, shape):
-        face_normals = (get_normal(shape.vertices, face)
-                        for face in shape.faces)
-        normals = (normal
-                   for face, normal in zip(shape.faces, face_normals)
-                   for index in face)
-        return _glarray(gl.GLfloat, chain(*normals), self.num_glvertices * 3) 
+    def _get_index_type(_, num_indices):
+        '''
+        return the numeric GL type needed to store the given number of values
+        '''
+        if num_indices < 256:
+            index_type = gl.GLubyte
+        elif num_indices < 65536:
+            index_type = gl.GLushort
+        else:
+            index_type = gl.GLuint
+        return index_type
+
+
+    def _get_glindices(self, faces):
+        indices = []
+        face_offset = 0
+        for face in faces:
+            face_indices = []
+            for index, vertexnum in enumerate(face):
+                face_indices.append(index + face_offset)
+            indices.extend(chain(*_triangulate(face_indices)))
+            face_offset += len(face)
+        return _glarray(self.index_type, indices, len(indices))
 
 
     def _get_glcolors(self, shape):
@@ -90,23 +88,20 @@ class Glyph(object):
         return _glarray(gl.GLubyte, chain(*colors), self.num_glvertices * 4) 
 
 
-    def _get_glindices(self, shape):
-        indices = []
-        face_offset = 0
-        for face in shape.faces:
-            face_indices = []
-            for index, vertexnum in enumerate(face):
-                face_indices.append(index + face_offset)
-            indices.extend(chain(*_triangulate(face_indices)))
-            face_offset += len(face)
-        return _glarray(self.index_type, indices, len(indices))
+    def _get_glnormals(self, shape):
+        face_normals = (get_normal(shape.vertices, face)
+                        for face in shape.faces)
+        normals = (normal
+                   for face, normal in zip(shape.faces, face_normals)
+                   for index in face)
+        return _glarray(gl.GLfloat, chain(*normals), self.num_glvertices * 3) 
 
 
     def from_shape(self, shape):
         self.num_glvertices = self._get_num_glvertices(shape.faces)
         self.glvertices = self._get_glvertices(shape)
-        self.index_type = _get_index_type(self.num_glvertices)
-        self.glindices = self._get_glindices(shape)
+        self.index_type = self._get_index_type(self.num_glvertices)
+        self.glindices = self._get_glindices(shape.faces)
         self.glcolors = self._get_glcolors(shape)
         self.glnormals = self._get_glnormals(shape)
 
