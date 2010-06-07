@@ -12,7 +12,7 @@ RUN = run.py
 
 clean:
 	rm -rf build dist tags pip-log.txt
-	-find ${PACKAGE} -name '*.py[oc]' -o -name '*.orig' -exec rm {} \;
+	-find ${PACKAGE} \( -name "*.py[oc]" -o -name "*.orig" \) -exec rm {} \;
 .PHONY: clean
 
 
