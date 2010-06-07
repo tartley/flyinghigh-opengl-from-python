@@ -9,7 +9,6 @@ from .render import Render
 from .shader import FragmentShader, ShaderProgram, VertexShader
 from .world import World
 from ..component.camera import Camera
-from ..component.wobblyorbit import WobblyOrbit
 
 
 class Gameloop(object):
@@ -25,12 +24,8 @@ class Gameloop(object):
     def prepare(self):
         self.world = World()
 
-        cam = GameItem(
-            camera=Camera(),
-            move=WobblyOrbit(),
-        )
-        self.camera = cam.camera
-        self.world.add(cam)
+        self.camera = Camera()
+        self.world.add( GameItem( camera=self.camera) )
 
         self.window = Window(
             vsync=True, fullscreen=True, visible=False, resizable=True)
@@ -48,9 +43,6 @@ class Gameloop(object):
         fs = FragmentShader('flyinghigh\shaders\lighting.frag')
         shader = ShaderProgram(vs, fs)
         shader.use()
-
-        self.world.update(0.0)
-        self.window.set_visible()
 
 
     def update(self, dt):

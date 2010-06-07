@@ -16,6 +16,8 @@ def run_game():
         gameloop = Gameloop()
         gameloop.prepare()
         populate(gameloop.world)
+        gameloop.world.update(0)
+        gameloop.window.set_visible()
         pyglet.app.run()
     finally:
         gameloop.stop()
