@@ -7,7 +7,7 @@ from .geometry.orientation import Orientation
 from .component.slowmo import SlowMo
 from .component.spinner import Spinner
 from .component.shapes import (
-    CompositeShape, Cube, CubeCross, CubeLattice, RgbCubeCluster,
+    CompositeShape, Cube, CubeCross, CubeLattice, RgbCubeCluster, Tetrahedron,
 )
 
 
@@ -17,11 +17,19 @@ def populate(world):
         shape=CubeCross(),
         spin=Spinner(speed=3),
     ) )
+
     world.add( GameItem(
         position=Origin,
         shape=RgbCubeCluster(1.0, 60, 11500),
         spin=Spinner(speed=1),
     ) )
+
+    orange = (255, 255, 0, 255)
+    world.add( GameItem(
+        position=Origin,
+        shape=Tetrahedron(80, orange),
+    ) )
+
     edge = 48
     darkgrey = (20, 20, 20, 80)
     shape = CompositeShape()

@@ -1,7 +1,7 @@
 from __future__ import division
 
 from itertools import chain
-from math import cos, pi, sin
+from math import cos, pi, sin, sqrt
 from random import randint
 
 from ..geometry.vec3 import Vec3, Origin, XAxis, YAxis, ZAxis
@@ -154,4 +154,19 @@ def CubeCross():
     shape.add(Cube(1, outer_color), -YAxis)
     shape.add(Cube(1, outer_color), -ZAxis)
     return shape
+
+
+def Tetrahedron(edge, color):
+    size = edge / sqrt(2)/2
+    return Shape(
+        vertices=[
+            (+size, +size, +size),
+            (-size, -size, +size),
+            (-size, +size, -size),
+            (+size, -size, -size), 
+        ],
+        faces=[ [0, 2, 1], [1, 3, 0], [2, 3, 1], [0, 3, 2] ],
+        color=color,
+    )
+
 
