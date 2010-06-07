@@ -7,6 +7,19 @@ from random import randint
 from ..geometry.vec3 import Vec3, Origin, XAxis, YAxis, ZAxis
 
 
+class Geometry(object):
+    '''
+    Defines a 3d object as a list of vertices, and a list of faces.
+    Each face is a list of indices into the vertex array, forming a
+    coplanar convex ring defining the face's boundary.
+    '''
+    def __init__(self, vertices, faces):
+        if not isinstance(vertices[0], Vec3):
+            vertices = [Vec3(*v) for v in vertices]
+        self.vertices = vertices
+        self.faces = faces
+
+
 class Shape(object):
 
     def __init__(self, vertices, faces, color):
@@ -17,6 +30,7 @@ class Shape(object):
     @property
     def colors(self):
         return [self.color for _ in xrange(len(self.vertices))]
+
 
 class CompositeShape(object):
 

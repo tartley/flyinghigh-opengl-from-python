@@ -9,6 +9,7 @@ from .render import Render
 from .shader import FragmentShader, ShaderProgram, VertexShader
 from .world import World
 from ..component.camera import Camera
+from ..geometry.vec3 import Origin
 
 
 class Gameloop(object):
@@ -25,7 +26,10 @@ class Gameloop(object):
         self.world = World()
 
         self.camera = Camera()
-        self.world.add( GameItem( camera=self.camera) )
+        self.world.add( GameItem(
+            position=Origin,
+            camera=self.camera,
+        ) )
 
         self.window = Window(
             vsync=True, fullscreen=True, visible=False, resizable=True)
