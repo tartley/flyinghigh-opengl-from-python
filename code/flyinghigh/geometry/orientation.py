@@ -1,9 +1,11 @@
 
 from math import pi, degrees
 
-from .vec3 import Vec3, YAxis, ZAxis
+from .vec3 import NegYAxis, NegZAxis, Vec3, YAxis, ZAxis
+
 
 EPSILON = 1e-15
+
 
 class Orientation(object):
     '''
@@ -34,10 +36,9 @@ class Orientation(object):
         returns a sensible default up vector
         '''
         # special case for forward is y-axis or negative y-axis
-        angle = self.forward.angle(YAxis)
-        if angle < EPSILON:
-            return -ZAxis
-        elif angle > pi - EPSILON:
+        if self.forward == YAxis:
+            return NegZAxis
+        elif self.forward == NegYAxis:
             return ZAxis
 
         # project 'forward' onto y=0 plane

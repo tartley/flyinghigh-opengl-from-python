@@ -155,4 +155,7 @@ Origin = Vec3(0.0, 0.0, 0.0)
 XAxis = Vec3(1.0, 0.0, 0.0)
 YAxis = Vec3(0.0, 1.0, 0.0)
 ZAxis = Vec3(0.0, 0.0, 1.0)
+NegXAxis = Vec3(-1.0, 0.0, 0.0)
+NegYAxis = Vec3(0.0, -1.0, 0.0)
+NegZAxis = Vec3(0.0, 0.0, -1.0)
 
