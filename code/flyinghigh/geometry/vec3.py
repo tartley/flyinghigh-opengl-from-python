@@ -16,10 +16,13 @@ class Vec3(namedtuple('Vec3Base', 'x y z')):
 
     def __eq__(self, other):
         return (
+            isinstance(other, tuple) and
             abs(self[0] - other[0]) < EPSILON and
             abs(self[1] - other[1]) < EPSILON and
             abs(self[2] - other[2]) < EPSILON
         )
+
+    # __neq__ as 'not __eq__' seems to be inherited from tuple
 
     # __hash__ is inherited from tuple, and depends on all of x, y, z
 
@@ -159,7 +162,6 @@ class Vec3(namedtuple('Vec3Base', 'x y z')):
             d21 * self.x + d22 * self.y + d23 * self.z,
             d31 * self.x + d32 * self.y + d33 * self.z,
         )
-
 
 Origin = Vec3(0.0, 0.0, 0.0)
 XAxis = Vec3(1.0, 0.0, 0.0)

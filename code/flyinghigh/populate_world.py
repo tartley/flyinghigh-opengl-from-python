@@ -3,42 +3,78 @@ from __future__ import division
 
 from .engine.gameitem import GameItem
 from .geometry.vec3 import Vec3, Origin
-from .geometry.serpinski import Serpinski
+from .geometry.orientation import Orientation
 from .component.slowmo import SlowMo
 from .component.spinner import Spinner
 from .component.shapes import (
-    CompositeShape, Cube, CubeCross, CubeLattice, RgbCubeCluster, Tetrahedron,
+    MultiShape, Cube, CubeCross, CubeLattice, RgbAxes, RgbCubeCluster, Shape,
+    Tetrahedron,
 )
 from .component.wobblyorbit import WobblyOrbit
 
 
 def populate(world):
-    world.camera.move = WobblyOrbit()
+    world.camera.move = WobblyOrbit(80, 75)
+
+    red = (255, 0, 0, 255)
+    orange = (255, 127, 0, 255)
+    yellow = (255, 255, 0, 255)
+    green = (0, 255, 0, 255)
+    blue = (0, 0, 255, 255)
+
+    world.add( GameItem(
+        shape=RgbAxes(),
+    ) )
+
+    shape=MultiShape(
+        Shape(
+            geometry=Cube(2),
+            color=orange,
+            position=(0, 2, 2),
+            orientation=(0.2, 0, -1),
+        ),
+        Shape(
+            geometry=Cube(2),
+            color=red,
+            position=(1, 1, -1),
+            orientation=(1, 1, 0),
+        )
+    )
+    shape.add( Shape(
+        geometry=Cube(1),
+        color=yellow,
+        position=(-1, -1, -1),
+    ) )
+    world.add(
+        GameItem(
+            shape=shape,
+            spin=Spinner(speed=1),
+        )
+    )
 
     world.add( GameItem(
         position=Vec3(4, 0, 0),
         shape=CubeCross(),
+        orientation=Orientation((1, 2, 3)),
         spin=Spinner(speed=3),
     ) )
 
     world.add( GameItem(
         position=Origin,
-        shape=RgbCubeCluster(1.0, 60, 1150),
+        shape=RgbCubeCluster(1.0, 60, 11500),
     ) )
 
-    # orange = (255, 127, 0, 255)
-    # shape = Serpinski(Tetrahedron(80, orange))
-    # world.add( GameItem(
-        # position=Origin,
-        # shape=shape,
-        # spin=Spinner(speed=2),
-    # ) )
+    world.add( GameItem(
+        position=(0, 0, 3),
+        shape=Shape(Tetrahedron(1), orange),
+        spin=Spinner(speed=2),
+    ) )
 
     edge = 48
     darkgrey = (20, 20, 20, 80)
-    shape = CompositeShape()
+    shape = MultiShape()
     shape.add(CubeLattice(1.0, edge, 8))
-    shape.add(Cube(edge, darkgrey))
+    shape.add(Shape(Cube(edge), color=darkgrey))
     world.add( GameItem(
         position=Origin,
         shape=shape,

@@ -2,25 +2,25 @@
 from math import pi
 from unittest2 import TestCase, main
 
-from ..vec3 import Vec3, XAxis, YAxis, ZAxis
+from ..vec3 import NegXAxis, NegYAxis, NegZAxis, Vec3, XAxis, YAxis, ZAxis
 from ..orientation import Orientation
 
 
 class testOrientation(TestCase):
 
-    def testConstructionRightIsGenerated(self):
-        o = Orientation(ZAxis)
-        self.assertEqual(o.forward, (0, 0, 1))
-        self.assertEqual(o.up, (0, 1, 0))
-        self.assertEqual(o.right, (1, 0, 0))
+    def testConstructionDefaults(self):
+        o = Orientation()
+        self.assertEqual(o.forward, NegZAxis)
+        self.assertEqual(o.up, YAxis)
+        self.assertEqual(o.right, XAxis)
 
     def testConstructionConvertsBareTuples(self):
-        o = Orientation((1, 0, 0), (0, 0, 1))
-        self.assertEquals(o.forward, (1, 0, 0))
+        o = Orientation(XAxis, ZAxis)
+        self.assertEquals(o.forward, XAxis)
         self.assertTrue(isinstance(o.forward, Vec3))
-        self.assertEquals(o.up, (0, 0, 1))
+        self.assertEquals(o.up, ZAxis)
         self.assertTrue(isinstance(o.up, Vec3))
-        self.assertEquals(o.right, (0, 1, 0))
+        self.assertEquals(o.right, NegYAxis)
         self.assertTrue(isinstance(o.right, Vec3))
 
     def testConstructionNormalises(self):
@@ -34,9 +34,9 @@ class testOrientation(TestCase):
             lambda: Orientation((1, 2, 3), (3, -2, 1)))
 
     def testConstructionProvidesDefaultUp(self):
-        self.assertEqual(Orientation((1, 0, 0)).up, (0, 1, 0))
-        self.assertEqual(Orientation((0, 2, 0)).up, (0, 0, -1))
-        self.assertEqual(Orientation((0, -2, 0)).up, (0, 0, 1))
+        self.assertEqual(Orientation(XAxis).up, YAxis)
+        self.assertEqual(Orientation(YAxis).up, ZAxis)
+        self.assertEqual(Orientation(NegYAxis).up, NegZAxis)
 
     def testStr(self):
         self.assertEqual(str(Orientation(XAxis, up=YAxis)),
@@ -47,12 +47,14 @@ class testOrientation(TestCase):
         self.assertTrue(a == Orientation((0, 2, 3)))
         self.assertFalse(a == Orientation((11, 2, 3)))
         self.assertFalse(a == Orientation((0, 2, 3), up=(0, -3, 2)))
+        self.assertFalse(a == 123)
 
     def testNotEqual(self):
         a = Orientation((0, 2, 3))
         self.assertFalse(a != Orientation((0, 2, 3)))
         self.assertTrue(a != Orientation((11, 2, 3)))
         self.assertTrue(a != Orientation((0, 2, 3), up=(0, -3, 2)))
+        self.assertTrue(a != 123)
 
     def testHash(self):
         a = Orientation((0, 2, 3))
@@ -61,27 +63,28 @@ class testOrientation(TestCase):
     def testRoll(self):
         o = Orientation(ZAxis)
         o.roll(pi/2)
-        self.assertEqual(o, Orientation(ZAxis, up=XAxis))
+        self.assertEqual(o, Orientation(ZAxis, up=NegXAxis))
 
     def testYaw(self):
         o = Orientation(ZAxis)
         o.yaw(pi/2)
-        self.assertEqual(o, Orientation(XAxis))
+        self.assertEqual(o, Orientation(NegXAxis))
 
     def testPitch(self):
         o = Orientation(ZAxis)
         o.pitch(pi/2)
-        self.assertEqual(o, Orientation(YAxis))
+        self.assertEqual(o, Orientation(YAxis, up=NegZAxis))
 
     def testMatrix(self):
         o = Orientation((1, 2, 3))
         expected = [
-            o.right.x,   o.right.y,   o.right.z,   0,
-            o.up.x,      o.up.y,      o.up.z,      0,
-            o.forward.x, o.forward.y, o.forward.z, 0,
-            0,           0,           0,           1,
+            o.right.x,    o.right.y,    o.right.z,   0,
+            o.up.x,       o.up.y,       o.up.z,      0,
+           -o.forward.x, -o.forward.y, -o.forward.z, 0,
+            0,            0,            0,           1,
         ]
-        self.assertEqual(o.matrix, expected)
+        self.assertEqual(o.get_matrix(), expected)
+
 
 if __name__ == '__main__':
     main()

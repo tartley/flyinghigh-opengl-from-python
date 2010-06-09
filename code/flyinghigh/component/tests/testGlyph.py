@@ -6,7 +6,7 @@ from unittest2 import TestCase, main
 from OpenGL import GL as gl
 
 from ..glyph import Glyph, _triangulate
-from ..shapes import Shape
+from ..shapes import Geometry, Shape
 
 
 class testGlyph(TestCase):
@@ -24,18 +24,20 @@ class testGlyph(TestCase):
         # two orthogonal squares share one common edge
         # create shape using generators, to make sure that works
         return Shape(
-            vertices = [
-                (0, 0, 0), #v0
-                (1, 0, 0), #v1
-                (1, 1, 0), #v2
-                (0, 1, 0), #v3
-                (1, 0, 1), #v4
-                (0, 0, 1), #v5
-            ],
-            faces = [
-                [0, 1, 2, 3],
-                [0, 1, 4, 5],
-            ],
+            Geometry(
+                vertices = [
+                    (0, 0, 0), #v0
+                    (1, 0, 0), #v1
+                    (1, 1, 0), #v2
+                    (0, 1, 0), #v3
+                    (1, 0, 1), #v4
+                    (0, 0, 1), #v5
+                ],
+                faces = [
+                    [0, 1, 2, 3],
+                    [0, 1, 4, 5],
+                ],
+            ),
             color = (11, 22, 33, 44)
         )
 
@@ -55,6 +57,10 @@ class testGlyph(TestCase):
         self.assertEqual(type(actual), gl.GLubyte * 12)
         self.assertEqual(list(actual), expected_values)
 
+    def assert_lists_almost_equal(self, l1, l2, places=15):
+        for a, e in zip(l1, l2):
+            self.assertAlmostEqual(a, e, places=places)
+
     def test_get_glvertices(self):
         shape = self.get_shape()
         glyph = Glyph()
@@ -73,7 +79,8 @@ class testGlyph(TestCase):
             (1, 0, 1), #v4 6
             (0, 0, 1), #v5 7
         ]
-        self.assertEqual(list(actual), list(chain(*expected_values)))
+        self.assert_lists_almost_equal(
+            list(actual), list(chain(*expected_values)))
 
     def test_get_glnormals(self):
         shape = self.get_shape()
@@ -86,7 +93,8 @@ class testGlyph(TestCase):
         n1 = (0, -1, 0)
         expected_values = [n0, n0, n0, n0, n1, n1, n1, n1]
         self.assertEqual(type(actual), gl.GLfloat * (8 * 3))
-        self.assertEqual(list(actual), list(chain(*expected_values)))
+        self.assert_lists_almost_equal(
+            list(actual), list(chain(*expected_values)))
 
     def test_get_glcolors(self):
         shape = self.get_shape()
@@ -99,8 +107,7 @@ class testGlyph(TestCase):
         self.assertEqual(type(actual), gl.GLubyte * (8 * 4))
         expected_values = [(11, 22, 33, 44) for _ in xrange(8)]
         expected_values = chain(*expected_values)
-        for a, e in zip(actual, expected_values):
-            self.assertAlmostEqual(a, e, places=7)
+        self.assert_lists_almost_equal(actual, expected_values, places=7)
 
 
 if __name__ == '__main__':

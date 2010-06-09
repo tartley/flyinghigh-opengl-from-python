@@ -2,7 +2,10 @@
 from math import sqrt, pi
 from unittest2 import TestCase, main
 
-from ..vec3 import EPSILON, Origin, Vec3
+from ..orientation import Orientation
+from ..vec3 import (
+    EPSILON, NegXAxis, NegYAxis, NegZAxis, Vec3, XAxis, YAxis, ZAxis,
+)
 
 
 class testVec3(TestCase):
@@ -34,12 +37,20 @@ class testVec3(TestCase):
         self.assertFalse(Vec3(1, 2, 3) == Vec3(1, 22, 3))
         self.assertFalse(Vec3(1, 2, 3) == Vec3(1, 2, 33))
 
+        self.assertFalse(Vec3(1, 2, 3) == 123)
+        self.assertFalse(Vec3(1, 2, 3) == 'hello')
+        self.assertFalse(Vec3(1, 2, 3) == 1.23)
+
     def testNotEq(self):
         self.assertFalse(Vec3(1, 2, 3) != Vec3(1, 2, 3))
         self.assertFalse(Vec3(1, 2, 3) != (1, 2, 3))
         self.assertTrue(Vec3(1, 2, 3) != Vec3(11, 2, 3))
         self.assertTrue(Vec3(1, 2, 3) != Vec3(1, 22, 3))
         self.assertTrue(Vec3(1, 2, 3) != Vec3(1, 2, 33))
+
+        self.assertTrue(Vec3(1, 2, 3) != 123)
+        self.assertTrue(Vec3(1, 2, 3) != 'hello')
+        self.assertTrue(Vec3(1, 2, 3) != 1.23)
 
     def testHash(self):
         self.assertEqual(hash(Vec3(1, 2, 3)), hash(Vec3(1, 2, 3)))
@@ -52,20 +63,27 @@ class testVec3(TestCase):
         self.assertEqual(Vec3(1, 2, 3), Vec3(1 + error, 2, 3))
         self.assertEqual(Vec3(1, 2, 3), Vec3(1, 2 + error, 3))
         self.assertEqual(Vec3(1, 2, 3), Vec3(1, 2, 3 + error))
+
+        self.assertEqual(Vec3(1, 2, 3),     (1, 2, 3 + error))
+        self.assertEqual(    (1, 2, 3), Vec3(1, 2, 3 + error))
+
         error = EPSILON * 1.1
         self.assertNotEqual(Vec3(1, 2, 3), Vec3(1 + error, 2, 3))
         self.assertNotEqual(Vec3(1, 2, 3), Vec3(1, 2 + error, 3))
         self.assertNotEqual(Vec3(1, 2, 3), Vec3(1, 2, 3 + error))
 
+        self.assertNotEqual(Vec3(1, 2, 3),     (1, 2, 3 + error))
+        self.assertNotEqual(    (1, 2, 3), Vec3(1, 2, 3 + error))
+
     def testLength(self):
-        self.assertEquals(Vec3(2, 3, 4).length, sqrt(4 + 9 + 16))
+        self.assertEqual(Vec3(2, 3, 4).length, sqrt(4 + 9 + 16))
 
     def testLength2(self):
-        self.assertEquals(Vec3(2, 3, 4).length2, 4 + 9 + 16)
+        self.assertEqual(Vec3(2, 3, 4).length2, 4 + 9 + 16)
 
     def testNormalize(self):
         v = Vec3(3, 4, 5)
-        self.assertEquals(
+        self.assertEqual(
             v.normalize(),
             Vec3(3/v.length, 4/v.length, 5/v.length) )
 
@@ -83,19 +101,19 @@ class testVec3(TestCase):
         self.assertRaises(TypeError, lambda: 4 + Vec3(1, 2, 3))
 
     def testSub(self):
-        self.assertEquals(Vec3(11, 22, 33) - Vec3(10, 20, 30), (1, 2, 3))
-        self.assertEquals(Vec3(11, 22, 33) -     (10, 20, 30), (1, 2, 3))
-        self.assertEquals(    (11, 22, 33) - Vec3(10, 20, 30), (1, 2, 3))
+        self.assertEqual(Vec3(11, 22, 33) - Vec3(10, 20, 30), (1, 2, 3))
+        self.assertEqual(Vec3(11, 22, 33) -     (10, 20, 30), (1, 2, 3))
+        self.assertEqual(    (11, 22, 33) - Vec3(10, 20, 30), (1, 2, 3))
         self.assertRaises(TypeError, lambda: Vec3(1, 2, 3) - 4)
         self.assertRaises(TypeError, lambda: 4 - Vec3(1, 2, 3))
 
     def testMul(self):
-        self.assertEquals(Vec3(1, 2, 3) * 10, Vec3(10, 20, 30))
-        self.assertEquals(10 * Vec3(1, 2, 3), Vec3(10, 20, 30))
+        self.assertEqual(Vec3(1, 2, 3) * 10, Vec3(10, 20, 30))
+        self.assertEqual(10 * Vec3(1, 2, 3), Vec3(10, 20, 30))
 
     def testDiv(self):
-        self.assertEquals(Vec3(10, 20, 30) / 10, Vec3(1, 2, 3))
-        self.assertEquals(Vec3(2, 0, 0) / 3, Vec3(0.6666666666666667, 0, 0))
+        self.assertEqual(Vec3(10, 20, 30) / 10, Vec3(1, 2, 3))
+        self.assertEqual(Vec3(2, 0, 0) / 3, Vec3(0.6666666666666667, 0, 0))
         self.assertRaises(ZeroDivisionError, lambda: Vec3(1, 2, 3) / 0)
         self.assertRaises(TypeError, lambda: 3 / Vec3(1, 2, 3))
 
@@ -103,17 +121,17 @@ class testVec3(TestCase):
         a = Vec3(1, 0, 0)
         b = Vec3(0, 2, 0)
         c = Vec3(0, 0, 3)
-        self.assertEquals(a.cross(b), (0, 0, 2))
-        self.assertEquals(b.cross(a), (0, 0, -2))
-        self.assertEquals(a.cross(c), (0, -3, 0))
-        self.assertEquals(c.cross(a), (0, 3, 0))
-        self.assertEquals(b.cross(c), (6, 0, 0))
-        self.assertEquals(c.cross(b), (-6, 0, 0))
+        self.assertEqual(a.cross(b), (0, 0, 2))
+        self.assertEqual(b.cross(a), (0, 0, -2))
+        self.assertEqual(a.cross(c), (0, -3, 0))
+        self.assertEqual(c.cross(a), (0, 3, 0))
+        self.assertEqual(b.cross(c), (6, 0, 0))
+        self.assertEqual(c.cross(b), (-6, 0, 0))
 
     def testDotProduct(self):
         a = Vec3(2, 3, 5)
         b = Vec3(7, 11, 13)
-        self.assertEquals(a.dot(b), 2 * 7 + 3 * 11 + 5 * 13)
+        self.assertEqual(a.dot(b), 2 * 7 + 3 * 11 + 5 * 13)
 
     def testAngle(self):
         a = Vec3(1, 0, 0)
@@ -123,44 +141,32 @@ class testVec3(TestCase):
         self.assertAlmostEqual(b.angle(b), 0, places=7)
 
     def testRotateX(self):
-        x = Vec3(1, 0, 0)
-        y = Vec3(0, 1, 0)
-        z = Vec3(0, 0, 1)
-        self.assertEquals(x.rotateX(pi/2), x)
-        self.assertEquals(y.rotateX(pi/2), -z)
-        self.assertEquals(z.rotateX(pi/2), y)
+        self.assertEqual(XAxis.rotateX(pi/2), XAxis)
+        self.assertEqual(YAxis.rotateX(pi/2), NegZAxis)
+        self.assertEqual(ZAxis.rotateX(pi/2), YAxis)
 
     def testRotateY(self):
-        x = Vec3(1, 0, 0)
-        y = Vec3(0, 1, 0)
-        z = Vec3(0, 0, 1)
-        self.assertEquals(x.rotateY(pi/2), z)
-        self.assertEquals(y.rotateY(pi/2), y)
-        self.assertEquals(z.rotateY(pi/2), -x)
+        self.assertEqual(XAxis.rotateY(pi/2), ZAxis)
+        self.assertEqual(YAxis.rotateY(pi/2), YAxis)
+        self.assertEqual(ZAxis.rotateY(pi/2), NegXAxis)
 
     def testRotateZ(self):
-        x = Vec3(1, 0, 0)
-        y = Vec3(0, 1, 0)
-        z = Vec3(0, 0, 1)
-        self.assertEquals(x.rotateZ(pi/2), -y)
-        self.assertEquals(y.rotateZ(pi/2), x)
-        self.assertEquals(z.rotateZ(pi/2), z)
+        self.assertEqual(XAxis.rotateZ(pi/2), NegYAxis)
+        self.assertEqual(YAxis.rotateZ(pi/2), XAxis)
+        self.assertEqual(ZAxis.rotateZ(pi/2), ZAxis)
 
     def testRotate(self):
-        x = Vec3(1, 0, 0)
-        y = Vec3(0, 1, 0)
-        z = Vec3(0, 0, 1)
-        self.assertEquals(x.rotate(x, pi/2), x)
-        self.assertEquals(y.rotate(x, pi/2), -z)
-        self.assertEquals(z.rotate(x, pi/2), y)
+        self.assertEqual(XAxis.rotate(XAxis, pi/2), XAxis)
+        self.assertEqual(YAxis.rotate(XAxis, pi/2), NegZAxis)
+        self.assertEqual(ZAxis.rotate(XAxis, pi/2), YAxis)
 
-        self.assertEquals(x.rotate(y, pi/2), z)
-        self.assertEquals(y.rotate(y, pi/2), y)
-        self.assertEquals(z.rotate(y, pi/2), -x)
+        self.assertEqual(XAxis.rotate(YAxis, pi/2), ZAxis)
+        self.assertEqual(YAxis.rotate(YAxis, pi/2), YAxis)
+        self.assertEqual(ZAxis.rotate(YAxis, pi/2), NegXAxis)
 
-        self.assertEquals(x.rotate(z, pi/2), -y)
-        self.assertEquals(y.rotate(z, pi/2), x)
-        self.assertEquals(z.rotate(z, pi/2), z)
+        self.assertEqual(XAxis.rotate(ZAxis, pi/2), NegYAxis)
+        self.assertEqual(YAxis.rotate(ZAxis, pi/2), XAxis)
+        self.assertEqual(ZAxis.rotate(ZAxis, pi/2), ZAxis)
 
 
 if __name__ == '__main__':

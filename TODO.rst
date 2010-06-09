@@ -30,21 +30,27 @@ face it participates in) and ditching indices
 
 Automatically calculate normals for flat faces
 
---CURRENT--
+Colors should be unsigned bytes, not floats.
+Turn off vsync to measure, is it faster?
+YES, 20fps faster.
 
-Colors should be unsigned bytes, not floats. Is it faster? Turn off vsync to measure.
+3d orientation of GameItem's
 
-3d orientation of shapes
+Separate out new class Geometry, leaving Shape to manage geometry, color,
+position and orientation (the latter two relative to its containing
+MultiShape.) So now we can re-use same geometry instance (eg. Cube(1)) many
+times in the same MultiShape.
+
+3d orientation of shapes relative to their containing Multishape
+
+--CURRENT----------------------------------------------------------------
+
+TIDY
+Try using same Cube instance in populate world, to help startup performance
+Convert orientation.matrix back to a property
 
 Create serpinski gasket (tetra)
 Create serpinski gasket (cube)
-
-REFACTOR
-Color should perhaps not be part of a shape. Should be passed to
-composite.add()? Then we could re-use same instance of Cube geometry
-for every entry in a CubeCluster. Is that useful?
-Simlarly, (Shape, color, offset, orientation) form some sort of quad
-in regards to children of composite shapes. How should this be treated?
 
 GEOMETRY
 Processing of shapes:
@@ -58,7 +64,19 @@ Fake skybox geometry:
     a ground
     a spherical moon with rings
 
+PRESENTATION PHASE 1
+Write first draft essay about procedural geometry
+Find way to automate conversion of essays into slides (rst2s5?)
+Write first draft essay about shaders
+Write first draft essay about compiled inner loops
+Section about 'composition instead of inheritance'?
+Section about choosing to use indexed arrays of GL_TRIANGLES
+
 PERFORMANCE
+If Vec3 creation is still bulk of startup time, try making Vec3 not inherit
+from tuple, giving it plain attributes x, y & z. Adding slots. Give it an
+indexor to still allow access to v[0], v[1], v[2].
+
 Are we currently sending all geometry across bus every frame?
 try VBOs. but fall back to current method (vertex arrays) if hardware is crap
 
@@ -74,14 +92,6 @@ try pyrex
 try cython
 try compiled C.
 Measure performances.
-
-PRESENTATION PHASE 1
-Write first draft essay about procedural geometry
-Find way to automate conversion of essays into slides (rst2s5?)
-Write first draft essay about shaders
-Write first draft essay about compiled inner loops
-Section about 'composition instead of inheritance'?
-Section about choosing to use indexed arrays of GL_TRIANGLES
 
 GEOMETRY
 Shape and Glyph should also handle curved surfaces. In these, vertices

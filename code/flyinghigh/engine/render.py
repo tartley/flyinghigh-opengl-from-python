@@ -40,14 +40,14 @@ class Render(object):
 
             gl.glPushMatrix()
 
-            position = item.position
-            if len(position) == 2:
-                gl.glTranslatef(position[0]. position[1], 0)
-                gl.glRotatef(degrees(item.angle), 0, 0, 1)
-            else:
-                gl.glTranslatef(*position)
-                if hasattr(item, 'orientation'):
-                    gl.glMultMatrixf(item.orientation.matrix)
+            # if len(position) == 2:
+                # gl.glTranslatef(position[0]. position[1], 0)
+                # gl.glRotatef(degrees(item.angle), 0, 0, 1)
+            # else:
+            if hasattr(item, 'position'):
+                gl.glTranslatef(*item.position)
+            if hasattr(item, 'orientation'):
+                gl.glMultMatrixf(item.orientation.get_matrix())
 
             glyph = item.glyph
             gl.glVertexPointer(

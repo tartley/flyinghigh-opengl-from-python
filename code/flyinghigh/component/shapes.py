@@ -4,7 +4,12 @@ from itertools import chain
 from math import cos, pi, sin, sqrt
 from random import randint
 
-from ..geometry.vec3 import Vec3, Origin, XAxis, YAxis, ZAxis
+from ..geometry.matrix import Matrix
+from ..geometry.orientation import Orientation
+from ..geometry.vec3 import Origin, Vec3, XAxis, YAxis, ZAxis
+
+
+white=(255, 255, 255, 255)
 
 
 class Geometry(object):
@@ -14,7 +19,7 @@ class Geometry(object):
     coplanar convex ring defining the face's boundary.
     '''
     def __init__(self, vertices, faces):
-        if not isinstance(vertices[0], Vec3):
+        if len(vertices) > 0 and not isinstance(vertices[0], Vec3):
             vertices = [Vec3(*v) for v in vertices]
         self.vertices = vertices
         self.faces = faces
@@ -22,13 +27,21 @@ class Geometry(object):
 
 class Shape(object):
 
-    def __init__(self, vertices, faces, color):
-        self.geometry = Geometry(vertices, faces)
+    def __init__(self, geometry, color=white, position=None, orientation=None):
+        self.geometry = geometry
         self.color = color
+        if type(position) is tuple:
+            position = Vec3(*position)
+        self.position = position
+        if type(orientation) is tuple:
+            orientation = Orientation(orientation)
+        self.orientation = orientation
 
     @property
     def vertices(self):
-        return self.geometry.vertices
+        matrix = Matrix(self.position, self.orientation)
+        return [matrix.transform(vert)
+                for vert in self.geometry.vertices]
 
     @property
     def faces(self):
@@ -39,25 +52,31 @@ class Shape(object):
         return [self.color for _ in xrange(len(self.vertices))]
 
 
-class CompositeShape(object):
+class MultiShape(object):
 
-    def __init__(self):
-        self.children = []
+    def __init__(self, *args, **kwargs):
+        self.children = list(args)
+        self.position = kwargs.pop('position', None)
+        self.orientation = kwargs.pop('orientation', None)
+        assert kwargs == {}
+
+        # if type(self.orientation) is tuple:
+            # self.orientation = Orientation(self.orientation)
+
         self._vertices = None
         self._colors = None
         self._faces = None
 
-    def add(self, child, offset=None):
-        if offset is None:
-            offset = Origin
-        self.children.append((child, offset))
+    def add(self, child):
+        self.children.append(child)
 
     @property
     def vertices(self):
         if self._vertices is None:
+            matrix = Matrix(self.position, self.orientation)
             self._vertices = [
-                vert + offset
-                for shape, offset in self.children
+                matrix.transform(vert)
+                for shape in self.children
                 for vert in shape.vertices]
         return self._vertices
 
@@ -66,7 +85,7 @@ class CompositeShape(object):
         if self._faces is None:
             newfaces = []
             index_offset = 0
-            for shape, _ in self.children:
+            for shape in self.children:
                 for face in shape.faces:
                     newface = []
                     for index in face:
@@ -80,11 +99,11 @@ class CompositeShape(object):
     def colors(self):
         if self._colors is None:
             self._colors = list(
-                chain.from_iterable(shape.colors for shape, _ in self.children))
+                chain.from_iterable(shape.colors for shape in self.children))
         return self._colors
 
 
-def Rectangle(width, height, color):
+def Rectangle(width, height):
     vertices = [
         (-width/2, -height/2),
         (+width/2, -height/2),
@@ -92,20 +111,20 @@ def Rectangle(width, height, color):
         (-width/2, +height/2),
     ]
     face = [0, 1, 2, 3]
-    return Shape(vertices, [face], color)
+    return Geometry(vertices, [face])
 
 
-def Circle(radius, color):
+def Circle(radius):
     NUM_POINTS = 32
     verts = []
     for n in xrange(0, NUM_POINTS):
         a = n * 2 * pi / NUM_POINTS
         verts.append( (radius * cos(a), radius * sin(a)) )
     face = [n for n in xrange(0, NUM_POINTS)]
-    return Shape(verts, [face], color)
+    return Geometry(verts, [face])
 
 
-def Cube(edge, color):
+def Cube(edge):
     e2 = edge/2
     verts = [
         (-e2, -e2, -e2),
@@ -125,11 +144,23 @@ def Cube(edge, color):
         [3, 7, 6, 2], # top
         [1, 0, 4, 5], # bottom
     ]
-    return Shape(verts, faces, color)
+    return Geometry(verts, faces)
+
+
+def Tetrahedron(edge):
+    size = edge / sqrt(2)/2
+    vertices = [
+        (+size, +size, +size),
+        (-size, -size, +size),
+        (-size, +size, -size),
+        (+size, -size, -size), 
+    ]
+    faces = [ [0, 2, 1], [1, 3, 0], [2, 3, 1], [0, 3, 2] ]
+    return Geometry(vertices, faces)
 
 
 def RgbCubeCluster(edge, cluster_edge, cube_count):
-    shape = CompositeShape()
+    shape = MultiShape()
     for i in xrange(cube_count):
         r = randint(1, cluster_edge-1)
         g = randint(1, cluster_edge-1)
@@ -144,50 +175,63 @@ def RgbCubeCluster(edge, cluster_edge, cube_count):
             g - cluster_edge / 2,
             b - cluster_edge / 2,
         ]
-        shape.add(Cube(edge, color), Vec3(*pos))
+        shape.add(Shape(Cube(edge), color=color, position=Vec3(*pos)))
     return shape
 
 
 def CubeLattice(edge, cluster_edge, freq):
-    shape = CompositeShape()
+    shape = MultiShape()
     black = (0, 0, 0, 255)
     for i in xrange(int(-cluster_edge/2), int(+cluster_edge/2+1), freq):
         for j in xrange(int(-cluster_edge/2), int(+cluster_edge/2+1), freq):
-            shape.add(Cube(edge, black), Vec3(i, j, -cluster_edge/2))
-            shape.add(Cube(edge, black), Vec3(i, j, +cluster_edge/2))
-            shape.add(Cube(edge, black), Vec3(i, -cluster_edge/2, j))
-            shape.add(Cube(edge, black), Vec3(i, +cluster_edge/2, j))
-            shape.add(Cube(edge, black), Vec3(-cluster_edge/2, i, j))
-            shape.add(Cube(edge, black), Vec3(+cluster_edge/2, i, j))
+            shape.add(Shape(Cube(edge), black, Vec3(i, j, -cluster_edge/2)))
+            shape.add(Shape(Cube(edge), black, Vec3(i, j, +cluster_edge/2)))
+            shape.add(Shape(Cube(edge), black, Vec3(i, -cluster_edge/2, j)))
+            shape.add(Shape(Cube(edge), black, Vec3(i, +cluster_edge/2, j)))
+            shape.add(Shape(Cube(edge), black, Vec3(-cluster_edge/2, i, j)))
+            shape.add(Shape(Cube(edge), black, Vec3(+cluster_edge/2, i, j)))
     return shape
 
 
 def CubeCross():
-    shape = CompositeShape()
+    multi = MultiShape()
     center_color = (150, 150, 150, 255)
-    shape.add(Cube(2, center_color))
+    multi.add(Shape(Cube(2), center_color, Origin))
+    # multi.add(Shape(Cube(2), outer_color, XAxis))
 
     outer_color = (170, 170, 170, 255)
-    shape.add(Cube(1, outer_color), XAxis)
-    shape.add(Cube(1, outer_color), YAxis)
-    shape.add(Cube(1, outer_color), ZAxis)
-    shape.add(Cube(1, outer_color), -XAxis)
-    shape.add(Cube(1, outer_color), -YAxis)
-    shape.add(Cube(1, outer_color), -ZAxis)
-    return shape
+    multi.add(Shape(Cube(1), outer_color, XAxis))
+    multi.add(Shape(Cube(1), outer_color, YAxis))
+    multi.add(Shape(Cube(1), outer_color, ZAxis))
+    multi.add(Shape(Cube(1), outer_color, -XAxis))
+    multi.add(Shape(Cube(1), outer_color, -YAxis))
+    multi.add(Shape(Cube(1), outer_color, -ZAxis))
+    return multi
 
-
-def Tetrahedron(edge, color):
-    size = edge / sqrt(2)/2
-    return Shape(
-        vertices=[
-            (+size, +size, +size),
-            (-size, -size, +size),
-            (-size, +size, -size),
-            (+size, -size, -size), 
-        ],
-        faces=[ [0, 2, 1], [1, 3, 0], [2, 3, 1], [0, 3, 2] ],
-        color=color,
+def RgbAxes():
+    red = (255, 0, 0, 255)
+    green = (0, 255, 0, 255)
+    blue = (0, 0, 255, 255)
+    cube1 = Cube(1)
+    multi = MultiShape(
+        Shape(
+            geometry=cube1,
+        ),
+        Shape(
+            geometry=cube1,
+            color=red,
+            position=XAxis,
+        ),
+        Shape(
+            geometry=cube1,
+            color=green,
+            position=YAxis,
+        ),
+        Shape(
+            geometry=Cube(1),
+            color=blue,
+            position=ZAxis,
+        ),
     )
-
+    return multi
 
