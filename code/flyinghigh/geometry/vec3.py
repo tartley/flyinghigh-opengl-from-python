@@ -12,7 +12,7 @@ class Vec3(namedtuple('Vec3Base', 'x y z')):
     __slots__ = []
 
     def __repr__(self):
-        return 'Vec3(%s, %s, %s)' % (self.x, self.y, self.z)
+        return 'Vec3(%.2g, %.2g, %.2g)' % (self.x, self.y, self.z)
 
     def __eq__(self, other):
         return (
@@ -56,7 +56,7 @@ class Vec3(namedtuple('Vec3Base', 'x y z')):
     def __rmul__(self, scalar):
         return self.__mul__(scalar)
 
-    def __div__(self, scalar):
+    def __truediv__(self, scalar):
         return Vec3(self.x / scalar, self.y / scalar, self.z / scalar)
 
     @property

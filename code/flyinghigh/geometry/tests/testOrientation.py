@@ -40,7 +40,7 @@ class testOrientation(TestCase):
 
     def testStr(self):
         self.assertEqual(str(Orientation(XAxis, up=YAxis)),
-            'Orientation(Vec3(1.0, 0.0, 0.0), up=Vec3(0.0, 1.0, 0.0))')
+            'Orientation(Vec3(1, 0, 0), up=Vec3(0, 1, 0))')
 
     def testEqual(self):
         a = Orientation((0, 2, 3))

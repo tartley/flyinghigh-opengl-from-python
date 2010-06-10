@@ -1,4 +1,5 @@
 
+from __future__ import division
 from math import sqrt, pi
 from unittest2 import TestCase, main
 
