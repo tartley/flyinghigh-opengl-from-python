@@ -61,7 +61,7 @@ def populate(world):
 
     world.add( GameItem(
         position=Origin,
-        shape=RgbCubeCluster(1.0, 60, 11500),
+        shape=RgbCubeCluster(1.0, 60, 1150),
     ) )
 
     world.add( GameItem(

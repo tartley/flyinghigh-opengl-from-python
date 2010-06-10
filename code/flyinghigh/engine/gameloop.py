@@ -1,3 +1,4 @@
+from os.path import join
 
 import pyglet
 from pyglet.event import EVENT_HANDLED
@@ -43,8 +44,8 @@ class Gameloop(object):
         pyglet.clock.schedule(self.update)
         self.clock_display = pyglet.clock.ClockDisplay()
 
-        vs = VertexShader('flyinghigh\shaders\lighting.vert')
-        fs = FragmentShader('flyinghigh\shaders\lighting.frag')
+        vs = VertexShader(join('flyinghigh', 'shaders', 'lighting.vert'))
+        fs = FragmentShader(join('flyinghigh', 'shaders', 'lighting.frag'))
         shader = ShaderProgram(vs, fs)
         shader.use()
 

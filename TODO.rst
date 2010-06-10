@@ -48,6 +48,8 @@ times in the same MultiShape.
 TIDY
 Try using same Cube instance in populate world, to help startup performance
 Convert orientation.matrix back to a property
+Split geometry and shape out into separate modules
+Make baseless-tetrahedron a geometry factory function
 
 Create serpinski gasket (tetra)
 Create serpinski gasket (cube)
