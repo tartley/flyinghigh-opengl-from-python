@@ -1,9 +1,11 @@
 
 from __future__ import division
+from math import sqrt
 
 from .engine.gameitem import GameItem
 from .geometry.vec3 import Vec3, Origin
 from .geometry.orientation import Orientation
+from .geometry.serpinski import Serpinski
 from .component.slowmo import SlowMo
 from .component.spinner import Spinner
 from .component.shapes import (
@@ -14,7 +16,7 @@ from .component.wobblyorbit import WobblyOrbit
 
 
 def populate(world):
-    world.camera.move = WobblyOrbit(80, 75)
+    world.camera.move = WobblyOrbit(10, 2)
 
     red = (255, 0, 0, 255)
     orange = (255, 127, 0, 255)
@@ -23,34 +25,9 @@ def populate(world):
     blue = (0, 0, 255, 255)
 
     world.add( GameItem(
-        shape=RgbAxes(),
+        shape=Shape(Serpinski(Tetrahedron(4), 2), orange),
+        spin=Spinner(speed=4),
     ) )
-
-    shape=MultiShape(
-        Shape(
-            geometry=Cube(2),
-            color=orange,
-            position=(0, 2, 2),
-            orientation=(0.2, 0, -1),
-        ),
-        Shape(
-            geometry=Cube(2),
-            color=red,
-            position=(1, 1, -1),
-            orientation=(1, 1, 0),
-        )
-    )
-    shape.add( Shape(
-        geometry=Cube(1),
-        color=yellow,
-        position=(-1, -1, -1),
-    ) )
-    world.add(
-        GameItem(
-            shape=shape,
-            spin=Spinner(speed=1),
-        )
-    )
 
     world.add( GameItem(
         position=Vec3(4, 0, 0),
@@ -62,12 +39,6 @@ def populate(world):
     world.add( GameItem(
         position=Origin,
         shape=RgbCubeCluster(1.0, 60, 1150),
-    ) )
-
-    world.add( GameItem(
-        position=(0, 0, 3),
-        shape=Shape(Tetrahedron(1), orange),
-        spin=Spinner(speed=2),
     ) )
 
     edge = 48

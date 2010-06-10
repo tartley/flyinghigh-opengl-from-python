@@ -1,53 +1,67 @@
 
+from __future__ import division
+from itertools import chain
 from math import sqrt
 
-from ..component.shapes import Shape
+from ..component.shapes import Geometry
 from .face import get_normal
 
 
-def BaselessTetrahedron(edge):
+def replace_face(vertices, face):
     '''
-    Return a shape, 3 sides of a tetrahedron. One vertex points up the Y axis.
-    The opposite face is the missing one.
+    Given a list of vertices and a face described by a length 3 list of indices
+    into the vertex array. Appends to the vertex list in-place, and returns
+    a new set of faces to replace the original given one.
+    The replacement looks like the original face, but with a tetrahedron
+    sticking out of it.
     '''
-    # equilateral triangle centroid to mid-point of edge
-    c2e = edge * sqrt(3) / 6
-    # regular tetrahedron centroid to mid-point of face
-    c2f = edge / sqrt(24)
-    return Shape(
-        verts = [
-            (      0, 3*c2f,          0),
-            (-edge/2,  -c2f,       -c2e),
-            (+edge/2,  -c2f,       -c2e),
-            (      0,  -c2f, edge*c2e*2),
-        ],
-        faces = [ [0, 1, 2], [0, 2, 3], [0, 1, 3] ],
-    )
+    # indices
+    i0 = face[0]
+    i1 = face[1]
+    i2 = face[2]
+    # original verts
+    v0 = vertices[i0]
+    v1 = vertices[i1]
+    v2 = vertices[i2]
+    # midpoints of edges, which form vertices of the new tetrahedron
+    v3mid = (v0 + v1) / 2
+    v4mid = (v1 + v2) / 2
+    v5mid = (v2 + v0) / 2
+    # location of the peak of the new tetrahedron
+    face_centroid = (v0 + v1 + v2) / 3
+    face_normal = get_normal(vertices, face)
+    edge = (v0 - v1).length
+    v6peak = face_centroid + face_normal * sqrt(2/3) * edge / 2
+
+    def add_vertex(vert):
+        vertices.append(vert)
+        return len(vertices) - 1
+
+    # modify vertices in-place. To localise the effect of side-effects,
+    # the caller of this function should make a copy of vertices before
+    # calling us. (they can then call us many times using a single copy)
+    i3 = add_vertex(v3mid)
+    i4 = add_vertex(v4mid)
+    i5 = add_vertex(v5mid)
+    i6 = add_vertex(v6peak)
+
+    faces = [ [i0, i3, i5], [i3, i1, i4], [i4, i2, i5],
+              [i5, i3, i6], [i3, i4, i6], [i4, i5, i6], ]
+    return faces
 
 
-def Serpinski(original):
+def Serpinski(original, n=1):
     '''
-    return a new shape, which is like the given one but with a tetrahedron 
-    stuck into the middle of each face.
-    Assumes the faces of the given original are equilateral triangles.
+    Return a new geometry, in which each face of the original has been
+    replaced by a triangle with a tetrahedron sticking out of it.
+    This replacement is performed iteratively, n times.
+    Assumes the faces of the original are triangles.
     '''
-    retval = Shape()
-    for face in original.faces:
-        # original verts
-        v0 = original.vertices[face[0]]
-        v1 = original.vertices[face[1]]
-        v2 = original.vertices[face[2]]
-        # # midpoints of edges
-        # midpoints = [
-            # (v0 + v1) / 2,
-            # (v1 + v2) / 2,
-            # (v2 + v0) / 2 ]
-        face_centroid = (v0 + v1 + v2) / 3
-        face_normal = get_normal(original.vertices, face)
-        edge = (v0 - v1).length
-        retval.add( Shape(
-            geometry=BaselessTetrahedron(edge/2),
-            offset=face_centroid,
-            orientation=face_normal,
-            color=original.color))
+    verts = list(original.vertices)
+    faces = original.faces
+
+    faces = list(chain.from_iterable(
+        replace_face(verts, face) for face in faces))
+
+    return Geometry(verts, faces)
 
