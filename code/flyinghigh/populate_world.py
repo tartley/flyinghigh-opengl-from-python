@@ -1,15 +1,13 @@
 
 from __future__ import division
-from math import sqrt
 
 from .engine.gameitem import GameItem
-from .geometry.vec3 import Vec3, Origin
-from .geometry.orientation import Orientation
+from .geometry.vec3 import Vec3
 from .geometry.serpinski import Serpinski
 from .component.slowmo import SlowMo
 from .component.spinner import Spinner
 from .component.shapes import (
-    MultiShape, Cube, CubeCross, CubeLattice, RgbAxes, RgbCubeCluster, Shape,
+    MultiShape, Cube, CubeCross, CubeLattice, RgbCubeCluster, Shape,
     Tetrahedron,
 )
 from .component.wobblyorbit import WobblyOrbit
@@ -32,12 +30,10 @@ def populate(world):
     world.add( GameItem(
         position=Vec3(4, 0, 0),
         shape=CubeCross(),
-        orientation=Orientation((1, 2, 3)),
         spin=Spinner(speed=3),
     ) )
 
     world.add( GameItem(
-        position=Origin,
         shape=RgbCubeCluster(1.0, 60, 1150),
     ) )
 
@@ -47,7 +43,6 @@ def populate(world):
     shape.add(CubeLattice(1.0, edge, 8))
     shape.add(Shape(Cube(edge), color=darkgrey))
     world.add( GameItem(
-        position=Origin,
         shape=shape,
         slowmo=SlowMo(edge, 0.2),
     ) )

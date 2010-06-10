@@ -7,14 +7,18 @@ from ..component.shapes import Geometry
 from .face import get_normal
 
 
-def replace_face(vertices, face):
+def replace_face(vertices, face, n):
     '''
-    Given a list of vertices and a face described by a length 3 list of indices
-    into the vertex array. Appends to the vertex list in-place, and returns
-    a new set of faces to replace the original given one.
-    The replacement looks like the original face, but with a tetrahedron
-    sticking out of it.
+    Given a list of vertices and a triangular face described by a list of 3
+    indices into the vertex array, append to the vertex list in-place and
+    return a new list of faces that describe a replacement geometry which looks
+    like the original face, but with a tetrahedron sticking out of the middle.
+    This replacement is performed recursively on each face of the tetrahedron.
+    This is repeated n times.
     '''
+    if n <= 0:
+        return [face]
+
     # indices
     i0 = face[0]
     i1 = face[1]
@@ -47,21 +51,22 @@ def replace_face(vertices, face):
 
     faces = [ [i0, i3, i5], [i3, i1, i4], [i4, i2, i5],
               [i5, i3, i6], [i3, i4, i6], [i4, i5, i6], ]
-    return faces
+    return list(chain(
+        [ faces[0], faces[1], faces[2] ],
+        replace_face(vertices, faces[3], n-1),
+        replace_face(vertices, faces[4], n-1),
+        replace_face(vertices, faces[5], n-1),
+    ))
 
 
 def Serpinski(original, n=1):
     '''
     Return a new geometry, in which each face of the original has been
     replaced by a triangle with a tetrahedron sticking out of it.
-    This replacement is performed iteratively, n times.
     Assumes the faces of the original are triangles.
     '''
     verts = list(original.vertices)
-    faces = original.faces
-
     faces = list(chain.from_iterable(
-        replace_face(verts, face) for face in faces))
-
+        replace_face(verts, face, 3) for face in original.faces))
     return Geometry(verts, faces)
 
