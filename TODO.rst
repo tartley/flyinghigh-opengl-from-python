@@ -44,20 +44,23 @@ times in the same MultiShape.
 3d orientation of shapes relative to their containing Multishape
 
 Try using same Cube instance in populate world, to help startup performance
+Convert orientation.matrix back to a property
+
+Create serpinski gasket (tetra)
 
 `CURRENT--------------------------------------------------------------------`
 
-TIDY
-Convert orientation.matrix back to a property
-Split geometry and shape out into separate modules
-Make baseless-tetrahedron a geometry factory function
+try out numpy vec3 and matrix classes. compare performance.
 
-Create serpinski gasket (tetra)
-Create serpinski gasket (cube)
+TIDY
+rename 'serpinski gasket' to 'koche tetrahedron'
+Split geometry and shape out into separate modules
+
+Create koche cube
 
 GEOMETRY
 Processing of shapes:
-    Add border to faces
+    Add border to faces (requires face shrinking. um.)
     Bevel edges
 
 User-controlled camera

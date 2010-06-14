@@ -63,7 +63,7 @@ class MultiShape(object):
         self.children = list(args)
         self.position = kwargs.pop('position', None)
         self.orientation = kwargs.pop('orientation', None)
-        assert kwargs == {}
+        assert kwargs == {}, 'unrecognized kwargs, %s' % (kwargs,)
         self._vertices = None
         self._colors = None
         self._faces = None

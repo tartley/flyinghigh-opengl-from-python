@@ -81,10 +81,11 @@ class Glyph(object):
 
 
     def _get_glcolors(self, shape):
+        vertcolors = shape.colors
         colors = []
         for face in shape.faces:
             for index, vertexnum in enumerate(face):
-                colors.append(shape.colors[vertexnum])
+                colors.append(vertcolors[vertexnum])
         return _glarray(gl.GLubyte, chain(*colors), self.num_glvertices * 4) 
 
 

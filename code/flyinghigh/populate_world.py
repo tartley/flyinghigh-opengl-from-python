@@ -14,7 +14,7 @@ from .component.wobblyorbit import WobblyOrbit
 
 
 def populate(world):
-    world.camera.move = WobblyOrbit(8, 4)
+    world.camera.move = WobblyOrbit(6, 3)
 
     red = (255, 0, 0, 255)
     orange = (255, 127, 0, 255)
@@ -23,7 +23,7 @@ def populate(world):
     blue = (0, 0, 255, 255)
 
     world.add( GameItem(
-        shape=Shape(Serpinski(Tetrahedron(4), 3), orange),
+        shape=Shape(Serpinski(Tetrahedron(4), 8)),
         spin=Spinner(speed=4),
     ) )
 

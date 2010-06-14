@@ -12,7 +12,7 @@ class WobblyOrbit(object):
     def __call__(self, time, dt):
         # camera position at distance, bearing
         bearing = cos(time / 5 - pi/2) * 10
-        distance = self.mean + sin(time / 3) * self.variance
+        distance = self.mean + sin(time / 1) * self.variance
         x1 = distance * sin(bearing)
         z1 = distance * cos(bearing)
 
