@@ -11,7 +11,7 @@ class Matrix(object):
         if orientation is None:
             orientation = Orientation()
         
-        self.elements = orientation.get_matrix()
+        self.elements = orientation.matrix
         self.elements[3] = position.x
         self.elements[7] = position.y
         self.elements[11] = position.z

@@ -43,10 +43,11 @@ times in the same MultiShape.
 
 3d orientation of shapes relative to their containing Multishape
 
---CURRENT----------------------------------------------------------------
+Try using same Cube instance in populate world, to help startup performance
+
+`CURRENT--------------------------------------------------------------------`
 
 TIDY
-Try using same Cube instance in populate world, to help startup performance
 Convert orientation.matrix back to a property
 Split geometry and shape out into separate modules
 Make baseless-tetrahedron a geometry factory function

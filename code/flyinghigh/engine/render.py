@@ -47,7 +47,7 @@ class Render(object):
             if hasattr(item, 'position'):
                 gl.glTranslatef(*item.position)
             if hasattr(item, 'orientation'):
-                gl.glMultMatrixf(item.orientation.get_matrix())
+                gl.glMultMatrixf(item.orientation.matrix)
 
             glyph = item.glyph
             gl.glVertexPointer(

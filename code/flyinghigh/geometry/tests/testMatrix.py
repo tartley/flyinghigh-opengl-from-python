@@ -17,7 +17,7 @@ class testMatrix(TestCase):
         forward = orientation.forward
         up = orientation.up
         right = orientation.right
-        expected = orientation.get_matrix()
+        expected = orientation.matrix
         expected[3] = position.x
         expected[7] = position.y
         expected[11] = position.z
@@ -28,7 +28,7 @@ class testMatrix(TestCase):
 
         matrix = Matrix(position)
 
-        expected = Orientation().get_matrix()
+        expected = Orientation().matrix
         expected[3] = position.x
         expected[7] = position.y
         expected[11] = position.z

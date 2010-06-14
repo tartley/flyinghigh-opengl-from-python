@@ -106,7 +106,8 @@ class Orientation(object):
         self.up = self.up.rotate(self.right, -angle).normalize()
 
 
-    def get_matrix(self):
+    @property
+    def matrix(self):
         '''
         The matrix that the OpenGL modelview matrix should be multiplied by
         to represent this orientation. If a Vec3 offset is supplied, then

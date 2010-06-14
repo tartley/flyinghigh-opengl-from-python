@@ -83,7 +83,7 @@ class testOrientation(TestCase):
            -o.forward.x, -o.forward.y, -o.forward.z, 0,
             0,            0,            0,           1,
         ]
-        self.assertEqual(o.get_matrix(), expected)
+        self.assertEqual(o.matrix, expected)
 
 
 if __name__ == '__main__':
