@@ -37,11 +37,16 @@ class Shape(object):
             orientation = Orientation(orientation)
         self.orientation = orientation
 
+        self._vertices = None
+
     @property
     def vertices(self):
-        matrix = Matrix(self.position, self.orientation)
-        return [matrix.transform(vert)
+        if self._vertices is None:
+            matrix = Matrix(self.position, self.orientation)
+            self._vertices = [
+                matrix.transform(vert)
                 for vert in self.geometry.vertices]
+        return self._vertices
 
     @property
     def faces(self):
@@ -59,10 +64,6 @@ class MultiShape(object):
         self.position = kwargs.pop('position', None)
         self.orientation = kwargs.pop('orientation', None)
         assert kwargs == {}
-
-        # if type(self.orientation) is tuple:
-            # self.orientation = Orientation(self.orientation)
-
         self._vertices = None
         self._colors = None
         self._faces = None

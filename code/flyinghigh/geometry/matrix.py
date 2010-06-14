@@ -16,6 +16,7 @@ class Matrix(object):
         self.elements[7] = position.y
         self.elements[11] = position.z
 
+
     def transform(self, vert):
         '''
         return the product of the given vertex by self, to give the vertex
