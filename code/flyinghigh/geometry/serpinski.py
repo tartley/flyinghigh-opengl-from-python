@@ -35,7 +35,7 @@ def replace_face(vertices, face, n):
     face_centroid = (v0 + v1 + v2) / 3
     face_normal = get_normal(vertices, face)
     edge = (v0 - v1).length
-    v6peak = face_centroid + face_normal * sqrt(2/3) * edge / 2
+    v6peak = face_centroid + face_normal * sqrt(2/3) * edge * 0.5
 
     def add_vertex(vert):
         vertices.append(vert)
@@ -67,6 +67,6 @@ def Serpinski(original, n=1):
     '''
     verts = list(original.vertices)
     faces = list(chain.from_iterable(
-        replace_face(verts, face, 3) for face in original.faces))
+        replace_face(verts, face, n) for face in original.faces))
     return Geometry(verts, faces)
 
