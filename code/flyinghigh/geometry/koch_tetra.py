@@ -7,6 +7,10 @@ from ..component.shapes import Geometry
 from .face import get_normal
 
 
+SUBTETRA_BASE = 0.5
+SUBTETRA_HEIGHT = 0.5
+
+
 def replace_face(vertices, face, n):
     '''
     Given a list of vertices and a triangular face described by a list of 3
@@ -28,14 +32,14 @@ def replace_face(vertices, face, n):
     v1 = vertices[i1]
     v2 = vertices[i2]
     # midpoints of edges, which form vertices of the new tetrahedron
-    v3mid = (v0 + v1) / 2
-    v4mid = (v1 + v2) / 2
-    v5mid = (v2 + v0) / 2
+    v3mid = (v0 + v1) * SUBTETRA_BASE
+    v4mid = (v1 + v2) * SUBTETRA_BASE
+    v5mid = (v2 + v0) * SUBTETRA_BASE
     # location of the peak of the new tetrahedron
     face_centroid = (v0 + v1 + v2) / 3
     face_normal = get_normal(vertices, face)
     edge = (v0 - v1).length
-    v6peak = face_centroid + face_normal * sqrt(2/3) * edge * 0.5
+    v6peak = face_centroid + face_normal * sqrt(2/3) * edge * SUBTETRA_HEIGHT
 
     def add_vertex(vert):
         vertices.append(vert)
@@ -49,6 +53,7 @@ def replace_face(vertices, face, n):
     i5 = add_vertex(v5mid)
     i6 = add_vertex(v6peak)
 
+    # construct list of new faces which replace 'face'
     faces = [ [i0, i3, i5], [i3, i1, i4], [i4, i2, i5],
               [i5, i3, i6], [i3, i4, i6], [i4, i5, i6], ]
     return list(chain(
@@ -59,8 +64,9 @@ def replace_face(vertices, face, n):
     ))
 
 
-def Serpinski(original, n=1):
+def KochTetra(original, n=1):
     '''
+    Performs a 'Koche tetrahedron' transformation to the given geometry.
     Return a new geometry, in which each face of the original has been
     replaced by a triangle with a tetrahedron sticking out of it.
     Assumes the faces of the original are triangles.

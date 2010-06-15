@@ -3,7 +3,8 @@ from __future__ import division
 
 from .engine.gameitem import GameItem
 from .geometry.vec3 import Vec3
-from .geometry.serpinski import Serpinski
+from .geometry.koch_cube import KochCube
+from .geometry.koch_tetra import KochTetra
 from .component.slowmo import SlowMo
 from .component.spinner import Spinner
 from .component.shapes import (
@@ -14,7 +15,7 @@ from .component.wobblyorbit import WobblyOrbit
 
 
 def populate(world):
-    world.camera.move = WobblyOrbit(6, 3)
+    world.camera.move = WobblyOrbit(10, 8)
 
     red = (255, 0, 0, 255)
     orange = (255, 127, 0, 255)
@@ -23,8 +24,14 @@ def populate(world):
     blue = (0, 0, 255, 255)
 
     world.add( GameItem(
-        shape=Shape(Serpinski(Tetrahedron(4), 8)),
+        shape=Shape(KochCube(Cube(2), 5), color=yellow),
+        spin=Spinner(speed=2),
+    ) )
+
+    world.add( GameItem(
+        shape=Shape(KochTetra(Tetrahedron(4), 6)),
         spin=Spinner(speed=4),
+        position=Vec3(0, 0, 4),
     ) )
 
     world.add( GameItem(

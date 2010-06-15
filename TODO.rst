@@ -40,6 +40,7 @@ Separate out new class Geometry, leaving Shape to manage geometry, color,
 position and orientation (the latter two relative to its containing
 MultiShape.) So now we can re-use same geometry instance (eg. Cube(1)) many
 times in the same MultiShape.
+CompositeShapes should be nestable.
 
 3d orientation of shapes relative to their containing Multishape
 
@@ -48,15 +49,28 @@ Convert orientation.matrix back to a property
 
 Create serpinski gasket (tetra)
 
+PERFORMANCE
+try making Vec3 not inherit from tuple, giving it plain attributes x, y & z.
+Adding slots. Give it an indexor to still allow access to v[0], v[1], v[2].
+- Tried and reverted. This was 20% slower.
+
+rename 'serpinski gasket' to 'koche tetrahedron'
+
+Create koch cube
+
 `CURRENT--------------------------------------------------------------------`
 
-try out numpy vec3 and matrix classes. compare performance.
+Try vec3d and matrix from:
+    -euclid
+    -numpy
 
-TIDY
-rename 'serpinski gasket' to 'koche tetrahedron'
+GEOMETRIES
+* Comprise Koch iterations from different Shapes so each one can use
+  separate color?
+* Tetris shapes!
+* Random symmetries of close-packed cube patterns
+
 Split geometry and shape out into separate modules
-
-Create koche cube
 
 GEOMETRY
 Processing of shapes:
@@ -65,26 +79,31 @@ Processing of shapes:
 
 User-controlled camera
 
+Slomo should take a lambda as predicate to evaluate whether to activate
+or not. Could then slow down on arbitrary conditions, such as two gameitems
+colliding, rather than just on camera moving within region.
+
 Fake skybox geometry:
     tiny triangular stars
     a ground
-    a spherical moon with rings
+    - with mountains!
+    a spherical moon
+    - with rings!
 
 PRESENTATION PHASE 1
-Write first draft essay about procedural geometry
+Write first draft essay
+    - like blog post, but with diagrams
 Find way to automate conversion of essays into slides (rst2s5?)
-Write first draft essay about shaders
-Write first draft essay about compiled inner loops
-Section about 'composition instead of inheritance'?
-Section about choosing to use indexed arrays of GL_TRIANGLES
-
-PERFORMANCE
-If Vec3 creation is still bulk of startup time, try making Vec3 not inherit
-from tuple, giving it plain attributes x, y & z. Adding slots. Give it an
-indexor to still allow access to v[0], v[1], v[2].
+    - include number of lines reqd for minimal funky app
+    - section on composition instead of inheritance
+    - section on shaders
+    - section on algorithmic geometry
 
 Are we currently sending all geometry across bus every frame?
 try VBOs. but fall back to current method (vertex arrays) if hardware is crap
+
+PRESENTATION
+Write first draft essay about compiled inner loops
 
 SHADERS:
 attach lighsource to an in-world object, pass position in to vertex shader
@@ -93,6 +112,7 @@ GEOMETRY
 Cube cluster generated from pixels of small bitmaps. Invader! Mario! etc.
 
 INNER LOOP PHASE 1
+try out numpy vec3 and matrix classes. compare performance.
 try psycho
 try pyrex
 try cython
@@ -106,7 +126,6 @@ all triangles adjacent to a vertex can re-use the exact same position,
 normal, color, etc. Still used indexed arrays of GL_TRIANGLES though.
 
 REFACTOR
-  * CompositeShapes should be nestable. Perhaps they are already.
   * use generators when creating glyph (if it is faster. Because it is a pain
     to debug them, hence not worth it if same speed)
 
@@ -120,7 +139,8 @@ REFACTOR
     try glBlendFunc(GL_ONE_MINUS_SRC_ALPHA)
 
 GEOMETRY
-Automatically triangulate *concave* faces (needs glu triangulate code)
+Automatically triangulate *concave* faces (needs glu triangulate code from
+svgbatch)
 Add to the geometry while it is being displayed
 
 REFACTOR
@@ -136,6 +156,10 @@ Several different clumps of radial sphere segments, all co-centered,
     with differing rates (axes?) of rotation
 City buildings
 One of each, in the same scene.
+
+Create & move geometries with keyboard
+Add spinners, movers with keyboard
+Change shaders with keyboard
 
 SHADERS PHASE 3
 Add single texture
