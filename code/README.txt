@@ -60,6 +60,17 @@ sub-package, eg. gameitem.glyph is set to an instance of component.Glyph.
 GameItems with this attribute are rendered by engine.Render. Those without it
 (eg. the camera) are not rendered.
 
+Currently, all glyph attribute values are derived directly from the gameitem's
+'shape' attribute. The Glyph class does this conversion itself. It is
+instructed to do so by 'world.add()', which knows that any gameitem with a
+shape attribute should have a corresponding 'glyph' attribute added, so that it
+can be rendered.
+
+Other components that may be attached to gameitems as attributes include
+spinners and movers, that move or reorient their parent gameitem. For
+example, the camera gameitem has a 'mover' attribute, which is an instance
+of component.WobblyOrbit. This is responsible for the camera movement.
+
 I ended up accidentally creating my own hand-rolled vec3 class, which I
 acknowledge is dumb.
 
