@@ -40,10 +40,6 @@ class Render(object):
 
             gl.glPushMatrix()
 
-            # if len(position) == 2:
-                # gl.glTranslatef(position[0]. position[1], 0)
-                # gl.glRotatef(degrees(item.angle), 0, 0, 1)
-            # else:
             if hasattr(item, 'position'):
                 gl.glTranslatef(*item.position)
             if hasattr(item, 'orientation'):

@@ -3,7 +3,7 @@ from unittest2 import TestCase, main
 
 from ..orientation import Orientation
 from ..matrix import Matrix
-from ..vec3 import NegZAxis, Vec3, XAxis, YAxis
+from ..vec3 import Vec3, XAxis, YAxis
 
 
 class testMatrix(TestCase):

@@ -6,8 +6,8 @@ from ..component.shapes import Geometry
 from .face import get_normal
 
 
-SUBCUBE_BASE = 1/3
-SUBCUBE_HEIGHT = 1/3
+SUBCUBE_BASE = 1/4
+SUBCUBE_HEIGHT = 1/2
 
 
 def add_vertex(vertices, vert):
@@ -38,10 +38,10 @@ def replace_face(vertices, face, n):
     v2 = vertices[i2]
     v3 = vertices[i3]
     # base of new cube
-    v0inner = v0 + (v2 - v0) * (1 - SUBCUBE_BASE)
-    v1inner = v1 + (v3 - v1) * (1 - SUBCUBE_BASE)
-    v2inner = v2 + (v0 - v2) * (1 - SUBCUBE_BASE)
-    v3inner = v3 + (v1 - v3) * (1 - SUBCUBE_BASE)
+    v0inner = v0 + (v2 - v0) * SUBCUBE_BASE
+    v1inner = v1 + (v3 - v1) * SUBCUBE_BASE
+    v2inner = v2 + (v0 - v2) * SUBCUBE_BASE
+    v3inner = v3 + (v1 - v3) * SUBCUBE_BASE
     # peaks of the new cube
     face_normal = get_normal(vertices, face)
     edge = (v0 - v1).length
@@ -90,10 +90,10 @@ def replace_face(vertices, face, n):
 
 def KochCube(original, n=1):
     '''
-    Performs a 'Koche tetrahedron' transformation to the given geometry.
+    Performs a 'Koche cube' transformation to the given geometry.
     Return a new geometry, in which each face of the original has been
-    replaced by a triangle with a tetrahedron sticking out of it.
-    Assumes the faces of the original are triangles.
+    replaced by a square with a new cube sticking out of it.
+    Assumes the faces of the original are squares.
     '''
     verts = list(original.vertices)
     faces = list(chain.from_iterable(
