@@ -60,15 +60,26 @@ Create koch cube
 
 `CURRENT--------------------------------------------------------------------`
 
+vec3 operations like add should work in-place, to remove overhead of
+construction This implies vec3 is mutable, and shouldn't hash
+Consider:
+    'normalise()' (functional, returns new instance)
+    'normalized()' (in-place, returns self)
+Consider equivalent for other methods.
+
 Try vec3d and matrix from:
-    -euclid
+    -euclid (looks ok, stolent one or two ideas)
+    -planar (will need augmenting to make 3d)
     -numpy
 
 GEOMETRIES
+* Koch branch
 * Comprise Koch iterations from different Shapes so each one can use
   separate color?
-* Tetris shapes!
+* Tetris shapes (unoptimised)
 * Random symmetries of close-packed cube patterns
+* regular solids
+* Elite ships
 
 Split geometry and shape out into separate modules
 
@@ -110,6 +121,8 @@ attach lighsource to an in-world object, pass position in to vertex shader
 
 GEOMETRY
 Cube cluster generated from pixels of small bitmaps. Invader! Mario! etc.
+Cube cluster presenting different images when viewed from different angles
+    - really needs set of icons re-using same color pallette to work well
 
 INNER LOOP PHASE 1
 try out numpy vec3 and matrix classes. compare performance.

@@ -1,11 +1,13 @@
 
 from math import pi, degrees
 
+from OpenGL import GL as gl
+
 from .vec3 import NegYAxis, NegZAxis, Vec3, YAxis, ZAxis
 
 
 EPSILON = 1e-15
-
+matrix_type = gl.GLfloat * 16
 
 class Orientation(object):
     '''
@@ -38,6 +40,8 @@ class Orientation(object):
         self.up = up.normalize()
 
         self.right = self._get_right()
+
+        self._matrix = None
 
 
     def _default_up(self):
@@ -113,10 +117,12 @@ class Orientation(object):
         to represent this orientation. If a Vec3 offset is supplied, then
         the returned matrix also incorporates that translation offset.
         '''
-        return [
-            self.right.x,    self.right.y,    self.right.z,   0,
-            self.up.x,       self.up.y,       self.up.z,      0,
-           -self.forward.x, -self.forward.y, -self.forward.z, 0,
-            0,               0,               0,              1,
-        ]
+        if self._matrix is None:
+            self._matrix = matrix_type(
+                self.right.x,    self.right.y,    self.right.z,   0,
+                self.up.x,       self.up.y,       self.up.z,      0,
+               -self.forward.x, -self.forward.y, -self.forward.z, 0,
+                0,               0,               0,              1,
+            )
+        return self._matrix
 

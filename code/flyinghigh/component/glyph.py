@@ -6,7 +6,6 @@ from ..geometry.face import get_normal
 
 
 
-
 def _glarray(gltype, seq, length):
     '''
     Convert nested sequences of values into a single contiguous ctypes array
