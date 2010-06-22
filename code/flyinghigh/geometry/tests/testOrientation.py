@@ -2,6 +2,8 @@
 from math import pi
 from unittest2 import TestCase, main
 
+from OpenGL import GL as gl
+
 from ..vec3 import NegXAxis, NegYAxis, NegZAxis, Vec3, XAxis, YAxis, ZAxis
 from ..orientation import Orientation
 
@@ -77,13 +79,15 @@ class testOrientation(TestCase):
 
     def testMatrix(self):
         o = Orientation((1, 2, 3))
+        self.assertEquals(type(o.matrix), gl.GLfloat * 16)
         expected = [
             o.right.x,    o.right.y,    o.right.z,   0,
             o.up.x,       o.up.y,       o.up.z,      0,
            -o.forward.x, -o.forward.y, -o.forward.z, 0,
             0,            0,            0,           1,
         ]
-        self.assertEqual(o.matrix, expected)
+        for a, e in zip(o.matrix, expected):
+            self.assertAlmostEqual(a, e)
 
 
 if __name__ == '__main__':
