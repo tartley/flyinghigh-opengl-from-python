@@ -1,7 +1,7 @@
 
 void main()
 {
-    vec3 LightPosition = vec3(0.2670, 0.267 * 3, 0.2673 * 2);
+    vec3 LightPosition = vec3(0.2670, 0.267 * 3.0, 0.2673 * 2.0);
 
     vec3 tnorm = normalize(gl_NormalMatrix * gl_Normal);
     float costheta = dot(tnorm, LightPosition);
