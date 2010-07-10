@@ -1,7 +1,12 @@
 
 from __future__ import division
 from math import sqrt, pi
-from unittest2 import TestCase, main
+try:
+    # Python 2.6 with unittest2 installed
+    from unittest2 import TestCase, main
+except:
+    # Python 2.7
+    from unittest import TestCase, main
 
 from ..orientation import Orientation
 from ..vec3 import (
@@ -54,10 +59,7 @@ class testVec3(TestCase):
         self.assertTrue(Vec3(1, 2, 3) != 1.23)
 
     def testHash(self):
-        self.assertEqual(hash(Vec3(1, 2, 3)), hash(Vec3(1, 2, 3)))
-        self.assertNotEqual(hash(Vec3(1, 2, 3)), hash(Vec3(11, 2, 3)))
-        self.assertNotEqual(hash(Vec3(1, 2, 3)), hash(Vec3(1, 22, 3)))
-        self.assertNotEqual(hash(Vec3(1, 2, 3)), hash(Vec3(1, 2, 33)))
+        self.assertRaises(NotImplementedError, lambda: hash(Vec3(1, 2, 3)))
 
     def testAlmostEqual(self):
         error = EPSILON * 0.9

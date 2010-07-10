@@ -1,7 +1,12 @@
 
 from itertools import chain
 
-from unittest2 import TestCase, main
+try:
+    # Python 2.6 with unittest2 installed
+    from unittest2 import TestCase, main
+except:
+    # Python 2.7
+    from unittest import TestCase, main
 
 from OpenGL import GL as gl
 
