@@ -24,7 +24,8 @@ class Vec3(namedtuple('Vec3Base', 'x y z')):
 
     # __neq__ as 'not __eq__' seems to be inherited from tuple
 
-    # __hash__ is inherited from tuple, and depends on all of x, y, z
+    def __hash__(self):
+        raise NotImplementedError
 
     def __neg__(self):
         return Vec3(-self.x, -self.y, -self.z)
