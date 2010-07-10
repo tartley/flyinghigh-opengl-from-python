@@ -60,6 +60,11 @@ Create koch cube
 
 `CURRENT--------------------------------------------------------------------`
 
+print some useful info to the console, to show what is taking so long time at
+the beginning.
+
+Consider python 2.5 and 3.1 compatibility.
+
 vec3 operations like add should work in-place, to remove overhead of
 construction This implies vec3 is mutable, and shouldn't hash
 Consider:
@@ -152,9 +157,14 @@ REFACTOR
     try glBlendFunc(GL_ONE_MINUS_SRC_ALPHA)
 
 GEOMETRY
+Add to the geometry while it is being displayed
+    create big array up front. Just update final few verts in it as the
+    shape grows.
+'Squaresnake', as square extrudes, curve it left-right or up-down.
+
+GEOMETRY
 Automatically triangulate *concave* faces (needs glu triangulate code from
 svgbatch)
-Add to the geometry while it is being displayed
 
 REFACTOR
 Review Mike's 'canonical opengl3 application', from his old pycon talk.
@@ -167,7 +177,6 @@ GEOMETRY PHASE 3
 Create clump of radial sphere segments
 Several different clumps of radial sphere segments, all co-centered,
     with differing rates (axes?) of rotation
-City buildings
 One of each, in the same scene.
 
 Create & move geometries with keyboard
@@ -177,6 +186,11 @@ Change shaders with keyboard
 SHADERS PHASE 3
 Add single texture
 
+`Out of scope-----------------------------------------------------------------`
+
 SKYBOX
 Add a real one
+
+Numpy integration
+    possibly can generate geometry and glarrays really quickly with this?
 

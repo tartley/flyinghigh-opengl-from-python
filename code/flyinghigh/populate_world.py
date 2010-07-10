@@ -23,24 +23,25 @@ def populate(world):
     green = (0, 255, 0, 255)
     blue = (0, 0, 255, 255)
 
+    world.add( GameItem(
+        shape=Shape(KochCube(Cube(2), 5), color=yellow),
+        spin=Spinner(speed=2),
+    ) )
+
     # world.add( GameItem(
-        # shape=Shape(KochCube(Cube(2), 6), color=yellow),
-        # spin=Spinner(speed=2),
+        # shape=Shape(KochTetra(Tetrahedron(4), 5)),
+        # spin=Spinner(speed=4),
+        # position=Vec3(0, -4, 4),
     # ) )
 
     world.add( GameItem(
-        shape=Shape(KochTetra(Tetrahedron(4), 5)),
-        spin=Spinner(speed=4),
-    ) )
-
-    world.add( GameItem(
-        position=Vec3(4, 0, 0),
+        position=Vec3(-4, 4, 0),
         shape=CubeCross(),
         spin=Spinner(speed=3),
     ) )
 
     world.add( GameItem(
-        shape=RgbCubeCluster(1.0, 60, 5150),
+        shape=RgbCubeCluster(1.0, 60, 1150),
     ) )
 
     edge = 48
