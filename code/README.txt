@@ -9,27 +9,33 @@ From the 'code' directory::
 
 DEPENDENCIES:
 
-    Python 2.6
+    Python 2.6 or 2.7
     Pyglet
     PyOpenGL
 
+
+DEVELOPMENT
+
 For development, I'm also using:
 
-    unittest2
+    unittest2 (not reqd for Python2.7)
     nose
 
 running tests using 'nosetests' (unittest2 discovery has some wrinkles)
 
-For profiling, I'm using the standard library cProfile, with this to render
-the output graphically:
+Also I have some simple commands stored in a Makefile, which run under Linux or
+under Windows with Cygwin binaries on the PATH.
 
-    RunSnakeRun
-    # runsnake must be installed either using:
-    #   easy_install RunSnakeRun SquareMap
-    # or download from here:
-    #   http://www.vrplumber.com/programming/runsnakerun/
-    # also needs wxPython, from here:
-    #   http://www.wxpython.org/download.php#binaries
+
+PROFILING
+
+For profiling, I'm using the standard library cProfile, with 3rd party tool
+'RunSnakeRun' to render the output graphically.
+
+    make profile
+
+will run the script under the profiler, then run RunSnakeRun on the output.
+See the Makefile for details of installing RunSnakeRun.
 
 
 DESIGN NOTES
