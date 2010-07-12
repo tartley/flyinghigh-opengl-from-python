@@ -181,19 +181,22 @@ def Tetrahedron2(edge):
 def RgbCubeCluster(edge, cluster_edge, cube_count):
     shape = MultiShape()
     for i in xrange(cube_count):
-        r = randint(1, cluster_edge-1)
-        g = randint(1, cluster_edge-1)
-        b = randint(1, cluster_edge-1)
-        color = (
-            int(r / cluster_edge * 255),
-            int(g / cluster_edge * 255),
-            int(b / cluster_edge * 255),
-            255)
-        pos = [
-            r - cluster_edge / 2,
-            g - cluster_edge / 2,
-            b - cluster_edge / 2,
-        ]
+        while True:
+            r = randint(1, cluster_edge-1)
+            g = randint(1, cluster_edge-1)
+            b = randint(1, cluster_edge-1)
+            color = (
+                int(r / cluster_edge * 255),
+                int(g / cluster_edge * 255),
+                int(b / cluster_edge * 255),
+                255)
+            pos = Vec3(
+                r - cluster_edge / 2,
+                g - cluster_edge / 2,
+                b - cluster_edge / 2,
+            )
+            if pos.length > 8:
+                break
         shape.add(Shape(Cube(edge), color=color, position=Vec3(*pos)))
     return shape
 
