@@ -60,8 +60,6 @@ Create koch cube
 
 `CURRENT--------------------------------------------------------------------`
 
-Why does spinner or orientation not work for sierpinskis?
-
 print some useful info to the console, to show users some progress during
 startup
 

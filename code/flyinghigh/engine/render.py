@@ -1,6 +1,4 @@
 
-from math import degrees
-
 from OpenGL import GL as gl
 
 
