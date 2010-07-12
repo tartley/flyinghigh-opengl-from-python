@@ -18,13 +18,14 @@ from .component.wobblyorbit import WobblyOrbit
 
 
 def populate(world):
-    world.camera.move = WobblyOrbit(80, 75)
+    world.camera.move = WobblyOrbit(80, 75, speed=0.5)
 
     red = (255, 0, 0, 255)
     orange = (255, 127, 0, 255)
     yellow = (255, 255, 0, 255)
     green = (0, 255, 0, 255)
     blue = (0, 0, 255, 255)
+    purple = (255, 0, 255, 255)
 
     # world.add( GameItem(
         # shape=Shape(SierpinskiTetra(Tetrahedron(40), 7)),
@@ -35,8 +36,8 @@ def populate(world):
     world.add( GameItem(
         shape=Shape(SierpinskiTetra(Tetrahedron(40), 7, scale=0.52),
                     color=(0xff, 0xff, 0, 0xff)),
-        spin=Spinner(speed=4),
         position=Vec3(0, 0, 0),
+        orientation=Orientation(ZAxis),
     ) )
 
     # world.add( GameItem(
@@ -58,10 +59,39 @@ def populate(world):
     # ) )
 
     world.add( GameItem(
-        position=Vec3(-4, 4, 0),
         shape=CubeCross(),
         spin=Spinner(speed=3),
-        move=WobblyOrbit(5, 4),
+    ) )
+
+    world.add( GameItem(
+        shape=Shape(Cube(1), color=orange),
+        spin=Spinner(speed=20),
+        move=WobblyOrbit(3, speed=10),
+    ) )
+    world.add( GameItem(
+        shape=Shape(Cube(1), color=green),
+        spin=Spinner(speed=20),
+        move=WobblyOrbit(3, speed=10),
+    ) )
+    world.add( GameItem(
+        shape=Shape(Cube(1), color=red),
+        spin=Spinner(speed=20),
+        move=WobblyOrbit(3, speed=10),
+    ) )
+    world.add( GameItem(
+        shape=Shape(Cube(1), color=blue),
+        spin=Spinner(speed=20),
+        move=WobblyOrbit(3, speed=10),
+    ) )
+    world.add( GameItem(
+        shape=Shape(Cube(1), color=yellow),
+        spin=Spinner(speed=20),
+        move=WobblyOrbit(3, speed=10),
+    ) )
+    world.add( GameItem(
+        shape=Shape(Cube(1), color=purple),
+        spin=Spinner(speed=20),
+        move=WobblyOrbit(3, speed=10),
     ) )
 
     world.add( GameItem(
