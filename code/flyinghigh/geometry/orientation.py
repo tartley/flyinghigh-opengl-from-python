@@ -27,7 +27,7 @@ class Orientation(object):
             forward = NegZAxis
         elif not isinstance(forward, Vec3):
             forward = Vec3(*forward)
-        self.forward = forward.normalize()
+        self._forward = forward.normalize()
 
         if up is None:
             up = self._default_up()
@@ -37,11 +37,27 @@ class Orientation(object):
             assert abs(angle_between - pi/2) < EPSILON, \
                 "up (%s) must be 90deg to forward (%s), actually %f deg" % \
                 (up, forward, degrees(angle_between))
-        self.up = up.normalize()
+        self._up = up.normalize()
 
         self.right = self._get_right()
 
         self._matrix = None
+
+
+    def _set_forward(self, new):
+        self._forward = new
+        self._matrix = None
+
+    forward = property(lambda s: s._forward, _set_forward, None,
+            'The forward vector')
+
+
+    def _set_up(self, new):
+        self._up = new
+        self._matrix = None
+
+    up = property(lambda s: s._up, _set_up, None,
+            'The up vector')
 
 
     def _default_up(self):
@@ -57,7 +73,7 @@ class Orientation(object):
 
         # project 'forward' onto y=0 plane
         flat = Vec3(self.forward.x, 0, self.forward.z)
-        # find vector in the y=0 plane at right angles to 'flat'
+        # find 'axis', a vector in the y=0 plane at right angles to 'flat'
         axis = flat.cross(YAxis)
         # rotate 'forward' by 90 deg about 'axis'
         up = self.forward.rotate(axis, -pi/2)
