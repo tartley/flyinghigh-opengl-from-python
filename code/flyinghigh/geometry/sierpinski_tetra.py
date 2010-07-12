@@ -1,3 +1,6 @@
+"""
+Brilliant Sierpinski gasket generator submitted by Oscar Lindberg
+"""
 from __future__ import division
 
 from ..component.shapes import Geometry
