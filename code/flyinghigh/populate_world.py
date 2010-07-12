@@ -2,9 +2,11 @@
 from __future__ import division
 
 from .engine.gameitem import GameItem
-from .geometry.vec3 import Vec3
+from .geometry.vec3 import Vec3, ZAxis
+from .geometry.orientation import Orientation
 from .geometry.koch_cube import KochCube
 from .geometry.koch_tetra import KochTetra
+from .geometry.sierpinski_tetra import SierpinskiTetra
 from .component.slowmo import SlowMo
 from .component.spinner import Spinner
 from .component.shapes import (
@@ -12,6 +14,7 @@ from .component.shapes import (
     Tetrahedron,
 )
 from .component.wobblyorbit import WobblyOrbit
+
 
 
 def populate(world):
@@ -23,10 +26,30 @@ def populate(world):
     green = (0, 255, 0, 255)
     blue = (0, 0, 255, 255)
 
+    # world.add( GameItem(
+        # shape=Shape(SierpinskiTetra(Tetrahedron(40), 7)),
+        # spin=Spinner(speed=4),
+        # position=Vec3(0, 0, 0),
+    # ) )
+
     world.add( GameItem(
-        shape=Shape(KochCube(Cube(2), 5), color=yellow),
-        spin=Spinner(speed=2),
+        shape=Shape(SierpinskiTetra(Tetrahedron(40), 7, scale=0.52),
+                    color=(0xff, 0xff, 0, 0xff)),
+        spin=Spinner(speed=4),
+        position=Vec3(0, 0, 0),
     ) )
+
+    # world.add( GameItem(
+        # shape=Shape(SierpinskiTetra(Cube(20), 3, scale=0.4),
+                    # color=(0x80, 0, 0x80, 0xff)),
+        # spin=Spinner(speed=4),
+        # position=Vec3(0, 15, 0),
+    # ) )
+
+    # world.add( GameItem(
+        # shape=Shape(KochCube(Cube(2), 5), color=yellow),
+        # spin=Spinner(speed=2),
+    # ) )
 
     # world.add( GameItem(
         # shape=Shape(KochTetra(Tetrahedron(4), 5)),
@@ -38,6 +61,7 @@ def populate(world):
         position=Vec3(-4, 4, 0),
         shape=CubeCross(),
         spin=Spinner(speed=3),
+        move=WobblyOrbit(5, 4),
     ) )
 
     world.add( GameItem(

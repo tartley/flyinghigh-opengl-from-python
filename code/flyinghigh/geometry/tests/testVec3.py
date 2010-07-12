@@ -8,7 +8,6 @@ except:
     # Python 2.7
     from unittest import TestCase, main
 
-from ..orientation import Orientation
 from ..vec3 import (
     EPSILON, NegXAxis, NegYAxis, NegZAxis, Vec3, XAxis, YAxis, ZAxis,
 )

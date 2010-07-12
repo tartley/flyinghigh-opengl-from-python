@@ -60,8 +60,8 @@ Create koch cube
 
 `CURRENT--------------------------------------------------------------------`
 
-print some useful info to the console, to show what is taking so long time at
-the beginning.
+print some useful info to the console, to show users some progress during
+startup
 
 Consider python 2.5 and 3.1 compatibility.
 
