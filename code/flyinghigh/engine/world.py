@@ -1,7 +1,20 @@
 
 import operator
 
-from ..component.glyph import Glyph
+
+class Event(object):
+
+    def __init__(self):
+        self.listeners = []
+
+    def __iadd__(self, listener):
+        self.listeners.append(listener)
+        return self
+
+    def fire(self, *args, **kwargs):
+        for listener in self.listeners:
+            listener(*args, **kwargs)
+
 
 
 class World(object):
@@ -11,13 +24,12 @@ class World(object):
     def __init__(self):
         self.items = {}
         self.time = 0.0
+        self.add_item = Event()
+
 
     def add(self, item):
         self.items[item.id] = item
-
-        if hasattr(item, 'shape'):
-            item.glyph = Glyph()
-            item.glyph.from_shape(item.shape)
+        self.add_item.fire(item)
 
         if hasattr(item, 'camera'):
             self.camera = item
@@ -25,12 +37,14 @@ class World(object):
     def product(self, *args):
         return reduce(operator.mul, list(*args), 1)
 
+
     def _get_rate(self):
         rate = self.product(
             item.slowmo(self.camera.position)
             for item in self.items.itervalues()
             if hasattr(item, 'slowmo'))
         return rate
+
 
     def update(self, dt):
         dt *= self._get_rate()

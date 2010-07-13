@@ -1,4 +1,6 @@
 
+from ..component.glyph import Glyph
+
 from OpenGL import GL as gl
 
 
@@ -29,6 +31,14 @@ class Render(object):
         gl.glEnable(gl.GL_CULL_FACE)
 
         gl.glClearColor(*self.world.clearColor)
+
+        self.world.add_item += self.on_world_add_item
+
+
+    def on_world_add_item(self, item):
+        if hasattr(item, 'shape'):
+            item.glyph = Glyph()
+            item.glyph.from_shape(item.shape)
 
 
     def draw(self, world):
