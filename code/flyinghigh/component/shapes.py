@@ -219,7 +219,6 @@ def CubeCross():
     multi = MultiShape()
     center_color = (150, 150, 150, 255)
     multi.add(Shape(Cube(2), center_color, Origin))
-    # multi.add(Shape(Cube(2), outer_color, XAxis))
 
     outer_color = (170, 170, 170, 255)
     multi.add(Shape(Cube(1), outer_color, XAxis))
@@ -229,6 +228,24 @@ def CubeCross():
     multi.add(Shape(Cube(1), outer_color, -YAxis))
     multi.add(Shape(Cube(1), outer_color, -ZAxis))
     return multi
+
+
+def CubeCorners():
+    multi = MultiShape()
+    center_color = (150, 150, 150, 255)
+    multi.add(Shape(Cube(2), center_color, Origin))
+
+    outer_color = (170, 170, 170, 255)
+    multi.add(Shape(Cube(1), outer_color, (+1, +1, +1)))
+    multi.add(Shape(Cube(1), outer_color, (+1, +1, -1)))
+    multi.add(Shape(Cube(1), outer_color, (+1, -1, +1)))
+    multi.add(Shape(Cube(1), outer_color, (+1, -1, -1)))
+    multi.add(Shape(Cube(1), outer_color, (-1, +1, +1)))
+    multi.add(Shape(Cube(1), outer_color, (-1, +1, -1)))
+    multi.add(Shape(Cube(1), outer_color, (-1, -1, +1)))
+    multi.add(Shape(Cube(1), outer_color, (-1, -1, -1)))
+    return multi
+    
 
 def RgbAxes():
     red = (255, 0, 0, 255)

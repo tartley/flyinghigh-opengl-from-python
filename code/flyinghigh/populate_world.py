@@ -9,8 +9,8 @@ from .geometry.koch_tetra import KochTetra
 from .geometry.sierpinski_tetra import SierpinskiTetra
 from .component.slowmo import SlowMo
 from .component.shapes import (
-    MultiShape, Cube, CubeCross, CubeLattice, RgbCubeCluster, Shape,
-    Tetrahedron,
+    MultiShape, Cube, CubeCorners, CubeCross, CubeLattice, RgbCubeCluster,
+    Shape, Tetrahedron,
 )
 from .component.spinner import Spinner
 from .component.wobblyorbit import WobblyOrbit
@@ -64,7 +64,7 @@ def populate(world, camera):
     # ) )
 
     world.add( GameItem(
-        shape=CubeCross(),
+        shape=CubeCorners(),
         spin=Spinner(speed=3),
     ) )
 

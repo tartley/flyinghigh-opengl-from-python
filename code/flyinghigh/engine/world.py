@@ -18,7 +18,7 @@ class Event(object):
 
 class World(object):
 
-    clearColor = (0.3, 0.3, 0.3, 1)
+    clearColor = (0.6, 0.3, 0.1, 1)
 
     def __init__(self):
         self.time = Time(self)
