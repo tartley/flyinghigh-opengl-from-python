@@ -63,48 +63,31 @@ def populate(world):
         spin=Spinner(speed=3),
     ) )
 
-    world.add( GameItem(
-        shape=Shape(Cube(1), color=orange),
-        spin=Spinner(speed=20),
-        move=WobblyOrbit(3, speed=10),
-    ) )
-    world.add( GameItem(
-        shape=Shape(Cube(1), color=green),
-        spin=Spinner(speed=20),
-        move=WobblyOrbit(3, speed=10),
-    ) )
-    world.add( GameItem(
-        shape=Shape(Cube(1), color=red),
-        spin=Spinner(speed=20),
-        move=WobblyOrbit(3, speed=10),
-    ) )
-    world.add( GameItem(
-        shape=Shape(Cube(1), color=blue),
-        spin=Spinner(speed=20),
-        move=WobblyOrbit(3, speed=10),
-    ) )
-    world.add( GameItem(
-        shape=Shape(Cube(1), color=yellow),
-        spin=Spinner(speed=20),
-        move=WobblyOrbit(3, speed=10),
-    ) )
-    world.add( GameItem(
-        shape=Shape(Cube(1), color=purple),
-        spin=Spinner(speed=20),
-        move=WobblyOrbit(3, speed=10),
-    ) )
+    for color in (orange, green, red, blue, yellow, purple):
+        world.add( GameItem(
+            shape=Shape(Cube(1), color=color),
+            spin=Spinner(speed=20),
+            move=WobblyOrbit(3, speed=10),
+        ) )
 
     world.add( GameItem(
         shape=RgbCubeCluster(1.0, 60, 1150),
     ) )
 
     edge = 48
+
+    def is_inside():
+        '''True if camera is inside cube of the given edge at the origin'''
+        position = world.camera.position
+        dist = max(abs(position.x), abs(position.y), abs(position.z))
+        return dist < edge / 2
+
     darkgrey = (20, 20, 20, 80)
     shape = MultiShape()
     shape.add(CubeLattice(1.0, edge, 8))
     shape.add(Shape(Cube(edge), color=darkgrey))
     world.add( GameItem(
         shape=shape,
-        slowmo=SlowMo(edge, 0.2),
+        slowmo=SlowMo(is_inside, 0.2),
     ) )
 

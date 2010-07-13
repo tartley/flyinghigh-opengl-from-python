@@ -1,23 +1,21 @@
 
+RATE = 0.05
 
 class SlowMo(object):
     '''
-    Defines a region of space, if the position of the given item is within it,
-    then time passes more slowly
+    If condition is False, __call__ returns 1.0, otherwise it returns
+    'slowdown'. Transition smoothly from one value to the other,
     '''
-    def __init__(self, edge, rate):
-        self.edge = edge
-        self.rate = rate
-        self.spread = 10
+    def __init__(self, condition, slowdown):
+        self.condition = condition
+        self.slowdown = slowdown
+        self.current = slowdown if condition() else 1.0
 
-    def __call__(self, position):
-        '''
-        return 1.0 for positions well outside the cube shaped region of size
-        'edge'. Return self.rate for positions well inside it. Linearly
-        interpolate between the two at the boundary.
-        '''
-        dist = max(abs(position.x), abs(position.y), abs(position.z))
-        offset = dist - self.edge / 2 + self.spread / 2
-        retval = offset * (1.0 - self.rate) / self.spread
-        return min(1.0, max(self.rate, retval))
+    def __call__(self):
+        if self.condition():
+            desired = self.slowdown
+        else:
+            desired = 1.0
+        self.current += (desired - self.current) * RATE
+        return self.current
 

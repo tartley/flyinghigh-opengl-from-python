@@ -39,8 +39,8 @@ class World(object):
 
 
     def _get_rate(self):
-        rate = self.product(
-            item.slowmo(self.camera.position)
+        rate = min(
+            item.slowmo()
             for item in self.items.itervalues()
             if hasattr(item, 'slowmo'))
         return rate
