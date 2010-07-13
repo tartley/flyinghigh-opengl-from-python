@@ -1,7 +1,7 @@
 from math import cos, sin, pi
 from random import uniform
 
-from ..geometry.vec3 import Vec3, YAxis
+from ..geometry.vec3 import Vec3
 
 
 class WobblyOrbit(object):
@@ -12,7 +12,8 @@ class WobblyOrbit(object):
         self.speed = speed
         self.phase = uniform(0, 2 * pi)
 
-    def __call__(self, time, dt):
+    def __call__(self, time):
+        time = time.current
         # camera position at distance, bearing
         distance = self.mean + sin(time * self.speed) * self.variance
         bearing = sin(time * self.speed / 4.0 + self.phase + 3 * pi / 4.0) * 10

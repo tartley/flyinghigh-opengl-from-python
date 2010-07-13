@@ -4,13 +4,11 @@ import pyglet
 from pyglet.event import EVENT_HANDLED
 from pyglet.window import Window
 
-from .gameitem import GameItem
 from .projection import Projection
 from .render import Render
 from .shader import FragmentShader, ShaderProgram, VertexShader
 from .world import World
 from ..component.camera import Camera
-from ..geometry.vec3 import Origin
 
 
 class Gameloop(object):
@@ -31,13 +29,8 @@ class Gameloop(object):
         self.projection = Projection(self.window.width, self.window.height)
         self.window.on_resize = self.projection.resize
 
-        self.world = World()
-
         self.camera = Camera()
-        self.world.add( GameItem(
-            position=Origin,
-            camera=self.camera,
-        ) )
+        self.world = World()
 
         self.render = Render(self.world)
         self.render.init()

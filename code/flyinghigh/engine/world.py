@@ -1,5 +1,5 @@
 
-import operator
+from .time import Time
 
 
 class Event(object):
@@ -16,14 +16,13 @@ class Event(object):
             listener(*args, **kwargs)
 
 
-
 class World(object):
 
     clearColor = (0.3, 0.3, 0.3, 1)
 
     def __init__(self):
+        self.time = Time(self)
         self.items = {}
-        self.time = 0.0
         self.add_item = Event()
 
 
@@ -31,27 +30,12 @@ class World(object):
         self.items[item.id] = item
         self.add_item.fire(item)
 
-        if hasattr(item, 'camera'):
-            self.camera = item
-
-    def product(self, *args):
-        return reduce(operator.mul, list(*args), 1)
-
-
-    def _get_rate(self):
-        rate = min(
-            item.slowmo()
-            for item in self.items.itervalues()
-            if hasattr(item, 'slowmo'))
-        return rate
-
 
     def update(self, dt):
-        dt *= self._get_rate()
-        self.time += dt
+        self.time.tick(dt)
         for item in self.items.itervalues():
             if hasattr(item, 'move'):
-                item.position = item.move(self.time, dt)
+                item.position = item.move(self.time)
             if hasattr(item, 'spin'):
-                item.orientation = item.spin(self.time, dt)
+                item.orientation = item.spin(self.time)
 

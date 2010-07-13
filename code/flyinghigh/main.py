@@ -12,7 +12,7 @@ def run_game():
     try:
         gameloop = Gameloop()
         gameloop.prepare()
-        populate(gameloop.world)
+        populate(gameloop.world, gameloop.camera)
         gameloop.world.update(0)
         gameloop.window.set_visible()
         pyglet.app.run()

@@ -2,23 +2,28 @@
 from __future__ import division
 
 from .engine.gameitem import GameItem
-from .geometry.vec3 import Vec3, ZAxis
+from .geometry.vec3 import Origin, Vec3, ZAxis
 from .geometry.orientation import Orientation
 from .geometry.koch_cube import KochCube
 from .geometry.koch_tetra import KochTetra
 from .geometry.sierpinski_tetra import SierpinskiTetra
 from .component.slowmo import SlowMo
-from .component.spinner import Spinner
 from .component.shapes import (
     MultiShape, Cube, CubeCross, CubeLattice, RgbCubeCluster, Shape,
     Tetrahedron,
 )
+from .component.spinner import Spinner
 from .component.wobblyorbit import WobblyOrbit
 
 
 
-def populate(world):
-    world.camera.move = WobblyOrbit(80, 75, speed=0.5)
+def populate(world, camera):
+    camitem = GameItem(
+        position=Origin,
+        camera=camera,
+        move=WobblyOrbit(80, 75, speed=0.5),
+    )
+    world.add(camitem)
 
     red = (255, 0, 0, 255)
     orange = (255, 127, 0, 255)
@@ -78,7 +83,7 @@ def populate(world):
 
     def is_inside():
         '''True if camera is inside cube of the given edge at the origin'''
-        position = world.camera.position
+        position = camitem.position
         dist = max(abs(position.x), abs(position.y), abs(position.z))
         return dist < edge / 2
 
