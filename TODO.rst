@@ -60,44 +60,81 @@ Create koch cube
 
 `CURRENT--------------------------------------------------------------------`
 
+Separate colors for each face.
+
 print some useful info to the console, to show users some progress during
 startup
 
-Consider python 2.5 and 3.1 compatibility.
+Review Mike's 'canonical opengl3 application', from his old pycon talk.
 
-vec3 operations like add should work in-place, to remove overhead of
-construction This implies vec3 is mutable, and shouldn't hash
-Consider:
-    'normalise()' (functional, returns new instance)
-    'normalized()' (in-place, returns self)
-Consider equivalent for other methods.
-
-Try vec3d and matrix from:
-    -euclid (looks ok, stolent one or two ideas)
-    -planar (will need augmenting to make 3d)
-    -numpy
+Write the first half of presentation.
+    - like blog post, but with diagrams
+    - Find way to automate conversion of essays into slides (rst2s5?)
+    - include number of lines reqd for minimal funky app
+    - section on composition instead of inheritance
+    - section on shaders
+    - section on algorithmic geometry
+    - section on shaders
 
 GEOMETRIES
-* Koch branch
-* Comprise Koch iterations from different Shapes so each one can use
-  separate color?
+* the regular solids
 * Tetris shapes (unoptimised)
 * Random symmetries of close-packed cube patterns
-* regular solids
-* Elite ships
+* random combos of regular solids
+* maze and pipe-like
+* Cube cluster generated from pixels of small bitmaps. Invader! Mario! etc.
+
+SHADERS
+* mobile in-world lightsource
+* colored lightsource
+* attach lightsource to an in-game object
+* multiple lightsources
+* specular reflection
+* texture map
+* noise
+
+GEOMETRY
+Shape and Glyph should also handle curved surfaces. In these, vertices
+will be re-used more often than in our current flat surfaces, because
+all triangles adjacent to a vertex can re-use the exact same position,
+normal, color, etc. Still used indexed arrays of GL_TRIANGLES though.
+* Cylinder
+* sphere
+* Ring (hollow cylinder)
+* donut
+* ring with crosses in it
+* multi-axis ring, with multi-axis cross
+
+Startup performance:
+    Look in profiler.
+    Are we calling anything too often?
+    Why all those str.__new__ calls?
+    What if we modify vec3's in place?
+    Try explicit loops rather than generators
+    Can we pre-allocate storage in the output lists?
+    Try generating gl arrays all in one loop
+    TAKE startup code to Code Clinic!
 
 Split geometry and shape out into separate modules
 
-GEOMETRY
-Processing of shapes:
-    Add border to faces (requires face shrinking. um.)
-    Bevel edges
+GEOMETRIES
+* Comprise Koch iterations from different Shapes so each one can use separate
+  color?
+* Bevel edges
+
+Are we currently sending all geometry across bus every frame?
+try VBOs. but fall back to current method (vertex arrays) if hardware is crap
+
+Add to geometry while it is being displayed
+    create big array up front. Just update final few verts in it as the
+    shape grows.
+'Squaresnake'
+
+Allow each entity (entity's shape?) to specify its own shaders.
+
+`Out of scope-----------------------------------------------------------------`
 
 User-controlled camera
-
-Slomo should take a lambda as predicate to evaluate whether to activate
-or not. Could then slow down on arbitrary conditions, such as two gameitems
-colliding, rather than just on camera moving within region.
 
 Fake skybox geometry:
     tiny triangular stars
@@ -105,29 +142,6 @@ Fake skybox geometry:
     - with mountains!
     a spherical moon
     - with rings!
-
-PRESENTATION PHASE 1
-Write first draft essay
-    - like blog post, but with diagrams
-Find way to automate conversion of essays into slides (rst2s5?)
-    - include number of lines reqd for minimal funky app
-    - section on composition instead of inheritance
-    - section on shaders
-    - section on algorithmic geometry
-
-Are we currently sending all geometry across bus every frame?
-try VBOs. but fall back to current method (vertex arrays) if hardware is crap
-
-PRESENTATION
-Write first draft essay about compiled inner loops
-
-SHADERS:
-attach lighsource to an in-world object, pass position in to vertex shader
-
-GEOMETRY
-Cube cluster generated from pixels of small bitmaps. Invader! Mario! etc.
-Cube cluster presenting different images when viewed from different angles
-    - really needs set of icons re-using same color pallette to work well
 
 INNER LOOP PHASE 1
 try out numpy vec3 and matrix classes. compare performance.
@@ -137,60 +151,33 @@ try cython
 try compiled C.
 Measure performances.
 
-GEOMETRY
-Shape and Glyph should also handle curved surfaces. In these, vertices
-will be re-used more often than in our current flat surfaces, because
-all triangles adjacent to a vertex can re-use the exact same position,
-normal, color, etc. Still used indexed arrays of GL_TRIANGLES though.
+Consider vec3 members:
+    'normalise()' (functional, returns new instance)
+    'normalized()' (in-place, returns self)
+Consider equivalent for other methods.
 
-REFACTOR
-  * use generators when creating glyph (if it is faster. Because it is a pain
-    to debug them, hence not worth it if same speed)
+Consider python 2.5 and 3.1 compatibility.
 
-SHADERS
-    specular highlight
-    colored lights
-    multiple lights
-
-REFACTOR
-    color generators. SolidColor, Gradient.
-    try glBlendFunc(GL_ONE_MINUS_SRC_ALPHA)
-
-GEOMETRY
-Add to the geometry while it is being displayed
-    create big array up front. Just update final few verts in it as the
-    shape grows.
-'Squaresnake', as square extrudes, curve it left-right or up-down.
-
-GEOMETRY
-Automatically triangulate *concave* faces (needs glu triangulate code from
-svgbatch)
-
-REFACTOR
-Review Mike's 'canonical opengl3 application', from his old pycon talk.
-
-SHADERS PHASE 2
-Allow each entity (entity's shape?) to specify its own shaders.
-Attach and detach shaders from entities at runtime, using keyboard?
-
-GEOMETRY PHASE 3
-Create clump of radial sphere segments
-Several different clumps of radial sphere segments, all co-centered,
-    with differing rates (axes?) of rotation
-One of each, in the same scene.
-
-Create & move geometries with keyboard
-Add spinners, movers with keyboard
-Change shaders with keyboard
-
-SHADERS PHASE 3
-Add single texture
-
-`Out of scope-----------------------------------------------------------------`
+Try vec3d and matrix from:
+    -euclid (looks ok, stolent one or two ideas)
+    -planar (will need augmenting to make 3d)
+    -numpy
 
 SKYBOX
 Add a real one
 
 Numpy integration
     possibly can generate geometry and glarrays really quickly with this?
+
+* Elite ships
+
+Slomo should take a lambda as predicate to evaluate whether to activate
+or not. Could then slow down on arbitrary conditions, such as two gameitems
+colliding, rather than just on camera moving within region.
+
+Cube cluster presenting different images when viewed from different angles
+    - really needs set of icons re-using same color pallette to work well
+
+Automatically triangulate *concave* faces (needs glu triangulate code from
+svgbatch)
 
