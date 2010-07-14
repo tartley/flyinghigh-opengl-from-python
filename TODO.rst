@@ -64,9 +64,9 @@ Slomo should take a lambda as predicate to evaluate whether to activate
 or not. Could then slow down on arbitrary conditions, such as two gameitems
 colliding, rather than just on camera moving within region.
 
-`CURRENT--------------------------------------------------------------------`
-
 Separate colors for each face.
+
+`CURRENT--------------------------------------------------------------------`
 
 print some useful info to the console, to show users some progress during
 startup

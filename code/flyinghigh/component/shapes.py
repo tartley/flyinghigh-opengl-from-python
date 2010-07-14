@@ -6,7 +6,9 @@ from random import randint
 from ..geometry.geometry import Cube
 from ..math.matrix import Matrix
 from ..math.orientation import Orientation
-from ..math.vec3 import Origin, Vec3, XAxis, YAxis, ZAxis
+from ..math.vec3 import (
+    NegXAxis, NegYAxis, NegZAxis, Origin, Vec3, XAxis, YAxis, ZAxis,
+)
 
 
 white=(255, 255, 255, 255)
@@ -140,15 +142,11 @@ def CubeLattice(edge, cluster_edge, freq, color):
 def CubeCross():
     multi = MultiShape()
     center_color = (150, 150, 150, 255)
-    multi.add(Shape(Cube(2), center_color, Origin))
+    multi.add(Shape(Cube(2), color=center_color, position=Origin))
 
     outer_color = (170, 170, 170, 255)
-    multi.add(Shape(Cube(1), color=outer_color, position=XAxis))
-    multi.add(Shape(Cube(1), color=outer_color, position=YAxis))
-    multi.add(Shape(Cube(1), color=outer_color, position=ZAxis))
-    multi.add(Shape(Cube(1), color=outer_color, position=-XAxis))
-    multi.add(Shape(Cube(1), color=outer_color, position=-YAxis))
-    multi.add(Shape(Cube(1), color=outer_color, position=-ZAxis))
+    for pos in [XAxis, YAxis, ZAxis, NegXAxis, NegYAxis, NegZAxis]:
+        multi.add(Shape(Cube(1), color=outer_color, position=pos))
     return multi
 
 
