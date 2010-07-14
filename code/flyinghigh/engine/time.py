@@ -15,9 +15,9 @@ class Time(object):
         ask all the items in the world with a 'slowmo' attribute whether time
         should be running slow right now
         '''
-        rate = min(
-            item.slowmo()
-            for item in self.world.items.itervalues()
-            if hasattr(item, 'slowmo'))
+        rate = 1.0
+        for item in self.world.items.itervalues():
+            if hasattr(item, 'slowmo'):
+                rate = min(rate, item.slowmo())
         return rate
 
