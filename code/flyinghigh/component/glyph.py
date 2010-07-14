@@ -50,7 +50,7 @@ class Glyph(object):
     def _get_glvertices(self, shape):
         vertices = []
         for face in shape.faces:
-            for _, vertexnum in enumerate(face):
+            for vertexnum in face:
                 vertices.append(shape.vertices[vertexnum])
         return _glarray(gl.GLfloat, chain(*vertices), self.num_glvertices * 3) 
 
@@ -72,9 +72,7 @@ class Glyph(object):
         indices = []
         face_offset = 0
         for face in faces:
-            face_indices = []
-            for index, _ in enumerate(face):
-                face_indices.append(index + face_offset)
+            face_indices = xrange(face_offset, face_offset + len(face))
             indices.extend(chain(*_triangulate(face_indices)))
             face_offset += len(face)
         return _glarray(self.index_type, indices, len(indices))
@@ -83,18 +81,24 @@ class Glyph(object):
     def _get_glcolors(self, shape):
         face_colors = iter(shape.face_colors)
         colors = []
-        for index, face in enumerate(shape.faces):
+        for face in shape.faces:
             colors.extend(repeat(face_colors.next(), len(face)))
         return _glarray(gl.GLubyte, chain(*colors), self.num_glvertices * 4) 
 
 
     def _get_glnormals(self, shape):
-        face_normals = (get_normal(shape.vertices, face)
-                        for face in shape.faces)
-        normals = (normal
-                   for face, normal in zip(shape.faces, face_normals)
-                   for _ in face)
-        return _glarray(gl.GLfloat, chain(*normals), self.num_glvertices * 3) 
+        faces = list(shape.faces)
+        normals = (
+            get_normal(shape.vertices, face)
+            for face in faces
+        )
+        face_normals = zip(faces, normals)
+        vert_normals = chain.from_iterable(
+            repeat(normal, len(face))
+            for face, normal in face_normals
+        )
+        return _glarray(
+            gl.GLfloat, chain(*vert_normals), self.num_glvertices * 3) 
 
 
     def from_shape(self, shape):
