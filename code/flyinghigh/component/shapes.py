@@ -1,7 +1,7 @@
 from __future__ import division
 
 from itertools import chain
-from math import cos, pi, sin, sqrt
+from math import cos, pi, sin
 from random import randint
 
 from ..geometry.geometry import Geometry
@@ -134,36 +134,6 @@ def Cube(edge):
         [1, 0, 4, 5], # bottom
     ]
     return Geometry(verts, faces)
-
-
-def Tetrahedron(edge):
-    size = edge / sqrt(2)/2
-    vertices = [
-        (+size, +size, +size),
-        (-size, -size, +size),
-        (-size, +size, -size),
-        (+size, -size, -size), 
-    ]
-    faces = [ [0, 2, 1], [1, 3, 0], [2, 3, 1], [0, 3, 2] ]
-    return Geometry(vertices, faces)
-
-
-def Tetrahedron2(edge):
-    '''
-    same geometry as Tetrahedron, but at a differetn orientation
-    '''
-    # equilateral triangle centroid to mid-point of edge
-    c2e = edge * sqrt(3) / 6
-    # regular tetrahedron centroid to mid-point of face
-    c2f = edge / sqrt(24)
-    vertices = [
-        (      0, 3*c2f,          0),
-        (-edge/2,  -c2f,       -c2e),
-        (+edge/2,  -c2f,       -c2e),
-        (      0,  -c2f, edge*c2e*2),
-    ]
-    faces = [ [0, 1, 2], [0, 2, 3], [0, 1, 3] ]
-    return Geometry(vertices, faces)
 
 
 def RgbCubeCluster(edge, cluster_edge, cube_count):

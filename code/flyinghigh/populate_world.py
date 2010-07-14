@@ -1,19 +1,20 @@
 
 from __future__ import division
 
-from .engine.gameitem import GameItem
-from .geometry.vec3 import Origin, Vec3, ZAxis
-from .geometry.orientation import Orientation
-from .geometry.koch_cube import KochCube
-from .geometry.koch_tetra import KochTetra
-from .geometry.sierpinski_tetra import SierpinskiTetra
-from .component.slowmo import SlowMo
 from .component.shapes import (
     MultiShape, Cube, CubeCorners, CubeCross, CubeLattice, RgbCubeCluster,
-    Shape, Tetrahedron,
+    Shape
 )
+from .component.slowmo import SlowMo
 from .component.spinner import Spinner
 from .component.wobblyorbit import WobblyOrbit
+from .engine.gameitem import GameItem
+from .geometry.geometry import Tetrahedron
+from .geometry.koch_cube import KochCube
+from .geometry.koch_tetra import KochTetra
+from .geometry.orientation import Orientation
+from .geometry.sierpinski_tetra import SierpinskiTetra
+from .geometry.vec3 import Origin, Vec3, ZAxis
 
 
 
