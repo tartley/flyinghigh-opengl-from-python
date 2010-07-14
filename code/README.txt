@@ -12,6 +12,13 @@ DEPENDENCIES:
     Python 2.6 or 2.7
     Pyglet
     PyOpenGL
+    numpy (used for sierpinski generation)
+
+I can't install numpy from source for Python2.7 (configuring distutils to use
+the mingw32 compiler instead of Visual Studio doesn't work for me.) and there
+are not yet numpy binaries published for Python2.7, so I'm using an unofficial
+numpy binary from here:
+http://www.lfd.uci.edu/~gohlke/pythonlibs/
 
 
 DEVELOPMENT
@@ -35,7 +42,14 @@ For profiling, I'm using the standard library cProfile, with 3rd party tool
     make profile
 
 will run the script under the profiler, then run RunSnakeRun on the output.
-See the Makefile for details of installing RunSnakeRun.
+
+RunSnakeRun is a graphical visualiser for the output of cProfile, very useful.
+Installed using:
+   easy_install RunSnakeRun SquareMap # (or pip)
+or download from here:
+   http://www.vrplumber.com/programming/runsnakerun/
+RunSnakeRun also needs wxPython, from here:
+   http://www.wxpython.org/download.php#binaries
 
 
 DESIGN NOTES

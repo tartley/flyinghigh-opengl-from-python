@@ -58,6 +58,12 @@ rename 'serpinski gasket' to 'koche tetrahedron'
 
 Create koch cube
 
+Integrate Oscar's sierpinski gaskets
+
+Slomo should take a lambda as predicate to evaluate whether to activate
+or not. Could then slow down on arbitrary conditions, such as two gameitems
+colliding, rather than just on camera moving within region.
+
 `CURRENT--------------------------------------------------------------------`
 
 Separate colors for each face.
@@ -170,10 +176,6 @@ Numpy integration
     possibly can generate geometry and glarrays really quickly with this?
 
 * Elite ships
-
-Slomo should take a lambda as predicate to evaluate whether to activate
-or not. Could then slow down on arbitrary conditions, such as two gameitems
-colliding, rather than just on camera moving within region.
 
 Cube cluster presenting different images when viewed from different angles
     - really needs set of icons re-using same color pallette to work well

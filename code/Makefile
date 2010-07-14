@@ -29,12 +29,7 @@ stats:
 .PHONY: stats
 
 
-# runsnake is a GUI profile visualiser, very useful. Must be installed using:
-#   easy_install RunSnakeRun SquareMap
-# or download from here:
-#   http://www.vrplumber.com/programming/runsnakerun/
-# runsnake also needs wxPython, from here:
-#   http://www.wxpython.org/download.php#binaries
+# runsnake is a GUI profile visualiser, very useful. See readme for install.
 profile:
 	python -O -m cProfile -o profile.out ${RUN}
 	runsnake profile.out
