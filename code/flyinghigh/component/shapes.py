@@ -1,10 +1,9 @@
 from __future__ import division
 
 from itertools import chain
-from math import cos, pi, sin
 from random import randint
 
-from ..geometry.geometry import Geometry
+from ..geometry.geometry import Cube
 from ..geometry.matrix import Matrix
 from ..geometry.orientation import Orientation
 from ..geometry.vec3 import Origin, Vec3, XAxis, YAxis, ZAxis
@@ -90,50 +89,6 @@ class MultiShape(object):
             self._colors = list(
                 chain.from_iterable(shape.colors for shape in self.children))
         return self._colors
-
-
-def Rectangle(width, height):
-    vertices = [
-        (-width/2, -height/2),
-        (+width/2, -height/2),
-        (+width/2, +height/2),
-        (-width/2, +height/2),
-    ]
-    face = [0, 1, 2, 3]
-    return Geometry(vertices, [face])
-
-
-def Circle(radius):
-    NUM_POINTS = 32
-    verts = []
-    for n in xrange(0, NUM_POINTS):
-        a = n * 2 * pi / NUM_POINTS
-        verts.append( (radius * cos(a), radius * sin(a)) )
-    face = [n for n in xrange(0, NUM_POINTS)]
-    return Geometry(verts, [face])
-
-
-def Cube(edge):
-    e2 = edge/2
-    verts = [
-        (-e2, -e2, -e2),
-        (-e2, -e2, +e2),
-        (-e2, +e2, -e2),
-        (-e2, +e2, +e2),
-        (+e2, -e2, -e2),
-        (+e2, -e2, +e2),
-        (+e2, +e2, -e2),
-        (+e2, +e2, +e2),
-    ]
-    faces = [
-        [0, 1, 3, 2], # left
-        [4, 6, 7, 5], # right
-        [7, 3, 1, 5], # front
-        [0, 2, 6, 4], # back
-        [3, 7, 6, 2], # top
-        [1, 0, 4, 5], # bottom
-    ]
-    return Geometry(verts, faces)
 
 
 def RgbCubeCluster(edge, cluster_edge, cube_count):

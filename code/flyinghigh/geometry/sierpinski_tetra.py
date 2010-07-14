@@ -3,7 +3,7 @@ Brilliant Sierpinski gasket generator submitted by Oscar Lindberg
 """
 from __future__ import division
 
-from ..component.shapes import Geometry
+from .geometry import Geometry
 
 import numpy as np
 from vec3 import Vec3

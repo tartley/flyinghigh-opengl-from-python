@@ -3,7 +3,7 @@ from __future__ import division
 from itertools import chain
 from math import sqrt
 
-from ..component.shapes import Geometry
+from .geometry import Geometry
 from .face import get_normal
 
 

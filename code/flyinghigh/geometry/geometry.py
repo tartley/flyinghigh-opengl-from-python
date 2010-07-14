@@ -1,5 +1,6 @@
+from __future__ import division
 
-from math import sqrt
+from math import cos, pi, sin, sqrt
 
 from .vec3 import Vec3
 
@@ -15,6 +16,27 @@ class Geometry(object):
             vertices = [Vec3(*v) for v in vertices]
         self.vertices = vertices
         self.faces = faces
+
+
+def Rectangle(width, height):
+    vertices = [
+        (-width/2, -height/2),
+        (+width/2, -height/2),
+        (+width/2, +height/2),
+        (-width/2, +height/2),
+    ]
+    face = [0, 1, 2, 3]
+    return Geometry(vertices, [face])
+
+
+def Circle(radius):
+    NUM_POINTS = 32
+    verts = []
+    for n in xrange(0, NUM_POINTS):
+        a = n * 2 * pi / NUM_POINTS
+        verts.append( (radius * cos(a), radius * sin(a)) )
+    face = [n for n in xrange(0, NUM_POINTS)]
+    return Geometry(verts, [face])
 
 
 def Cube(edge):
