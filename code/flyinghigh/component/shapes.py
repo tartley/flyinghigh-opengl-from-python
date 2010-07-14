@@ -1,6 +1,6 @@
 from __future__ import division
 
-from itertools import chain
+from itertools import islice, repeat
 from random import randint
 
 from ..geometry.geometry import Cube
@@ -14,17 +14,28 @@ white=(255, 255, 255, 255)
 
 class Shape(object):
 
-    def __init__(self, geometry, color=white, position=None, orientation=None):
+    def __init__(self, geometry,
+        color=None, face_colors=None, position=None, orientation=None):
+
         self.geometry = geometry
-        self.color = color
+
+        assert color is None or face_colors is None
+        if face_colors is None:
+            if color is None:
+                color = white
+            face_colors = islice(repeat(color), len(geometry.faces))
+        self.face_colors = face_colors
+
         if type(position) is tuple:
             position = Vec3(*position)
         self.position = position
+
         if type(orientation) is tuple:
             orientation = Orientation(orientation)
         self.orientation = orientation
 
         self._vertices = None
+
 
     @property
     def vertices(self):
@@ -35,13 +46,10 @@ class Shape(object):
                 for vert in self.geometry.vertices]
         return self._vertices
 
+
     @property
     def faces(self):
         return self.geometry.faces
-
-    @property
-    def colors(self):
-        return [self.color for _ in xrange(len(self.vertices))]
 
 
 class MultiShape(object):
@@ -52,7 +60,6 @@ class MultiShape(object):
         self.orientation = kwargs.pop('orientation', None)
         assert kwargs == {}, 'unrecognized kwargs, %s' % (kwargs,)
         self._vertices = None
-        self._colors = None
         self._faces = None
 
     def add(self, child):
@@ -84,11 +91,11 @@ class MultiShape(object):
         return self._faces
 
     @property
-    def colors(self):
-        if self._colors is None:
-            self._colors = list(
-                chain.from_iterable(shape.colors for shape in self.children))
-        return self._colors
+    def face_colors(self):
+        face_colors = []
+        for shape in self.children:
+            face_colors.extend(islice(shape.face_colors, len(shape.faces)))
+        return face_colors
 
 
 def RgbCubeCluster(edge, cluster_edge, cube_count):
@@ -114,17 +121,19 @@ def RgbCubeCluster(edge, cluster_edge, cube_count):
     return shape
 
 
-def CubeLattice(edge, cluster_edge, freq):
+def CubeLattice(edge, cluster_edge, freq, color):
     shape = MultiShape()
-    black = (0, 0, 0, 255)
     for i in xrange(int(-cluster_edge/2), int(+cluster_edge/2+1), freq):
         for j in xrange(int(-cluster_edge/2), int(+cluster_edge/2+1), freq):
-            shape.add(Shape(Cube(edge), black, Vec3(i, j, -cluster_edge/2)))
-            shape.add(Shape(Cube(edge), black, Vec3(i, j, +cluster_edge/2)))
-            shape.add(Shape(Cube(edge), black, Vec3(i, -cluster_edge/2, j)))
-            shape.add(Shape(Cube(edge), black, Vec3(i, +cluster_edge/2, j)))
-            shape.add(Shape(Cube(edge), black, Vec3(-cluster_edge/2, i, j)))
-            shape.add(Shape(Cube(edge), black, Vec3(+cluster_edge/2, i, j)))
+            for pos in [
+                Vec3(i, j, -cluster_edge/2),
+                Vec3(i, j, +cluster_edge/2),
+                Vec3(i, -cluster_edge/2, j),
+                Vec3(i, +cluster_edge/2, j),
+                Vec3(-cluster_edge/2, i, j),
+                Vec3(+cluster_edge/2, i, j),
+            ]:
+                shape.add(Shape(Cube(edge), color=color, position=pos))
     return shape
 
 
@@ -134,29 +143,29 @@ def CubeCross():
     multi.add(Shape(Cube(2), center_color, Origin))
 
     outer_color = (170, 170, 170, 255)
-    multi.add(Shape(Cube(1), outer_color, XAxis))
-    multi.add(Shape(Cube(1), outer_color, YAxis))
-    multi.add(Shape(Cube(1), outer_color, ZAxis))
-    multi.add(Shape(Cube(1), outer_color, -XAxis))
-    multi.add(Shape(Cube(1), outer_color, -YAxis))
-    multi.add(Shape(Cube(1), outer_color, -ZAxis))
+    multi.add(Shape(Cube(1), color=outer_color, position=XAxis))
+    multi.add(Shape(Cube(1), color=outer_color, position=YAxis))
+    multi.add(Shape(Cube(1), color=outer_color, position=ZAxis))
+    multi.add(Shape(Cube(1), color=outer_color, position=-XAxis))
+    multi.add(Shape(Cube(1), color=outer_color, position=-YAxis))
+    multi.add(Shape(Cube(1), color=outer_color, position=-ZAxis))
     return multi
 
 
 def CubeCorners():
     multi = MultiShape()
     center_color = (150, 150, 150, 255)
-    multi.add(Shape(Cube(2), center_color, Origin))
+    multi.add(Shape(Cube(2), color=center_color, position=Origin))
 
     outer_color = (170, 170, 170, 255)
-    multi.add(Shape(Cube(1), outer_color, (+1, +1, +1)))
-    multi.add(Shape(Cube(1), outer_color, (+1, +1, -1)))
-    multi.add(Shape(Cube(1), outer_color, (+1, -1, +1)))
-    multi.add(Shape(Cube(1), outer_color, (+1, -1, -1)))
-    multi.add(Shape(Cube(1), outer_color, (-1, +1, +1)))
-    multi.add(Shape(Cube(1), outer_color, (-1, +1, -1)))
-    multi.add(Shape(Cube(1), outer_color, (-1, -1, +1)))
-    multi.add(Shape(Cube(1), outer_color, (-1, -1, -1)))
+    multi.add(Shape(Cube(1), color=outer_color, position=(+1, +1, +1)))
+    multi.add(Shape(Cube(1), color=outer_color, position=(+1, +1, -1)))
+    multi.add(Shape(Cube(1), color=outer_color, position=(+1, -1, +1)))
+    multi.add(Shape(Cube(1), color=outer_color, position=(+1, -1, -1)))
+    multi.add(Shape(Cube(1), color=outer_color, position=(-1, +1, +1)))
+    multi.add(Shape(Cube(1), color=outer_color, position=(-1, +1, -1)))
+    multi.add(Shape(Cube(1), color=outer_color, position=(-1, -1, +1)))
+    multi.add(Shape(Cube(1), color=outer_color, position=(-1, -1, -1)))
     return multi
     
 

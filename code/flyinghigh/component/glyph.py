@@ -1,4 +1,5 @@
-from itertools import chain
+
+from itertools import chain, repeat
 
 from OpenGL import GL as gl
 
@@ -49,7 +50,7 @@ class Glyph(object):
     def _get_glvertices(self, shape):
         vertices = []
         for face in shape.faces:
-            for index, vertexnum in enumerate(face):
+            for _, vertexnum in enumerate(face):
                 vertices.append(shape.vertices[vertexnum])
         return _glarray(gl.GLfloat, chain(*vertices), self.num_glvertices * 3) 
 
@@ -72,7 +73,7 @@ class Glyph(object):
         face_offset = 0
         for face in faces:
             face_indices = []
-            for index, vertexnum in enumerate(face):
+            for index, _ in enumerate(face):
                 face_indices.append(index + face_offset)
             indices.extend(chain(*_triangulate(face_indices)))
             face_offset += len(face)
@@ -80,11 +81,10 @@ class Glyph(object):
 
 
     def _get_glcolors(self, shape):
-        vertcolors = shape.colors
+        face_colors = iter(shape.face_colors)
         colors = []
-        for face in shape.faces:
-            for index, vertexnum in enumerate(face):
-                colors.append(vertcolors[vertexnum])
+        for index, face in enumerate(shape.faces):
+            colors.extend(repeat(face_colors.next(), len(face)))
         return _glarray(gl.GLubyte, chain(*colors), self.num_glvertices * 4) 
 
 
@@ -93,7 +93,7 @@ class Glyph(object):
                         for face in shape.faces)
         normals = (normal
                    for face, normal in zip(shape.faces, face_normals)
-                   for index in face)
+                   for _ in face)
         return _glarray(gl.GLfloat, chain(*normals), self.num_glvertices * 3) 
 
 

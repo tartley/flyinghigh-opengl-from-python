@@ -1,5 +1,5 @@
 
-from itertools import chain
+from itertools import chain, repeat
 
 try:
     # Python 2.6 with unittest2 installed
@@ -44,7 +44,7 @@ class testGlyph(TestCase):
                     [0, 1, 4, 5],
                 ],
             ),
-            color = (11, 22, 33, 44)
+            face_colors = [(11, 22, 33, 44), (55, 66, 77, 88)]
         )
 
     def test_get_num_glvertices(self):
@@ -64,6 +64,8 @@ class testGlyph(TestCase):
         self.assertEqual(list(actual), expected_values)
 
     def assert_lists_almost_equal(self, l1, l2, places=15):
+        print l1
+        print l2
         for a, e in zip(l1, l2):
             self.assertAlmostEqual(a, e, places=places)
 
@@ -111,8 +113,10 @@ class testGlyph(TestCase):
         actual = glyph.glcolors
         self.assertTrue(isinstance(actual, gl.GLubyte * (8 * 4)))
         self.assertEqual(type(actual), gl.GLubyte * (8 * 4))
-        expected_values = [(11, 22, 33, 44) for _ in xrange(8)]
-        expected_values = chain(*expected_values)
+        expected_values = list(chain.from_iterable(chain(
+            repeat([11, 22, 33, 44], 4),
+            repeat([55, 66, 77, 88], 4),
+        )))
         self.assert_lists_almost_equal(actual, expected_values, places=7)
 
 

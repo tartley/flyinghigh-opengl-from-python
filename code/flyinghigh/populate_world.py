@@ -22,7 +22,7 @@ def populate(world, camera):
     camitem = GameItem(
         position=Origin,
         camera=camera,
-        move=WobblyOrbit(80, 75, speed=0.5),
+        move=WobblyOrbit(80, 60, speed=0.5),
     )
     world.add(camitem)
 
@@ -32,6 +32,16 @@ def populate(world, camera):
     green = (0, 255, 0, 255)
     blue = (0, 0, 255, 255)
     purple = (255, 0, 255, 255)
+    white = (255, 255, 255, 255)
+
+    world.add( GameItem(
+        shape=Shape(
+            Cube(10),
+            face_colors=[red, orange, yellow, green, blue, purple],
+        ),
+        spin=Spinner(speed=4),
+        position=Vec3(0, 0, 0),
+    ) )
 
     # world.add( GameItem(
         # shape=Shape(SierpinskiTetra(Tetrahedron(40), 7)),
@@ -39,12 +49,14 @@ def populate(world, camera):
         # position=Vec3(0, 0, 0),
     # ) )
 
-    world.add( GameItem(
-        shape=Shape(SierpinskiTetra(Tetrahedron(40), 7, scale=0.52),
-                    color=(0xff, 0xff, 0, 0xff)),
-        position=Vec3(0, 0, 0),
-        orientation=Orientation(ZAxis),
-    ) )
+    # world.add( GameItem(
+        # shape=Shape(
+            # SierpinskiTetra(Tetrahedron(40), 7, scale=0.52),
+            # color=yellow,
+        # ),
+        # position=Vec3(0, 0, 0),
+        # orientation=Orientation(ZAxis),
+    # ) )
 
     # world.add( GameItem(
         # shape=Shape(SierpinskiTetra(Cube(20), 3, scale=0.4),
@@ -64,21 +76,24 @@ def populate(world, camera):
         # position=Vec3(0, -4, 4),
     # ) )
 
-    world.add( GameItem(
-        shape=CubeCorners(),
-        spin=Spinner(speed=3),
-    ) )
+    # world.add( GameItem(
+        # shape=CubeCorners(),
+        # spin=Spinner(speed=3),
+    # ) )
 
-    for color in (orange, green, red, blue, yellow, purple):
-        world.add( GameItem(
-            shape=Shape(Cube(1), color=color),
-            spin=Spinner(speed=20),
-            move=WobblyOrbit(3, speed=10),
-        ) )
+    # for color in (orange, green, red, blue, yellow, purple):
+        # world.add( GameItem(
+            # shape=Shape(
+                # Cube(1),
+                # color=color,
+            # ),
+            # spin=Spinner(speed=20),
+            # move=WobblyOrbit(3, speed=10),
+        # ) )
 
-    world.add( GameItem(
-        shape=RgbCubeCluster(1.0, 60, 1150),
-    ) )
+    # world.add( GameItem(
+        # shape=RgbCubeCluster(1.0, 60, 1150),
+    # ) )
 
     edge = 48
 
@@ -90,7 +105,7 @@ def populate(world, camera):
 
     darkgrey = (20, 20, 20, 80)
     shape = MultiShape()
-    shape.add(CubeLattice(1.0, edge, 8))
+    shape.add(CubeLattice(1.0, edge, 8, white))
     shape.add(Shape(Cube(edge), color=darkgrey))
     world.add( GameItem(
         shape=shape,

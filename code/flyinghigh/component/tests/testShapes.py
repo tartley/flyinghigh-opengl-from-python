@@ -1,5 +1,4 @@
 
-from collections import Iterable
 try:
     # Python 2.6 with unittest2 installed
     from unittest2 import TestCase, main
@@ -7,25 +6,14 @@ except:
     # Python 2.7
     from unittest import TestCase, main
 
+from collections import Iterable
+from itertools import repeat
 
-from ...geometry.geometry import Geometry
+from ...geometry.geometry import Cube, Geometry, Tetrahedron
 from ...math.orientation import Orientation
 from ...math.vec3 import Vec3, YAxis, ZAxis
 from ..shapes import MultiShape, Shape
 
-
-class testGeometry(TestCase):
-
-    def testInitBad(self):
-        self.assertRaises(TypeError, Geometry)
-        self.assertRaises(TypeError, lambda: Geometry([]))
-
-    def testInit(self):
-        verts = []
-        faces = []
-        geometry = Geometry(verts, faces)
-        self.assertEquals(geometry.vertices, verts)
-        self.assertEquals(geometry.faces, faces)
 
 
 def assert_is_a_shape(test, shape):
@@ -33,7 +21,9 @@ def assert_is_a_shape(test, shape):
     test.assertIsNone(shape.orientation)
     test.assertTrue(isinstance(shape.vertices, Iterable))
     test.assertTrue(isinstance(shape.faces, Iterable))
-    test.assertTrue(isinstance(shape.colors, Iterable))
+    test.assertTrue(isinstance(shape.face_colors, Iterable))
+    test.assertEquals(len(list(shape.faces)), len(list(shape.face_colors)))
+
 
 
 class testShape(TestCase):
@@ -46,29 +36,32 @@ class testShape(TestCase):
         s = Shape(geometry)
         assert_is_a_shape(self, s)
         self.assertEquals(s.geometry, geometry)
-        self.assertEquals(s.color, (255, 255, 255, 255))
+        self.assertEquals(list(s.face_colors), [])
 
         red = (255, 0, 0, 255)
-        position = (1, 2, 3)
-        orientation = Orientation((4, 5, 6))
+        p = (1, 2, 3)
+        o = Orientation((4, 5, 6))
 
-        s = Shape(geometry, red, position, orientation)
-        self.assertEquals(s.color, red)
-        self.assertEquals(s.position, position)
-        self.assertEquals(s.orientation, orientation)
+        s = Shape(geometry, color=red, position=p, orientation=o)
+        self.assertEquals(list(s.face_colors), [])
+        self.assertEquals(s.position, p)
+        self.assertEquals(s.orientation, o)
+
+
+    def testColors(self):
+        pass
 
     def testAttributes(self):
         verts = [(0, 1, 2), (3, 4, 5), (6, 7, 8)]
         faces = [[1, 2, 3]]
         geom = Geometry(verts, faces)
         color = (11, 22, 33, 44)
-        s = Shape(geom, color)
+        s = Shape(geom, color=color)
         self.assertTrue(
             all(actual == expected
                 for actual, expected in zip(verts, s.vertices)))
         self.assertIs(s.faces, faces)
-        self.assertEquals(len(s.colors), len(verts))
-        self.assertTrue(all(c == color for c in s.colors))
+        self.assertEquals(list(s.face_colors), [color])
 
 
 class testMultiShape(TestCase):
@@ -98,14 +91,18 @@ class testMultiShape(TestCase):
         VERTS1 = [(1, 2, 3), (4, 5, 6), (7, 8, 9), (10, 11, 12)]
         FACES1 = [ [0, 1, 2], [1, 2, 3] ]
         RED = (1, 0, 0)
+        YELLOW = (1, 1, 0)
         OFFSET1 = Vec3(100, 200, 300)
-        s1 = Shape(Geometry(VERTS1, FACES1), RED, OFFSET1)
+        s1 = Shape(Geometry(VERTS1, FACES1),
+            face_colors=(RED, YELLOW), position=OFFSET1)
 
         VERTS2 = [(10, 20, 30), (40, 50, 60), (70, 80, 90), (100, 110, 120)]
         FACES2 = [ [3, 2, 1], [2, 1, 0] ]
+        GREEN = (0, 1, 0)
         BLUE = (0, 0, 1)
         OFFSET2 = Vec3(400, 500, 600)
-        s2 = Shape(Geometry(VERTS2, FACES2), BLUE, OFFSET2)
+        s2 = Shape(Geometry(VERTS2, FACES2),
+            face_colors=(GREEN, BLUE), position=OFFSET2)
 
         multi = MultiShape()
         multi.add(s1)
@@ -114,12 +111,27 @@ class testMultiShape(TestCase):
         self.assertEquals(list(multi.vertices),
            [OFFSET1 + v for v in VERTS1] + [OFFSET2 + v for v in VERTS2]
         )
-
         self.assertEquals(multi.faces,
            [ [0, 1, 2], [1, 2, 3], [7, 6, 5], [6, 5, 4] ]
         )
+        self.assertEquals(list(multi.face_colors), [RED, YELLOW, GREEN, BLUE])
 
-        self.assertEquals(list(multi.colors), [RED] * 4 + [BLUE] * 4)
+
+    def testMuliShapeCopesWithInfiniteColorIterators(self):
+        red = (255, 0, 0, 255)
+        blue = (0, 0, 255, 255)
+        s1 = Shape(
+            geometry=Tetrahedron(1),
+            face_colors=repeat(blue),
+        )
+        s2 = Shape(
+            geometry=Cube(1),
+            face_colors=repeat(red),
+        )
+        multi = MultiShape(s1, s2)
+        self.assertEquals(
+            list(multi.face_colors),
+            [blue, blue, blue, blue, red, red, red, red, red, red])
 
 
     def testMultiShapeVerticesAccumulateNestedChildrensOffsets(self):
