@@ -10,8 +10,9 @@ except:
 
 from OpenGL import GL as gl
 
+from ...geometry.geometry import Geometry
 from ..glyph import Glyph, _triangulate
-from ..shapes import Geometry, Shape
+from ..shapes import Shape
 
 
 class testGlyph(TestCase):

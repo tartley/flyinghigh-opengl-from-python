@@ -4,25 +4,13 @@ from itertools import chain
 from math import cos, pi, sin, sqrt
 from random import randint
 
+from ..geometry.geometry import Geometry
 from ..geometry.matrix import Matrix
 from ..geometry.orientation import Orientation
 from ..geometry.vec3 import Origin, Vec3, XAxis, YAxis, ZAxis
 
 
 white=(255, 255, 255, 255)
-
-
-class Geometry(object):
-    '''
-    Defines a 3d object as a list of vertices, and a list of faces.
-    Each face is a list of indices into the vertex array, forming a
-    coplanar convex ring defining the face's boundary.
-    '''
-    def __init__(self, vertices, faces):
-        if len(vertices) > 0 and not isinstance(vertices[0], Vec3):
-            vertices = [Vec3(*v) for v in vertices]
-        self.vertices = vertices
-        self.faces = faces
 
 
 class Shape(object):

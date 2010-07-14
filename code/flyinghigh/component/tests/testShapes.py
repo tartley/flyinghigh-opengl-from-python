@@ -8,9 +8,10 @@ except:
     from unittest import TestCase, main
 
 
+from ...geometry.geometry import geometry
 from ...geometry.orientation import Orientation
 from ...geometry.vec3 import Origin, Vec3, YAxis, ZAxis
-from ..shapes import Geometry, MultiShape, Shape
+from ..shapes import MultiShape, Shape
 
 
 class testGeometry(TestCase):
