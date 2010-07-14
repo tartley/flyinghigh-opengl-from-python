@@ -12,9 +12,9 @@ from .engine.gameitem import GameItem
 from .geometry.geometry import Tetrahedron
 from .geometry.koch_cube import KochCube
 from .geometry.koch_tetra import KochTetra
-from .geometry.orientation import Orientation
 from .geometry.sierpinski_tetra import SierpinskiTetra
-from .geometry.vec3 import Origin, Vec3, ZAxis
+from .math.orientation import Orientation
+from .math.vec3 import Origin, Vec3, ZAxis
 
 
 

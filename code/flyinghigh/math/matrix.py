@@ -1,5 +1,5 @@
 
-from .vec3 import Origin, Vec3
+from ..math.vec3 import Origin, Vec3
 from .orientation import Orientation
 
 

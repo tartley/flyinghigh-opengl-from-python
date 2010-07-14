@@ -4,9 +4,9 @@ from itertools import chain
 from random import randint
 
 from ..geometry.geometry import Cube
-from ..geometry.matrix import Matrix
-from ..geometry.orientation import Orientation
-from ..geometry.vec3 import Origin, Vec3, XAxis, YAxis, ZAxis
+from ..math.matrix import Matrix
+from ..math.orientation import Orientation
+from ..math.vec3 import Origin, Vec3, XAxis, YAxis, ZAxis
 
 
 white=(255, 255, 255, 255)

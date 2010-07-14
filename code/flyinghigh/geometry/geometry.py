@@ -2,7 +2,7 @@ from __future__ import division
 
 from math import cos, pi, sin, sqrt
 
-from .vec3 import Vec3
+from ..math.vec3 import Vec3
 
 
 class Geometry(object):

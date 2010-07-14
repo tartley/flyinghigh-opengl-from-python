@@ -3,10 +3,11 @@ Brilliant Sierpinski gasket generator submitted by Oscar Lindberg
 """
 from __future__ import division
 
-from .geometry import Geometry
-
 import numpy as np
-from vec3 import Vec3
+
+from ..math.vec3 import Vec3
+
+from .geometry import Geometry
 
 
 def SierpinskiTetra(original, n=1, scale=0.5):
