@@ -5,11 +5,11 @@ from __future__ import division
 
 import numpy as np
 
-from .geometry import Geometry
+from ..engine.shape import Shape
 from .vec3 import Vec3
 
 
-def SierpinskiTetra(original, n=1, scale=0.5):
+def SierpinskiTetra(original, n, scale=0.5, **kwargs):
     verts = list(original.vertices)
     faces = list(original.faces)
 
@@ -48,6 +48,5 @@ def SierpinskiTetra(original, n=1, scale=0.5):
     verts = [Vec3(x, y, z) for x, y, z in vs]
     faces = fs.tolist()
 
-    return Geometry(verts, faces)
-
+    return Shape(verts, faces, **kwargs)
 

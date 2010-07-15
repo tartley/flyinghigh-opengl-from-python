@@ -2,8 +2,8 @@
 from __future__ import division
 from itertools import chain
 
-from .geometry import Geometry
 from .face import get_normal
+from ..engine.shape import Shape
 
 
 SUBCUBE_BASE = 1/4
@@ -88,7 +88,7 @@ def replace_face(vertices, face, n):
     ))
 
 
-def KochCube(original, n=1):
+def KochCube(original, n=1, **kwargs):
     '''
     Performs a 'Koche cube' transformation to the given geometry.
     Return a new geometry, in which each face of the original has been
@@ -98,5 +98,5 @@ def KochCube(original, n=1):
     verts = list(original.vertices)
     faces = list(chain.from_iterable(
         replace_face(verts, face, n) for face in original.faces))
-    return Geometry(verts, faces)
+    return Shape(verts, faces, **kwargs)
 

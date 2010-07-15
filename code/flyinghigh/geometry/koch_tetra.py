@@ -3,7 +3,7 @@ from __future__ import division
 from itertools import chain
 from math import sqrt
 
-from .geometry import Geometry
+from ..engine.shape import Shape
 from .face import get_normal
 
 
@@ -74,5 +74,5 @@ def KochTetra(original, n=1):
     verts = list(original.vertices)
     faces = list(chain.from_iterable(
         replace_face(verts, face, n) for face in original.faces))
-    return Geometry(verts, faces)
+    return Shape(verts, faces)
 

@@ -9,10 +9,10 @@ except:
 from collections import Iterable
 from itertools import repeat
 
-from ...geometry.geometry import Cube, Geometry, Tetrahedron
+from ...component.shapes import Cube, Tetrahedron
 from ...geometry.orientation import Orientation
 from ...geometry.vec3 import Vec3, YAxis, ZAxis
-from ..shapes import MultiShape, Shape
+from ..shape import MultiShape, Shape
 
 
 
@@ -25,24 +25,24 @@ def assert_is_a_shape(test, shape):
     test.assertEquals(len(list(shape.faces)), len(list(shape.face_colors)))
 
 
-
 class testShape(TestCase):
 
     def testInit(self):
         self.assertRaises(TypeError, Shape)
 
-        geometry = Geometry([], [])
-
-        s = Shape(geometry)
+        verts = []
+        faces = []
+        s = Shape(verts, faces)
         assert_is_a_shape(self, s)
-        self.assertEquals(s.geometry, geometry)
+        self.assertEquals(s.vertices, verts)
+        self.assertEquals(s.faces, faces)
         self.assertEquals(list(s.face_colors), [])
 
         red = (255, 0, 0, 255)
         p = (1, 2, 3)
         o = Orientation((4, 5, 6))
 
-        s = Shape(geometry, face_colors=repeat(red), position=p, orientation=o)
+        s = Shape([], [], face_colors=repeat(red), position=p, orientation=o)
         self.assertEquals(list(s.face_colors), [])
         self.assertEquals(s.position, p)
         self.assertEquals(s.orientation, o)
@@ -51,9 +51,8 @@ class testShape(TestCase):
     def testAttributes(self):
         verts = [(0, 1, 2), (3, 4, 5), (6, 7, 8)]
         faces = [[1, 2, 3]]
-        geom = Geometry(verts, faces)
         color = (11, 22, 33, 44)
-        s = Shape(geom, face_colors=repeat(color))
+        s = Shape(verts, faces, face_colors=repeat(color))
         self.assertTrue(
             all(actual == expected
                 for actual, expected in zip(verts, s.vertices)))
@@ -68,9 +67,8 @@ class testMultiShape(TestCase):
         assert_is_a_shape(self, m)
         self.assertEquals(m.children, [])
 
-        geometry = Geometry([], [])
-        child1 = Shape(geometry)
-        child2 = Shape(geometry)
+        child1 = Shape([], [])
+        child2 = Shape([], [])
         position = ZAxis
         orientation = Orientation(YAxis)
 
@@ -90,16 +88,14 @@ class testMultiShape(TestCase):
         RED = (1, 0, 0)
         YELLOW = (1, 1, 0)
         OFFSET1 = Vec3(100, 200, 300)
-        s1 = Shape(Geometry(VERTS1, FACES1),
-            face_colors=(RED, YELLOW), position=OFFSET1)
+        s1 = Shape(VERTS1, FACES1, face_colors=(RED, YELLOW), position=OFFSET1)
 
         VERTS2 = [(10, 20, 30), (40, 50, 60), (70, 80, 90), (100, 110, 120)]
         FACES2 = [ [3, 2, 1], [2, 1, 0] ]
         GREEN = (0, 1, 0)
         BLUE = (0, 0, 1)
         OFFSET2 = Vec3(400, 500, 600)
-        s2 = Shape(Geometry(VERTS2, FACES2),
-            face_colors=(GREEN, BLUE), position=OFFSET2)
+        s2 = Shape(VERTS2, FACES2, face_colors=(GREEN, BLUE), position=OFFSET2)
 
         multi = MultiShape()
         multi.add(s1)
@@ -117,14 +113,8 @@ class testMultiShape(TestCase):
     def testMuliShapeCopesWithInfiniteColorIterators(self):
         red = (255, 0, 0, 255)
         blue = (0, 0, 255, 255)
-        s1 = Shape(
-            geometry=Tetrahedron(1),
-            face_colors=repeat(blue),
-        )
-        s2 = Shape(
-            geometry=Cube(1),
-            face_colors=repeat(red),
-        )
+        s1 = Tetrahedron(1, repeat(blue))
+        s2 = Cube(1, repeat(red))
         multi = MultiShape(s1, s2)
         self.assertEquals(
             list(multi.face_colors),
@@ -132,8 +122,8 @@ class testMultiShape(TestCase):
 
 
     def testMultiShapeVerticesAccumulateNestedChildrensOffsets(self):
-        geom = Geometry([(1, 2, 3)], [])
-        shape = Shape(geom, position=Vec3(10, 20, 30))
+        
+        shape = Shape([(1, 2, 3)], [], position=Vec3(10, 20, 30))
         self.assertEquals(shape.vertices, [Vec3(11, 22, 33)])
 
         mInner = MultiShape(shape, position=Vec3(100, 200, 300))

@@ -1,100 +1,50 @@
+
 from __future__ import division
 
-from itertools import islice, repeat
+from itertools import repeat
+from math import cos, pi, sin, sqrt
 from random import randint
 
-from ..geometry.geometry import Cube
-from ..geometry.matrix import Matrix
-from ..geometry.orientation import Orientation
+from ..engine.shape import Shape, MultiShape
 from ..geometry.vec3 import (
     NegXAxis, NegYAxis, NegZAxis, Origin, Vec3, XAxis, YAxis, ZAxis,
 )
 
 
-white=(255, 255, 255, 255)
+
+def Cube(edge, *args, **kwargs):
+    e2 = edge/2
+    verts = [
+        (-e2, -e2, -e2),
+        (-e2, -e2, +e2),
+        (-e2, +e2, -e2),
+        (-e2, +e2, +e2),
+        (+e2, -e2, -e2),
+        (+e2, -e2, +e2),
+        (+e2, +e2, -e2),
+        (+e2, +e2, +e2),
+    ]
+    faces = [
+        [0, 1, 3, 2], # left
+        [4, 6, 7, 5], # right
+        [7, 3, 1, 5], # front
+        [0, 2, 6, 4], # back
+        [3, 7, 6, 2], # top
+        [1, 0, 4, 5], # bottom
+    ]
+    return Shape(verts, faces, *args, **kwargs)
 
 
-class Shape(object):
-
-    def __init__(self, geometry,
-        face_colors=None, position=None, orientation=None):
-
-        self.geometry = geometry
-
-        if face_colors is None:
-            face_colors = repeat(white)
-        self.face_colors = islice(face_colors, len(geometry.faces))
-
-        if type(position) is tuple:
-            position = Vec3(*position)
-        self.position = position
-
-        if type(orientation) is tuple:
-            orientation = Orientation(orientation)
-        self.orientation = orientation
-
-        self._vertices = None
-
-
-    @property
-    def vertices(self):
-        if self._vertices is None:
-            matrix = Matrix(self.position, self.orientation)
-            self._vertices = [
-                matrix.transform(vert)
-                for vert in self.geometry.vertices]
-        return self._vertices
-
-
-    @property
-    def faces(self):
-        return self.geometry.faces
-
-
-class MultiShape(object):
-
-    def __init__(self, *args, **kwargs):
-        self.children = list(args)
-        self.position = kwargs.pop('position', None)
-        self.orientation = kwargs.pop('orientation', None)
-        assert kwargs == {}, 'unrecognized kwargs, %s' % (kwargs,)
-        self._vertices = None
-        self._faces = None
-
-    def add(self, child):
-        self.children.append(child)
-
-    @property
-    def vertices(self):
-        if self._vertices is None:
-            matrix = Matrix(self.position, self.orientation)
-            self._vertices = [
-                matrix.transform(vert)
-                for shape in self.children
-                for vert in shape.vertices]
-        return self._vertices
-
-    @property
-    def faces(self):
-        if self._faces is None:
-            newfaces = []
-            index_offset = 0
-            for shape in self.children:
-                for face in shape.faces:
-                    newface = []
-                    for index in face:
-                        newface.append(index + index_offset)
-                    newfaces.append(newface)
-                index_offset += len(shape.vertices)
-            self._faces = newfaces
-        return self._faces
-
-    @property
-    def face_colors(self):
-        face_colors = []
-        for shape in self.children:
-            face_colors.extend(islice(shape.face_colors, len(shape.faces)))
-        return face_colors
+def Tetrahedron(edge, *args, **kwargs):
+    size = edge / sqrt(2)/2
+    vertices = [
+        (+size, +size, +size),
+        (-size, -size, +size),
+        (-size, +size, -size),
+        (+size, -size, -size), 
+    ]
+    faces = [ [0, 2, 1], [1, 3, 0], [2, 3, 1], [0, 3, 2] ]
+    return Shape(vertices, faces, *args, **kwargs)
 
 
 def RgbCubeCluster(edge, cluster_edge, cube_count):
@@ -117,11 +67,7 @@ def RgbCubeCluster(edge, cluster_edge, cube_count):
             if pos.length > 8:
                 break
         shape.add(
-            Shape(
-                Cube(edge),
-                face_colors=repeat(color),
-                position=Vec3(*pos),
-            )
+            Cube(edge, repeat(color), position=Vec3(*pos))
         )
     return shape
 
@@ -139,27 +85,21 @@ def CubeLattice(edge, cluster_edge, freq, color):
                 Vec3(+cluster_edge/2, i, j),
             ]:
                 shape.add(
-                    Shape(
-                        Cube(edge),
-                        face_colors=repeat(color),
-                        position=pos,
-                    )
+                    Cube(edge, face_colors=repeat(color), position=pos)
                 )
     return shape
 
 
 def CubeCross():
     multi = MultiShape()
+
     center_color = (150, 150, 150, 255)
-    multi.add(Shape(
-        Cube(2),
-        face_colors=repeat(center_color),
-        position=Origin,
-    ) )
+    multi.add(Cube(2, face_colors=repeat(center_color)))
+
     outer_color = (170, 170, 170, 255)
     for pos in [XAxis, YAxis, ZAxis, NegXAxis, NegYAxis, NegZAxis]:
-        multi.add(Shape(
-            Cube(1),
+        multi.add( Cube(
+            1,
             face_colors=repeat(outer_color),
             position=pos,
         ) )
@@ -169,7 +109,7 @@ def CubeCross():
 def CubeCorners():
     multi = MultiShape()
     center_color = (150, 150, 150, 255)
-    multi.add(Shape(Cube(2), face_colors=repeat(center_color), position=Origin))
+    multi.add(Cube(2, face_colors=repeat(center_color), position=Origin))
 
     outer_color = (170, 170, 170, 255)
 
@@ -183,8 +123,8 @@ def CubeCorners():
         (-1, -1, +1),
         (-1, -1, -1),
     ]:
-        multi.add(Shape(
-            Cube(1),
+        multi.add( Cube(
+            1,
             face_colors=repeat(outer_color),
             position=pos,
         ) )

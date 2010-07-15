@@ -10,9 +10,8 @@ except:
 
 from OpenGL import GL as gl
 
-from ...geometry.geometry import Geometry
+from ...engine.shape import Shape
 from ..glyph import Glyph, _triangulate
-from ..shapes import Shape
 
 
 class testGlyph(TestCase):
@@ -30,20 +29,18 @@ class testGlyph(TestCase):
         # two orthogonal squares share one common edge
         # create shape using generators, to make sure that works
         return Shape(
-            Geometry(
-                vertices = [
-                    (0, 0, 0), #v0
-                    (1, 0, 0), #v1
-                    (1, 1, 0), #v2
-                    (0, 1, 0), #v3
-                    (1, 0, 1), #v4
-                    (0, 0, 1), #v5
-                ],
-                faces = [
-                    [0, 1, 2, 3],
-                    [0, 1, 4, 5],
-                ],
-            ),
+            vertices = [
+                (0, 0, 0), # v0
+                (1, 0, 0), # v1
+                (1, 1, 0), # v2
+                (0, 1, 0), # v3
+                (1, 0, 1), # v4
+                (0, 0, 1), # v5
+            ],
+            faces = [
+                [0, 1, 2, 3],
+                [0, 1, 4, 5],
+            ],
             face_colors = [(11, 22, 33, 44), (55, 66, 77, 88)]
         )
 
