@@ -1,6 +1,8 @@
 
 from __future__ import division
 
+from random import uniform
+
 from .component.shapes import (
     MultiShape, Cube, CubeCorners, CubeCross, CubeLattice, RgbCubeCluster,
     Shape
@@ -22,7 +24,7 @@ def populate(world, camera):
     camitem = GameItem(
         position=Origin,
         camera=camera,
-        move=WobblyOrbit(80, 60, speed=0.5),
+        move=WobblyOrbit(80, 75, speed=0.5),
     )
     world.add(camitem)
 
@@ -56,6 +58,7 @@ def populate(world, camera):
         ),
         position=Vec3(0, 0, 0),
         orientation=Orientation(ZAxis),
+        spin=Spinner(speed=0.5),
     ) )
 
     # world.add( GameItem(
@@ -74,34 +77,34 @@ def populate(world, camera):
         spin=Spinner(speed=3),
     ) )
 
-    # for color in (orange, green, red, blue, yellow, purple):
-        # world.add( GameItem(
-            # shape=Shape(
-                # Cube(1),
-                # color=color,
-            # ),
-            # spin=Spinner(speed=20),
-            # move=WobblyOrbit(3, speed=10),
-        # ) )
+    for color in (orange, green, red, blue, yellow, purple):
+        world.add( GameItem(
+            shape=Shape(
+                Cube(1),
+                color=color,
+            ),
+            spin=Spinner(speed=20),
+            move=WobblyOrbit(3, speed=uniform(8, 12)),
+        ) )
 
     world.add( GameItem(
         shape=RgbCubeCluster(1.0, 60, 5150),
     ) )
 
-    # edge = 48
+    edge = 38
 
-    # def is_inside():
-        # '''True if camera is inside cube of the given edge at the origin'''
-        # position = camitem.position
-        # dist = max(abs(position.x), abs(position.y), abs(position.z))
-        # return dist < edge / 2
+    def is_inside():
+        '''True if camera is inside cube of the given edge at the origin'''
+        position = camitem.position
+        dist = max(abs(position.x), abs(position.y), abs(position.z))
+        return dist < edge / 2
 
-    # darkgrey = (20, 20, 20, 80)
-    # shape = MultiShape()
-    # shape.add(CubeLattice(1.0, edge, 8, white))
-    # shape.add(Shape(Cube(edge), color=darkgrey))
-    # world.add( GameItem(
-        # shape=shape,
-        # slowmo=SlowMo(is_inside, 0.2),
-    # ) )
+    darkgrey = (20, 20, 20, 80)
+    shape = MultiShape()
+    shape.add(CubeLattice(1.0, edge, 8, white))
+    shape.add(Shape(Cube(edge), color=darkgrey))
+    world.add( GameItem(
+        shape=shape,
+        slowmo=SlowMo(is_inside, 0.2),
+    ) )
 
