@@ -42,21 +42,18 @@ class testShape(TestCase):
         p = (1, 2, 3)
         o = Orientation((4, 5, 6))
 
-        s = Shape(geometry, color=red, position=p, orientation=o)
+        s = Shape(geometry, face_colors=repeat(red), position=p, orientation=o)
         self.assertEquals(list(s.face_colors), [])
         self.assertEquals(s.position, p)
         self.assertEquals(s.orientation, o)
 
-
-    def testColors(self):
-        pass
 
     def testAttributes(self):
         verts = [(0, 1, 2), (3, 4, 5), (6, 7, 8)]
         faces = [[1, 2, 3]]
         geom = Geometry(verts, faces)
         color = (11, 22, 33, 44)
-        s = Shape(geom, color=color)
+        s = Shape(geom, face_colors=repeat(color))
         self.assertTrue(
             all(actual == expected
                 for actual, expected in zip(verts, s.vertices)))

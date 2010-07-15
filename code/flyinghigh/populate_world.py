@@ -1,6 +1,7 @@
 
 from __future__ import division
 
+from itertools import repeat
 from random import uniform
 
 from .component.shapes import (
@@ -54,7 +55,7 @@ def populate(world, camera):
     world.add( GameItem(
         shape=Shape(
             SierpinskiTetra(Tetrahedron(40), 6, scale=0.52),
-            color=yellow,
+            face_colors=repeat(yellow),
         ),
         position=Vec3(0, 0, 0),
         orientation=Orientation(ZAxis),
@@ -62,7 +63,7 @@ def populate(world, camera):
     ) )
 
     # world.add( GameItem(
-        # shape=Shape(KochCube(Cube(2), 5), color=yellow),
+        # shape=Shape(KochCube(Cube(2), 5), face_colors=repeat(yellow)),
         # spin=Spinner(speed=2),
     # ) )
 
@@ -81,7 +82,7 @@ def populate(world, camera):
         world.add( GameItem(
             shape=Shape(
                 Cube(1),
-                color=color,
+                face_colors=repeat(color),
             ),
             spin=Spinner(speed=20),
             move=WobblyOrbit(3, speed=uniform(8, 12)),
@@ -102,7 +103,7 @@ def populate(world, camera):
     darkgrey = (20, 20, 20, 80)
     shape = MultiShape()
     shape.add(CubeLattice(1.0, edge, 8, white))
-    shape.add(Shape(Cube(edge), color=darkgrey))
+    shape.add(Shape(Cube(edge), face_colors=repeat(darkgrey)))
     world.add( GameItem(
         shape=shape,
         slowmo=SlowMo(is_inside, 0.2),
