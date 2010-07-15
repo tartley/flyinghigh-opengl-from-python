@@ -68,12 +68,10 @@ Separate colors for each face.
 
 `CURRENT--------------------------------------------------------------------`
 
-print some useful info to the console, to show users some progress during
-startup
-
-Review Mike's 'canonical opengl3 application', from his old pycon talk.
+upload refined description to site. Add content (images!) to wiki.
 
 Write the first half of presentation.
+    - plan on 1024x768 resolution
     - like blog post, but with diagrams
     - Find way to automate conversion of essays into slides (rst2s5?)
     - include number of lines reqd for minimal funky app
@@ -81,6 +79,13 @@ Write the first half of presentation.
     - section on shaders
     - section on algorithmic geometry
     - section on shaders
+
+print some useful info to the console, to show users some progress during
+startup
+
+make python2.5 compliant to get Oscar's further input.
+
+Review Mike's 'canonical opengl3 application', from his old pycon talk.
 
 GEOMETRIES
 * the regular solids
