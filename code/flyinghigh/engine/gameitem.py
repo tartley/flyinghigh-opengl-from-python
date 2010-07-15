@@ -1,5 +1,5 @@
 
-from ..math.orientation import Orientation
+from ..geometry.orientation import Orientation
 
 class GameItem(object):
 

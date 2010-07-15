@@ -4,9 +4,9 @@ from itertools import islice, repeat
 from random import randint
 
 from ..geometry.geometry import Cube
-from ..math.matrix import Matrix
-from ..math.orientation import Orientation
-from ..math.vec3 import (
+from ..geometry.matrix import Matrix
+from ..geometry.orientation import Orientation
+from ..geometry.vec3 import (
     NegXAxis, NegYAxis, NegZAxis, Origin, Vec3, XAxis, YAxis, ZAxis,
 )
 

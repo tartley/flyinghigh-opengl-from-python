@@ -10,8 +10,8 @@ from collections import Iterable
 from itertools import repeat
 
 from ...geometry.geometry import Cube, Geometry, Tetrahedron
-from ...math.orientation import Orientation
-from ...math.vec3 import Vec3, YAxis, ZAxis
+from ...geometry.orientation import Orientation
+from ...geometry.vec3 import Vec3, YAxis, ZAxis
 from ..shapes import MultiShape, Shape
 
 

@@ -4,7 +4,7 @@ from math import sin, cos
 
 from OpenGL import GL as gl, GLU as glu
 
-from ..math.vec3 import Origin
+from ..geometry.vec3 import Origin
 
 
 class CameraBase(object):

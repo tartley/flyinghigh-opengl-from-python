@@ -1,7 +1,7 @@
 from math import cos, sin, pi
 from random import uniform
 
-from ..math.vec3 import Vec3
+from ..geometry.vec3 import Vec3
 
 
 class WobblyOrbit(object):

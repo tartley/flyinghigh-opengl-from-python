@@ -1,8 +1,8 @@
 
 from math import cos, sin
 
-from ..math.orientation import Orientation
-from ..math.vec3 import XAxis
+from ..geometry.orientation import Orientation
+from ..geometry.vec3 import XAxis
 
 
 class Spinner(object):

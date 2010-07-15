@@ -5,9 +5,8 @@ from __future__ import division
 
 import numpy as np
 
-from ..math.vec3 import Vec3
-
 from .geometry import Geometry
+from .vec3 import Vec3
 
 
 def SierpinskiTetra(original, n=1, scale=0.5):
