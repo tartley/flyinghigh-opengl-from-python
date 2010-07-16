@@ -47,14 +47,6 @@ class Glyph(object):
         return len(list(chain(*faces)))
 
 
-    def _get_glvertices(self, shape):
-        vertices = []
-        for face in shape.faces:
-            for vertexnum in face:
-                vertices.append(shape.vertices[vertexnum])
-        return _glarray(gl.GLfloat, chain(*vertices), self.num_glvertices * 3) 
-
-
     def _get_index_type(_, num_indices):
         '''
         return the numeric GL type needed to store the given number of values
@@ -66,6 +58,15 @@ class Glyph(object):
         else:
             index_type = gl.GLuint
         return index_type
+
+
+    def _get_glvertices(self, shape):
+        shape_vertices = shape.vertices
+        vertices = []
+        for face in shape.faces:
+            for vertexnum in face:
+                vertices.append(shape_vertices[vertexnum])
+        return _glarray(gl.GLfloat, chain(*vertices), self.num_glvertices * 3) 
 
 
     def _get_glindices(self, faces):
@@ -87,9 +88,10 @@ class Glyph(object):
 
 
     def _get_glnormals(self, shape):
+        shape_vertices = shape.vertices
         faces = list(shape.faces)
         normals = (
-            get_normal(shape.vertices, face)
+            get_normal(shape_vertices, face)
             for face in faces
         )
         face_normals = zip(faces, normals)
@@ -108,4 +110,23 @@ class Glyph(object):
         self.glindices = self._get_glindices(shape.faces)
         self.glcolors = self._get_glcolors(shape)
         self.glnormals = self._get_glnormals(shape)
+
+
+    def from_shape_new(self, shape):
+        vertices = []
+        indices = []
+        normals = []
+        colors = []
+
+        face_offset = 0
+        for face in shape.faces:
+            # normal = get_normal(shape.vertices, face)
+            # face_indices = xrange(face_offset, face_offset + len(face))
+            # self.glindices.extend(chain(*_triangulate(face_indices)))
+            for index in face:
+                vertices.append(shape.vertices[index])
+
+        self.num_glvertices = self._get_num_glvertices(shape.faces)
+        self.glvertices = _glarray(
+            gl.GLfloat, chain(*vertices), self.num_glvertices * 3) 
 

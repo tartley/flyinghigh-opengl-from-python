@@ -12,7 +12,7 @@ from ..geometry.vec3 import (
 
 
 
-def Cube(edge, *args, **kwargs):
+def Cube(edge, face_colors=None):
     e2 = edge/2
     verts = [
         (-e2, -e2, -e2),
@@ -32,10 +32,10 @@ def Cube(edge, *args, **kwargs):
         [3, 7, 6, 2], # top
         [1, 0, 4, 5], # bottom
     ]
-    return Shape(verts, faces, *args, **kwargs)
+    return Shape(verts, faces, face_colors)
 
 
-def Tetrahedron(edge, *args, **kwargs):
+def Tetrahedron(edge, face_colors=None):
     size = edge / sqrt(2)/2
     vertices = [
         (+size, +size, +size),
@@ -44,7 +44,7 @@ def Tetrahedron(edge, *args, **kwargs):
         (+size, -size, -size), 
     ]
     faces = [ [0, 2, 1], [1, 3, 0], [2, 3, 1], [0, 3, 2] ]
-    return Shape(vertices, faces, *args, **kwargs)
+    return Shape(vertices, faces, face_colors)
 
 
 def RgbCubeCluster(edge, cluster_edge, cube_count):
@@ -67,7 +67,8 @@ def RgbCubeCluster(edge, cluster_edge, cube_count):
             if pos.length > 8:
                 break
         shape.add(
-            Cube(edge, repeat(color), position=Vec3(*pos))
+            Cube(edge, repeat(color)),
+            position=Vec3(*pos)
         )
     return shape
 
@@ -85,7 +86,8 @@ def CubeLattice(edge, cluster_edge, freq, color):
                 Vec3(+cluster_edge/2, i, j),
             ]:
                 shape.add(
-                    Cube(edge, face_colors=repeat(color), position=pos)
+                    Cube(edge, repeat(color)),
+                    position=pos,
                 )
     return shape
 
@@ -98,19 +100,20 @@ def CubeCross():
 
     outer_color = (170, 170, 170, 255)
     for pos in [XAxis, YAxis, ZAxis, NegXAxis, NegYAxis, NegZAxis]:
-        multi.add( Cube(
-            1,
-            face_colors=repeat(outer_color),
+        multi.add(
+            Cube(1, repeat(outer_color)),
             position=pos,
-        ) )
+        )
     return multi
 
 
 def CubeCorners():
     multi = MultiShape()
     center_color = (150, 150, 150, 255)
-    multi.add(Cube(2, face_colors=repeat(center_color), position=Origin))
-
+    multi.add(
+        Cube(2, repeat(center_color)),
+        position=Origin,
+    )
     outer_color = (170, 170, 170, 255)
 
     for pos in [
@@ -123,38 +126,9 @@ def CubeCorners():
         (-1, -1, +1),
         (-1, -1, -1),
     ]:
-        multi.add( Cube(
-            1,
-            face_colors=repeat(outer_color),
+        multi.add(
+            Cube(1, repeat(outer_color)),
             position=pos,
-        ) )
+        )
     return multi
     
-
-def RgbAxes():
-    red = (255, 0, 0, 255)
-    green = (0, 255, 0, 255)
-    blue = (0, 0, 255, 255)
-    cube1 = Cube(1)
-    multi = MultiShape(
-        Shape(
-            geometry=cube1,
-        ),
-        Shape(
-            geometry=cube1,
-            face_colors=repeat(red),
-            position=XAxis,
-        ),
-        Shape(
-            geometry=cube1,
-            face_colors=repeat(green),
-            position=YAxis,
-        ),
-        Shape(
-            geometry=cube1,
-            face_colors=repeat(blue),
-            position=ZAxis,
-        ),
-    )
-    return multi
-

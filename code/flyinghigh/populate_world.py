@@ -79,7 +79,7 @@ def populate(world, camera):
         ) )
 
     world.add( GameItem(
-        shape=RgbCubeCluster(1.0, 60, 5150),
+        shape=RgbCubeCluster(1.0, 60, 5000),
     ) )
 
     edge = 38

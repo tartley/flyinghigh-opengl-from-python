@@ -1,5 +1,5 @@
 
-from itertools import islice, repeat
+from itertools import chain, cycle, islice, repeat
 
 from ..geometry.matrix import Matrix
 from ..geometry.orientation import Orientation
@@ -16,88 +16,79 @@ class Shape(object):
     into the vertex array, forming a coplanar convex ring defining the face's
     edges. Each face has its own color.
     '''
-    def __init__(self, vertices, faces,
-        face_colors=None, position=None, orientation=None):
-
+    def __init__(self, vertices, faces, face_colors=None):
+        
         if len(vertices) > 0 and not isinstance(vertices[0], Vec3):
             vertices = [Vec3(*v) for v in vertices]
-        self._vertices = vertices
-        self._transformed_vertices = None
+        self.vertices = vertices
 
+        for face in faces:
+            assert len(face) >= 3
+            for index in face:
+                assert 0 <= index < len(vertices)
         self.faces = faces
 
         if face_colors is None:
             face_colors = repeat(white)
-        else:
-            assert (
-                hasattr(face_colors, 'next') or
-                len(face_colors) == len(faces)
-            )
-        self.face_colors = islice(face_colors, len(self.faces))
-
-        if type(position) is tuple:
-            position = Vec3(*position)
-        self.position = position
-
-        if type(orientation) is tuple:
-            orientation = Orientation(orientation)
-        self.orientation = orientation
-
-
-    @property
-    def vertices(self):
-        if self._transformed_vertices is None:
-            matrix = Matrix(self.position, self.orientation)
-            self._transformed_vertices = [
-                matrix.transform(vert)
-                for vert in self._vertices]
-
-        return self._transformed_vertices
-
+        self.face_colors = islice(cycle(face_colors), len(self.faces))
 
 
 class MultiShape(object):
 
-    def __init__(self, *args, **kwargs):
-        self.children = list(args)
-        self.position = kwargs.pop('position', None)
-        self.orientation = kwargs.pop('orientation', None)
-        assert kwargs == {}, 'unrecognized kwargs, %s' % (kwargs,)
+    def __init__(self):
+        self.children = []
+        self.positions = []
+        self.orientations = []
+
         self._vertices = None
         self._faces = None
 
-    def add(self, child):
+
+    def add(self, child, position=None, orientation=None):
         self.children.append(child)
+        self.positions.append(position)
+        self.orientations.append(orientation)
+
 
     @property
     def vertices(self):
-        if self._vertices is None:
-            matrix = Matrix(self.position, self.orientation)
-            self._vertices = [
-                matrix.transform(vert)
-                for shape in self.children
-                for vert in shape.vertices]
-        return self._vertices
+        matrices = (
+            Matrix(self.positions[index], self.orientations[index])
+            for index in xrange(len(self.children))
+        )
+        return list(
+            matrix.transform(vertex)
+            for index, matrix in enumerate(matrices)
+            for vertex in self.children[index].vertices
+        )
+        # TODO delete this explicit list version
+        # if self._vertices is None:
+            # self._vertices = []
+            # for index, child in enumerate(self.children):
+                # matrix = Matrix(self.positions[index], self.orientations[index])
+                # for vertex in child.vertices:
+                    # self._vertices.append(matrix.transform(vertex))
+        # return self._vertices
+
 
     @property
     def faces(self):
         if self._faces is None:
-            newfaces = []
-            index_offset = 0
-            for shape in self.children:
-                for face in shape.faces:
+            self._faces = []
+
+            child_offset = 0
+            for child in self.children:
+                for face in child.faces:
                     newface = []
                     for index in face:
-                        newface.append(index + index_offset)
-                    newfaces.append(newface)
-                index_offset += len(shape.vertices)
-            self._faces = newfaces
+                        newface.append(index + child_offset)
+                    self._faces.append(newface)
+                child_offset += len(child.vertices)
+
         return self._faces
+
 
     @property
     def face_colors(self):
-        face_colors = []
-        for shape in self.children:
-            face_colors.extend(islice(shape.face_colors, len(shape.faces)))
-        return face_colors
+        return chain.from_iterable(child.face_colors for child in self.children)
 

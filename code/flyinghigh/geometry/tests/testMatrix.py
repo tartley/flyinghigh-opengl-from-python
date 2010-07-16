@@ -28,18 +28,6 @@ class testMatrix(TestCase):
         expected[11] = position.z
         self.assertEqual(matrix.elements, expected)
 
-    def testDefaultOrientation(self):
-        position = Vec3(1, 2, 3)
-
-        matrix = Matrix(position)
-
-        expected = Orientation().matrix
-        expected[3] = position.x
-        expected[7] = position.y
-        expected[11] = position.z
-        for actual, expected in zip(matrix.elements, expected):
-            self.assertAlmostEqual(actual, expected)
-
     def testTransform(self):
         position = Vec3(10, 20, 30)
         vert = Vec3(1, 2, 3)
