@@ -61,8 +61,6 @@ class testGlyph(TestCase):
         self.assertEqual(list(actual), expected_values)
 
     def assert_lists_almost_equal(self, l1, l2, places=15):
-        print l1
-        print l2
         for a, e in zip(l1, l2):
             self.assertAlmostEqual(a, e, places=places)
 

@@ -53,7 +53,6 @@ class testShape(TestCase):
             [[0, 1, 3], [0, 1, 2]], # index bigger than num verts
             [[0, 1, 2], [0, 1, 3]], # index bigger than num verts
         ]:
-            print faces
             self.assertRaises(AssertionError, lambda: Shape(verts, faces))
 
     def testInitDefaultsMissingColorsToWhite(self):
