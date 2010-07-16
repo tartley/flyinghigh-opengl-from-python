@@ -43,7 +43,7 @@ class Shape(object):
 
         if face_colors is None:
             face_colors = repeat(white)
-        self.face_colors = islice(cycle(face_colors), len(self.faces))
+        self.face_colors = list(islice(cycle(face_colors), len(self.faces)))
 
 
 class MultiShape(object):

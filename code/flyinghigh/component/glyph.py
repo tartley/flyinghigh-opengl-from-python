@@ -103,6 +103,7 @@ class Glyph(object):
 
 
     def from_shape(self, shape):
+        face_colors = list(shape.face_colors)
         self.num_glvertices = self._get_num_glvertices(shape.faces)
         self.glvertices = self._get_glvertices(shape)
         self.index_type = self._get_index_type(self.num_glvertices)
