@@ -66,9 +66,12 @@ colliding, rather than just on camera moving within region.
 
 Separate colors for each face.
 
-`CURRENT--------------------------------------------------------------------`
+* Comprise Koch iterations from different Shapes so each one can use separate
+  color?
 
 upload refined description to site. Add content (images!) to wiki.
+
+`CURRENT--------------------------------------------------------------------`
 
 Write the first half of presentation.
     - plan on 1024x768 resolution
@@ -79,6 +82,7 @@ Write the first half of presentation.
     - section on shaders
     - section on algorithmic geometry
     - section on shaders
+    - put screenshots on the wiki
 
 print some useful info to the console, to show users some progress during
 startup
@@ -126,11 +130,6 @@ Startup performance:
     Try generating gl arrays all in one loop
     TAKE startup code to Code Clinic!
 
-Split geometry and shape out into separate modules
-
-GEOMETRIES
-* Comprise Koch iterations from different Shapes so each one can use separate
-  color?
 * Bevel edges
 
 Are we currently sending all geometry across bus every frame?
@@ -144,6 +143,21 @@ Add to geometry while it is being displayed
 Allow each entity (entity's shape?) to specify its own shaders.
 
 `Out of scope-----------------------------------------------------------------`
+
+Refactorings:
+ * multishape just stores matrices, rather than positions and orientations.
+   Matrix generator near line 55/59 then becomes simple iteration over
+   existing list.
+ * multishape "child_offset += len(list(child.vertices))"
+   is apparently faster than the quicker-looking current line
+   Maybe this and other instances of counting verts could be skipped if a
+   shape remembered it's num_verts?
+ * Face object, which knows indices, color, normal.
+ * cache normals, genreating them takes ages. Put in cache keyed by vertices
+   and orientation, then subsequent calls for a different child shape, with
+   different position, but same verts list and same orientation, will retrieve
+   cache value
+ * perform Glyph.from_verts using numpy
 
 User-controlled camera
 
