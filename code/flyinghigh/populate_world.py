@@ -46,22 +46,22 @@ def populate(world, camera):
         spin=Spinner(speed=0.5),
     ) )
 
-    world.add( GameItem(
-        shape=KochCube(
-            Cube(2),
-            5,
-            face_colors=repeat(yellow)),
-        spin=Spinner(speed=2),
-    ) )
+    # world.add( GameItem(
+        # shape=KochCube(
+            # Cube(2),
+            # 1,
+            # face_colors=repeat(yellow)),
+        # spin=Spinner(speed=2),
+    # ) )
 
-    world.add( GameItem(
-        shape=KochTetra(
-            Tetrahedron(4),
-            5,
-        ),
-        spin=Spinner(speed=4),
-        position=Vec3(0, -4, 4),
-    ) )
+    # world.add( GameItem(
+        # shape=KochTetra(
+            # Tetrahedron(4),
+            # 5,
+        # ),
+        # spin=Spinner(speed=4),
+        # position=Vec3(0, -4, 4),
+    # ) )
 
     world.add( GameItem(
         shape=CubeCross(),

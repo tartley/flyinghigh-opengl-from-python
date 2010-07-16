@@ -7,7 +7,8 @@ From the 'code' directory::
     python -O run.py [--profile]
 
 
-DEPENDENCIES:
+DEPENDENCIES
+------------
 
     Python 2.6 or 2.7
     Pyglet
@@ -22,6 +23,7 @@ http://www.lfd.uci.edu/~gohlke/pythonlibs/
 
 
 DEVELOPMENT
+-----------
 
 For development, I'm also using:
 
@@ -31,10 +33,14 @@ For development, I'm also using:
 running tests using 'nosetests' (unittest2 discovery has some wrinkles)
 
 Also I have some simple commands stored in a Makefile, which run under Linux or
-under Windows with Cygwin binaries on the PATH.
+under Windows with Cygwin binaries on the PATH. If you're on Windows but don't
+have make or Cygwin, open up the Makefile and examine the targets. The commands
+they run are generally dead simple and you can easily figure out how to do the
+same thing on your system.
 
 
 PROFILING
+---------
 
 For profiling, I'm using the standard library cProfile, with 3rd party tool
 'RunSnakeRun' to render the output graphically.
@@ -44,15 +50,18 @@ For profiling, I'm using the standard library cProfile, with 3rd party tool
 will run the script under the profiler, then run RunSnakeRun on the output.
 
 RunSnakeRun is a graphical visualiser for the output of cProfile, very useful.
-Installed using:
-   easy_install RunSnakeRun SquareMap # (or pip)
-or download from here:
-   http://www.vrplumber.com/programming/runsnakerun/
-RunSnakeRun also needs wxPython, from here:
-   http://www.wxpython.org/download.php#binaries
+Installed using: ``easy_install RunSnakeRun`` (or pip) or download from:
+
+ * http://www.vrplumber.com/programming/runsnakerun/
+
+RunSnakeRun also needs:
+
+ * SquareMap: ``easy_install SquareMap`` (or pip)
+ * wxPython: from http://www.wxpython.org/download.php#binaries
 
 
 DESIGN NOTES
+------------
 
 The hub of the design is the 'engine.GameLoop' class, which contains the
 main game loop and responds to pyglet window events such as update and
@@ -96,13 +105,17 @@ acknowledge is dumb.
 
 
 PERFORMANCE
+-----------
 
 As with all pyglet projects, it's important to run with -O. Makes a big
 difference to performance.
 
-run.py recognises a '--profile' command line param, which runs the program
-with profiling turned on. On exit, it then fires up
-RunSnakeRun on the resulting output, to view the profiling info graphically.
+Biggest problem is converting Shapes to Glyphs, which causes a twenty
+second pause on startup. Presumably numpy could fix this?
+
+'make profile' runs the program with profiling turned on. On exit, it then
+fires up RunSnakeRun on the resulting output, to view the profiling info
+graphically.
 
 Currently runs under Windows at 60fps on my modest 2005-era Thinkpad laptop
 (with ATI Radeon X1400). I just fired it up under Linux and got disappointing

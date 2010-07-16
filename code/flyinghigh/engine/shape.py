@@ -2,11 +2,24 @@
 from itertools import chain, cycle, islice, repeat
 
 from ..geometry.matrix import Matrix
-from ..geometry.orientation import Orientation
 from ..geometry.vec3 import Vec3
 
 
 white=(255, 255, 255, 255)
+
+
+def face_normal(vertices, face):
+    '''
+    Return the unit normal vector (at right angles to) this face.
+    Note that the direction of the normal will be reversed if the
+    face's winding is reversed.
+    '''
+    v0 = vertices[face[0]]
+    v1 = vertices[face[1]]
+    v2 = vertices[face[2]]
+    a = v0 - v1
+    b = v2 - v1
+    return b.cross(a).normalize()
 
 
 class Shape(object):

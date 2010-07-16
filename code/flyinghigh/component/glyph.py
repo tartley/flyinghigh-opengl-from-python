@@ -3,8 +3,7 @@ from itertools import chain, repeat
 
 from OpenGL import GL as gl
 
-from ..geometry.face import get_normal
-
+from ..engine.shape import face_normal
 
 
 def _glarray(gltype, seq, length):
@@ -91,7 +90,7 @@ class Glyph(object):
         shape_vertices = shape.vertices
         faces = list(shape.faces)
         normals = (
-            get_normal(shape_vertices, face)
+            face_normal(shape_vertices, face)
             for face in faces
         )
         face_normals = zip(faces, normals)
@@ -110,23 +109,4 @@ class Glyph(object):
         self.glindices = self._get_glindices(shape.faces)
         self.glcolors = self._get_glcolors(shape)
         self.glnormals = self._get_glnormals(shape)
-
-
-    def from_shape_new(self, shape):
-        vertices = []
-        indices = []
-        normals = []
-        colors = []
-
-        face_offset = 0
-        for face in shape.faces:
-            # normal = get_normal(shape.vertices, face)
-            # face_indices = xrange(face_offset, face_offset + len(face))
-            # self.glindices.extend(chain(*_triangulate(face_indices)))
-            for index in face:
-                vertices.append(shape.vertices[index])
-
-        self.num_glvertices = self._get_num_glvertices(shape.faces)
-        self.glvertices = _glarray(
-            gl.GLfloat, chain(*vertices), self.num_glvertices * 3) 
 
