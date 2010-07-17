@@ -84,12 +84,9 @@ Write the first half of presentation.
     - section on shaders
     - put screenshots on the wiki
 
-print some useful info to the console, to show users some progress during
-startup
-
-make python2.5 compliant to get Oscar's further input.
-
-Review Mike's 'canonical opengl3 application', from his old pycon talk.
+ * I'm pretty sure I'm transforming every vertex for every child shape, at
+   every step along the branches of the tree. Can't we just transform the
+   transforms, then do each vertex once?
 
 GEOMETRIES
 * the regular solids
@@ -143,6 +140,13 @@ Add to geometry while it is being displayed
 Allow each entity (entity's shape?) to specify its own shaders.
 
 `Out of scope-----------------------------------------------------------------`
+
+print some useful info to the console, to show users some progress during
+startup
+
+make python2.5 compliant to get Oscar's further input.
+
+Review Mike's 'canonical opengl3 application', from his old pycon talk.
 
 Refactorings:
  * multishape just stores matrices, rather than positions and orientations.
