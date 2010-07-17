@@ -11,18 +11,18 @@ except:
 from OpenGL import GL as gl
 
 from ...engine.shape import Shape
-from ..glyph import Glyph, _triangulate
+from ..glyph import Glyph, tessellate
 
 
 class testGlyph(TestCase):
 
-    def test_triangulate(self):
+    def test_tessellate(self):
         data = [
             ([11, 22, 33], [[11, 22, 33]]),
             ([11, 22, 33, 44], [[11, 22, 33], [11, 33, 44]]),
         ]
         for datum, expected in data:
-            self.assertEqual(list(_triangulate(datum)), expected)
+            self.assertEqual(list(tessellate(datum)), expected)
 
 
     def get_shape(self):
@@ -47,7 +47,7 @@ class testGlyph(TestCase):
     def test_get_num_glvertices(self):
         shape = self.get_shape()
         glyph = Glyph()
-        self.assertEquals(glyph._get_num_glvertices(shape.faces), 8)
+        self.assertEquals(glyph.get_num_glvertices(shape.faces), 8)
 
     def test_get_glindices(self):
         shape = self.get_shape()
