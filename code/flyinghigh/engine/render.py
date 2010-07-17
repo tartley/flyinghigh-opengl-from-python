@@ -42,7 +42,7 @@ class Render(object):
 
 
     def draw(self):
-        for item in self.world.items.itervalues():
+        for item in self.world:
             if not hasattr(item, 'glyph'):
                 continue
 

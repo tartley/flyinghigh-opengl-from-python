@@ -16,7 +16,7 @@ class Time(object):
         should be running slow right now
         '''
         rate = 1.0
-        for item in self.world.items.itervalues():
+        for item in self.world:
             if hasattr(item, 'slowmo'):
                 rate = min(rate, item.slowmo())
         return rate

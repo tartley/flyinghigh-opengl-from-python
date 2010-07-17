@@ -25,15 +25,16 @@ class World(object):
         self.items = {}
         self.add_item = Event()
 
+    def __iter__(self):
+        return self.items.itervalues()
 
     def add(self, item):
         self.items[item.id] = item
         self.add_item.fire(item)
 
-
     def update(self, dt):
         self.time.tick(dt)
-        for item in self.items.itervalues():
+        for item in self:
             if hasattr(item, 'move'):
                 item.position = item.move(self.time)
             if hasattr(item, 'spin'):
