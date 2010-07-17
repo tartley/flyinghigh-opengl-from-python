@@ -28,18 +28,16 @@ def glarray(gltype, seq, length):
     return arraytype(*seq)
 
 
-def triangulate(face):
+def tessellate(face):
     '''
-    If 'face' defines the indices of each vertices in a flat, convex polyon,
-    output is that surface broken into triangles, wound in the same direction
-    as the original poly.
+    Return the given face broken into a list of triangles, wound in the
+    same direction as the original poly. Does not work for concave faces.
     e.g. [0, 1, 2, 3, 4] -> [[0, 1, 2], [0, 2, 3], [0, 3, 4]]
     '''
-    tris = []
-    for index in xrange(1, len(face) - 1):
-        triangle = [face[0], face[index], face[index+1]]
-        tris.append(triangle)
-    return tris
+    return (
+        [face[0], face[index], face[index + 1]]
+        for index in xrange(1, len(face) - 1)
+    )
 
 
 class Glyph(object):
@@ -71,7 +69,7 @@ class Glyph(object):
         face_offset = 0
         for face in faces:
             indices = xrange(face_offset, face_offset + len(face))
-            glindices.extend(chain(*triangulate(indices)))
+            glindices.extend(chain(*tessellate(indices)))
             face_offset += len(face)
         return glarray(self.index_type, glindices, len(glindices))
 
@@ -99,7 +97,6 @@ class Glyph(object):
     def from_shape(self, shape):
         vertices = list(shape.vertices)
         faces = list(shape.faces)
-
         self.num_glvertices = self.get_num_glvertices(faces)
         self.glvertices = self.get_glvertices(vertices, faces)
         self.index_type = get_index_type(self.num_glvertices)
