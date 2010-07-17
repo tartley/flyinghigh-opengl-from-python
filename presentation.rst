@@ -83,10 +83,10 @@ Whichever framework or library you use, this minimal application takes about
 
 The idea of this talk is that I will show (or at least mention) *all* of the
 code you need to add on top of this minimal canonical OpenGL loop. I want to
-demonstrate that producing pretty graphis like this can be done with a
-surprisingly small amount of code, and is quite easy. I want you to leave here
-enthused to generate your own virtual sculptures and animations, or graphics
-engines for games.
+demonstrate that producing pretty graphics is quite easy, and can be done with
+a surprisingly small amount of code. I want you to leave here enthused to
+generate your own virtual sculptures and animations, and maybe build on that to
+produce simple but effective graphics engines for games.
 
 
 Modelling Polyhedra
@@ -187,7 +187,7 @@ That was a lot of talk, but the code is quite small::
             return glarray(GLfloat, glverts, num_glverts * 4)
 
         def from_shape(self, shape):
-            num_glverts = sum(len(face) for face in shape.faces)
+            self.num_glverts = sum(len(face) for face in shape.faces)
             self.glverts = self.get_glverts(shape, num_glverts)
 
 So Glyph.from_shape() converts our Shape instance into a vertex array that
@@ -218,26 +218,43 @@ So Glyph also needs to generate an array of indices.
                            -------   -----------------
                           triangle    square, triangulated
 
-(Note that the indextype will need to be GLushort or GLuint for vertex
-arrays of longer than 256 elements)
+Note that the indextype will need to be GLushort or GLuint for vertex
+arrays of longer than 256 elements::
+
+    def get_glindex_type(num_indices):
+        '''
+        The type of the glindices array depends on how many vertices there are
+        '''
+        if num_indices < 256:
+            index_type = gl.GLubyte
+        elif num_indices < 65536:
+            index_type = gl.GLushort
+        else:
+            index_type = gl.GLuint
+        return index_type
 
 The glindices for the triangular face are now sequential, because we swapped
 around the positions of the vertices in the array to match the order we
-expected them to be used. This helps with caching.
+expected them to be used. This helps with caching. You might think this makes
+the index array redundant, and if all we were rendering was disjoint triangles,
+then you'd be right.
 
-Something strange has happened to the square face though: It now consists of
-six indices instead of four. This is because we are passing geometry to
-OpenGL as GL_TRIANGLES. It means all faces of more than three vertices need
-to be broken into triangles.
+Something strange has happened to the indices for the square face though:
+It now consists of six indices instead of four. This is because we are passing
+geometry to OpenGL as GL_TRIANGLES, and so we need to break all faces of
+more than three vertices into separate triangles before passing them to OpenGL.
 
-TODO: diagram of triangulation
+There are well-known algorithms to tesselate arbitrary polygons.
+An implementation using the GLU library takes about 150 lines of Python.
+For the moment though, since we're interested in keeping things simple,
+let's restrict outselves just to convex faces. This lets us tesselate faces
+using a substantially simpler algorithm: Just take one arbitrarily-chosen
+vertex, and join it up to all the other vertices in the face::
 
-There are well-known algorithms which will tesselate any arbitrary polygon. I
-wrote an implementation using the GLU library, that took about 150 lines of
-Python. For the moment though, since we're interested in keeping things simple,
-let's use a simpler algorithm. If we take one arbitrarily-chosen vertex, and
-join it up to all the other vertices in the face, that will work. This will
-only work on convex faces, but the code is much simpler::
+TODO: diagram of simple tesselation algorithm
+      doesn't work for concave faces
+
+The code to do this is really simple::
 
     def triangulate(face):
         '''
@@ -250,15 +267,39 @@ only work on convex faces, but the code is much simpler::
             for index in xrange(1, len(face) - 1)
         )
 
-This means we can't represent polygons with concave faces. But it turns out
-that isn't much of a restriction.
+This means we can't render shapes with concave faces. But that isn't much of
+a restriction.
 
 TODO: diagram:
-    polygons with concave faces : Can't do
-    BUT: creating concave faces from multiple convex faces : OK
-    AND of course, concave polyhedra using only concave faces : OK
+    Can't do polygons with concave faces
+    But concave polyhedra using only concave faces are OK
+    And if we really need to, we can manually conpose concave faces out of
+        several convex faces.
 
+So, given our new tessellate function, we can now ask Glyph to provide the
+index array as well::
 
+    class Glyph(object):
+
+        def get_glindices(self, faces):
+            glindices = []
+            face_offset = 0
+            for face in faces:
+                indices = xrange(face_offset, face_offset + len(face))
+                glindices.extend(chain(*tessellate(indices)))
+                face_offset += len(face)
+            return glarray(self.glindex_type, glindices, len(glindices))
+
+        def from_shape(self, shape):
+            self.num_glvertices = self.get_num_glvertices(faces)
+            self.glvertices = self.get_glvertices(vertices, faces)
+            self.glindex_type = get_glindex_type()
+            self.glindices = self.get_glindices(faces)
+
+Rendering
+---------
+
+We now have enough code to render our thing!
 
 
 

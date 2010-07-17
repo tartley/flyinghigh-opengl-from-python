@@ -19,10 +19,12 @@ class Projection(object):
     def _ortho_bounds(self, zoom, aspect):
         left = bottom = -zoom
         right = top = zoom
-        if self.width > self.height: # landscape
+        if self.width > self.height:
+            # landscape mode window
             bottom /= aspect
             top /= aspect
-        elif self.width < self.height: # portrait
+        elif self.width < self.height:
+            # portrait mode window
             left *= aspect
             right *= aspect
         return left, right, bottom, top
