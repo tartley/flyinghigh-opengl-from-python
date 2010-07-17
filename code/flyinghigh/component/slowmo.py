@@ -1,5 +1,5 @@
 
-RATE = 0.05
+RATE = 0.1
 
 class SlowMo(object):
     '''

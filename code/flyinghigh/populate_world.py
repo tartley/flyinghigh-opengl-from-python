@@ -16,8 +16,17 @@ from .geometry.koch_cube import KochCube
 from .geometry.koch_tetra import KochTetra
 from .geometry.sierpinski_tetra import SierpinskiTetra
 from .geometry.orientation import Orientation
-from .geometry.vec3 import Origin, Vec3, ZAxis
+from .geometry.vec3 import Origin, Vec3, XAxis, ZAxis, NegZAxis
 
+
+def color_invert(color):
+    r, g, b, _ = color
+    return (
+        255 - r,
+        255 - g,
+        255 - b,
+        255
+    )
 
 
 def populate(world, camera):
@@ -38,31 +47,31 @@ def populate(world, camera):
 
     world.add( GameItem(
         shape=SierpinskiTetra(
-            Tetrahedron(40), 6, scale=0.52,
+            Tetrahedron(4), 6, scale=0.52,
             face_colors=repeat(yellow),
         ),
-        position=Vec3(0, 0, 0),
+        position=Vec3(0, 0, 5),
         orientation=Orientation(ZAxis),
-        spin=Spinner(speed=0.5),
+        spin=Spinner(speed=0.75),
     ) )
 
     world.add( GameItem(
         shape=KochCube(
-            Cube(5, face_colors=repeat(red)),
+            Cube(3, face_colors=repeat(red)),
             5,
             tip_color=yellow,
         ),
         spin=Spinner(speed=0.2),
-        position=(-10, 0, 0),
+        position=(5, 5, 0),
     ) )
 
     world.add( GameItem(
         shape=KochTetra(
-            Tetrahedron(20, face_colors=repeat(purple)),
-            6,
+            Tetrahedron(10, face_colors=repeat(purple)),
+            5,
             tip_color=white,
         ),
-        position=(10, 0, 0),
+        position=(-5, 0, 0),
     ) )
 
     world.add( GameItem(
@@ -70,14 +79,25 @@ def populate(world, camera):
         spin=Spinner(speed=3),
     ) )
 
-    for color in (orange, green, red, blue, yellow, purple):
-        world.add( GameItem(
-            shape=Cube(
+    for color in (orange, green, red, blue, yellow, purple, white):
+        shape = MultiShape()
+        shape.add(
+            Tetrahedron(
                 1,
                 face_colors=repeat(color),
+            )
+        )
+        shape.add(
+            Tetrahedron(
+                1,
+                face_colors=repeat(color_invert(color)),
             ),
-            spin=Spinner(speed=10),
-            move=WobblyOrbit(3, speed=uniform(4, 5)),
+            orientation=Orientation(XAxis),
+        )
+        world.add( GameItem(
+            shape=shape,
+            spin=Spinner(speed=uniform(8, 12)),
+            move=WobblyOrbit(2, speed=uniform(4, 5)),
         ) )
 
     world.add( GameItem(
