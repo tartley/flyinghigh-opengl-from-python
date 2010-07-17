@@ -53,7 +53,7 @@ class Gameloop(object):
         self.window.clear()
         self.projection.set_perspective(45)
         self.camera.look_at()
-        self.render.draw(self.world)
+        self.render.draw()
         self.projection.set_screen()
         self.camera.reset()
         self.clock_display.draw()

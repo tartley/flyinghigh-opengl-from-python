@@ -41,8 +41,8 @@ class Render(object):
             item.glyph.from_shape(item.shape)
 
 
-    def draw(self, world):
-        for item in world.items.itervalues():
+    def draw(self):
+        for item in self.world.items.itervalues():
             if not hasattr(item, 'glyph'):
                 continue
 
