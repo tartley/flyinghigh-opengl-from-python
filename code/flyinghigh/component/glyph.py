@@ -59,13 +59,12 @@ class Glyph(object):
         return index_type
 
 
-    def _get_glvertices(self, shape):
-        shape_vertices = shape.vertices
-        vertices = []
-        for face in shape.faces:
+    def _get_glvertices(self, vertices, faces):
+        glvertices = []
+        for face in faces:
             for vertexnum in face:
-                vertices.append(shape_vertices[vertexnum])
-        return _glarray(gl.GLfloat, chain(*vertices), self.num_glvertices * 3) 
+                glvertices.append(vertices[vertexnum])
+        return _glarray(gl.GLfloat, chain(*glvertices), self.num_glvertices * 3)
 
 
     def _get_glindices(self, faces):
@@ -78,36 +77,34 @@ class Glyph(object):
         return _glarray(self.index_type, indices, len(indices))
 
 
-    def _get_glcolors(self, shape):
-        face_colors = iter(shape.face_colors)
-        colors = []
-        for face in shape.faces:
-            colors.extend(repeat(face_colors.next(), len(face)))
-        return _glarray(gl.GLubyte, chain(*colors), self.num_glvertices * 4) 
+    def _get_glcolors(self, faces, face_colors):
+        glcolors = []
+        for face, color in zip(faces, face_colors):
+            glcolors.extend(repeat(color, len(face)))
+        return _glarray(gl.GLubyte, chain(*glcolors), self.num_glvertices * 4) 
 
 
-    def _get_glnormals(self, shape):
-        shape_vertices = shape.vertices
-        faces = list(shape.faces)
+    def _get_glnormals(self, vertices, faces):
         normals = (
-            face_normal(shape_vertices, face)
+            face_normal(vertices, face)
             for face in faces
         )
-        face_normals = zip(faces, normals)
-        vert_normals = chain.from_iterable(
+        glnormals = chain.from_iterable(
             repeat(normal, len(face))
-            for face, normal in face_normals
+            for face, normal in zip(faces, normals)
         )
         return _glarray(
-            gl.GLfloat, chain(*vert_normals), self.num_glvertices * 3) 
+            gl.GLfloat, chain(*glnormals), self.num_glvertices * 3) 
 
 
     def from_shape(self, shape):
-        face_colors = list(shape.face_colors)
-        self.num_glvertices = self._get_num_glvertices(shape.faces)
-        self.glvertices = self._get_glvertices(shape)
+        vertices = list(shape.vertices)
+        faces = list(shape.faces)
+
+        self.num_glvertices = self._get_num_glvertices(faces)
+        self.glvertices = self._get_glvertices(vertices, faces)
         self.index_type = self._get_index_type(self.num_glvertices)
-        self.glindices = self._get_glindices(shape.faces)
-        self.glcolors = self._get_glcolors(shape)
-        self.glnormals = self._get_glnormals(shape)
+        self.glindices = self._get_glindices(faces)
+        self.glcolors = self._get_glcolors(faces, shape.face_colors)
+        self.glnormals = self._get_glnormals(vertices, faces)
 

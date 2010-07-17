@@ -43,7 +43,7 @@ class Shape(object):
 
         if face_colors is None:
             face_colors = repeat(white)
-        self.face_colors = list(islice(cycle(face_colors), len(self.faces)))
+        self.face_colors = islice(cycle(face_colors), len(self.faces))
 
 
 class MultiShape(object):
@@ -63,7 +63,7 @@ class MultiShape(object):
 
     @property
     def vertices(self):
-        return list(
+        return (
             matrix.transform(vertex)
             for index, matrix in enumerate(self.matrices)
             for vertex in self.children[index].vertices
@@ -82,12 +82,13 @@ class MultiShape(object):
                     for index in face:
                         newface.append(index + child_offset)
                     self._faces.append(newface)
-                child_offset += len(child.vertices)
+                child_offset += len(list(child.vertices))
 
         return self._faces
 
 
     @property
     def face_colors(self):
-        return chain.from_iterable(child.face_colors for child in self.children)
+        return chain.from_iterable(
+            child.face_colors for child in self.children)
 
