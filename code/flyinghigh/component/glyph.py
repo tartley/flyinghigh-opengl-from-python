@@ -8,9 +8,8 @@ from ..engine.shape import face_normal
 
 def glarray(gltype, seq, length):
     '''
-    Convert nested sequences of values into a single contiguous ctypes array
-    of the given GLtype. eg:
-        [ 
+    Convert a list of lists into a flattened ctypes array, eg:
+    [ (1, 2, 3), (4, 5, 6) ] -> (GLfloat*6)(1, 2, 3, 4, 5, 6)
     '''
     arraytype = gltype * length
     return arraytype(*seq)
@@ -59,11 +58,12 @@ class Glyph(object):
 
 
     def _get_glvertices(self, vertices, faces):
-        glvertices = []
-        for face in faces:
-            for vertexnum in face:
-                glvertices.append(vertices[vertexnum])
-        return glarray(gl.GLfloat, chain(*glvertices), self.num_glvertices * 3)
+        glverts = chain.from_iterable(
+            vertices[index]
+            for face in faces
+            for index in face
+        )
+        return glarray(gl.GLfloat, glverts, self.num_glvertices * 3)
 
 
     def _get_glindices(self, faces):
