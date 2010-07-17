@@ -5,7 +5,7 @@ from ..geometry.matrix import Matrix
 from ..geometry.vec3 import Vec3
 
 
-white=(255, 255, 255, 255)
+WHITE = (255, 255, 255, 255)
 
 
 def face_normal(vertices, face):
@@ -42,7 +42,7 @@ class Shape(object):
         self.faces = faces
 
         if face_colors is None:
-            face_colors = repeat(white)
+            face_colors = repeat(WHITE)
         self.face_colors = islice(cycle(face_colors), len(self.faces))
 
 

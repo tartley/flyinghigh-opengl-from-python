@@ -6,16 +6,17 @@ from OpenGL import GL as gl
 from ..engine.shape import face_normal
 
 
-def _glarray(gltype, seq, length):
+def glarray(gltype, seq, length):
     '''
     Convert nested sequences of values into a single contiguous ctypes array
-    of the given GLtype.
+    of the given GLtype. eg:
+        [ 
     '''
     arraytype = gltype * length
     return arraytype(*seq)
 
 
-def _triangulate(face):
+def triangulate(face):
     '''
     If 'face' defines the indices of each vertices in a flat, convex polyon,
     output is that surface broken into triangles, wound in the same direction
@@ -30,8 +31,6 @@ def _triangulate(face):
 
 
 class Glyph(object):
-
-    dimension = 3
 
     def __init__(self):
         self.num_glvertices = None
@@ -64,7 +63,7 @@ class Glyph(object):
         for face in faces:
             for vertexnum in face:
                 glvertices.append(vertices[vertexnum])
-        return _glarray(gl.GLfloat, chain(*glvertices), self.num_glvertices * 3)
+        return glarray(gl.GLfloat, chain(*glvertices), self.num_glvertices * 3)
 
 
     def _get_glindices(self, faces):
@@ -72,16 +71,16 @@ class Glyph(object):
         face_offset = 0
         for face in faces:
             face_indices = xrange(face_offset, face_offset + len(face))
-            indices.extend(chain(*_triangulate(face_indices)))
+            indices.extend(chain(*triangulate(face_indices)))
             face_offset += len(face)
-        return _glarray(self.index_type, indices, len(indices))
+        return glarray(self.index_type, indices, len(indices))
 
 
     def _get_glcolors(self, faces, face_colors):
         glcolors = []
         for face, color in zip(faces, face_colors):
             glcolors.extend(repeat(color, len(face)))
-        return _glarray(gl.GLubyte, chain(*glcolors), self.num_glvertices * 4) 
+        return glarray(gl.GLubyte, chain(*glcolors), self.num_glvertices * 4) 
 
 
     def _get_glnormals(self, vertices, faces):
@@ -93,7 +92,7 @@ class Glyph(object):
             repeat(normal, len(face))
             for face, normal in zip(faces, normals)
         )
-        return _glarray(
+        return glarray(
             gl.GLfloat, chain(*glnormals), self.num_glvertices * 3) 
 
 

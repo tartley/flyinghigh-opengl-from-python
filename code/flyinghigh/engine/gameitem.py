@@ -5,7 +5,7 @@ class GameItem(object):
 
     _next_id = 0
 
-    def __init__(self, *_, **kwargs):
+    def __init__(self, **kwargs):
         self.id = GameItem._next_id
         GameItem._next_id += 1
 

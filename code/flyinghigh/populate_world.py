@@ -24,7 +24,7 @@ def populate(world, camera):
     camitem = GameItem(
         position=Origin,
         camera=camera,
-        move=WobblyOrbit(80, 55, speed=0.5),
+        move=WobblyOrbit(80, 75, speed=0.5),
     )
     world.add(camitem)
 
@@ -59,7 +59,7 @@ def populate(world, camera):
     world.add( GameItem(
         shape=KochTetra(
             Tetrahedron(20, face_colors=repeat(purple)),
-            7,
+            6,
             tip_color=white,
         ),
         position=(10, 0, 0),

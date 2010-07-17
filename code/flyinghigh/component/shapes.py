@@ -2,7 +2,7 @@
 from __future__ import division
 
 from itertools import repeat
-from math import cos, pi, sin, sqrt
+from math import sqrt
 from random import randint
 
 from ..engine.shape import Shape, MultiShape
