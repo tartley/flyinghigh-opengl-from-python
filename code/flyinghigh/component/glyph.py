@@ -6,18 +6,6 @@ from OpenGL import GL as gl
 from ..engine.shape import face_normal
 
 
-def get_glindex_type(num_indices):
-    '''
-    return the integer GL type needed to store the given number of values
-    '''
-    if num_indices < 256:
-        index_type = gl.GLubyte
-    elif num_indices < 65536:
-        index_type = gl.GLushort
-    else:
-        index_type = gl.GLuint
-    return index_type
-
 
 def glarray(gltype, seq, length):
     '''
@@ -65,6 +53,19 @@ class Glyph(object):
         return glarray(gl.GLfloat, glverts, self.num_glvertices * 3)
 
 
+    def get_glindex_type(self):
+        '''
+        The type of the glindices array depends on how many vertices there are
+        '''
+        if self.num_glvertices < 256:
+            index_type = gl.GLubyte
+        elif self.num_glvertices < 65536:
+            index_type = gl.GLushort
+        else:
+            index_type = gl.GLuint
+        return index_type
+
+
     def get_glindices(self, faces):
         glindices = []
         face_offset = 0
@@ -72,16 +73,17 @@ class Glyph(object):
             indices = xrange(face_offset, face_offset + len(face))
             glindices.extend(chain(*tessellate(indices)))
             face_offset += len(face)
-        self.glindex_type = get_glindex_type(self.num_glvertices)
+        self.glindex_type = self.get_glindex_type()
         return glarray(self.glindex_type, glindices, len(glindices))
 
 
     def get_glcolors(self, faces, face_colors):
-        glcolors = []
-        for face, color in zip(faces, face_colors):
-            glcolors.extend(repeat(color, len(face)))
+        glcolors = chain.from_iterable(
+            repeat(color, len(face))
+            for face, color in zip(faces, face_colors)
+        )
         return glarray(gl.GLubyte, chain(*glcolors), self.num_glvertices * 4) 
-
+        
 
     def get_glnormals(self, vertices, faces):
         normals = (
