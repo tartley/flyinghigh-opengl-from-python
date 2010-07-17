@@ -171,8 +171,8 @@ That was a lot of talk, but the code is quite small::
 
     def glarray(datatype, data, length):
         '''
-        convert a list of list of elements into a flattened ctypes array, eg:
-        [ [ 1, 2, 3], [4, 5, 6] ] -> (GLfloat*6)(1, 2, 3, 4, 5, 6)
+        convert a list of list of elements into a flattened ctypes array
+        e.g: [ [ 1, 2, 3], [4, 5, 6] ] -> (GLfloat*6)(1, 2, 3, 4, 5, 6)
         '''
         return (datatype * length)(*data)
 
@@ -212,13 +212,54 @@ So Glyph also needs to generate an array of indices.
     vertices = [ v0, v1, v2, v3, v4, ]
     faces = [ [0, 1, 4], [0, 1, 2, 3], ]
     ->
+    glvertices = verttype( v0, v1, v4, v0, v1, v2, v3, )
     indextype = GLubyte
-    glindices = indextype( 0, 1, 4,  0, 1, 2,  2, 0, 3 )
+    glindices = indextype( 0, 1, 2,  3, 4, 5,  5, 4, 6 )
                            -------   -----------------
                           triangle    square, triangulated
 
-Note that the gltype of glindices will need to be GLushort or GLuint for longer
-vertex arrays::
+(Note that the indextype will need to be GLushort or GLuint for vertex
+arrays of longer than 256 elements)
+
+The glindices for the triangular face are now sequential, because we swapped
+around the positions of the vertices in the array to match the order we
+expected them to be used. This helps with caching.
+
+Something strange has happened to the square face though: It now consists of
+six indices instead of four. This is because we are passing geometry to
+OpenGL as GL_TRIANGLES. It means all faces of more than three vertices need
+to be broken into triangles.
+
+TODO: diagram of triangulation
+
+There are well-known algorithms which will tesselate any arbitrary polygon. I
+wrote an implementation using the GLU library, that took about 150 lines of
+Python. For the moment though, since we're interested in keeping things simple,
+let's use a simpler algorithm. If we take one arbitrarily-chosen vertex, and
+join it up to all the other vertices in the face, that will work. This will
+only work on convex faces, but the code is much simpler::
+
+    def triangulate(face):
+        '''
+        Return the given face broken into a list of triangles, wound in the
+        same direction as the original poly. Does not work on concave faces.
+        e.g. [0, 1, 2, 3, 4] -> [[0, 1, 2], [0, 2, 3], [0, 3, 4]]
+        '''
+        return (
+            [face[0], face[index], face[index + 1]]
+            for index in xrange(1, len(face) - 1)
+        )
+
+This means we can't represent polygons with concave faces. But it turns out
+that isn't much of a restriction.
+
+TODO: diagram:
+    polygons with concave faces : Can't do
+    BUT: creating concave faces from multiple convex faces : OK
+    AND of course, concave polyhedra using only concave faces : OK
+
+
+
 
 
 Shape Factories
