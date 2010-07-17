@@ -50,8 +50,7 @@ class MultiShape(object):
 
     def __init__(self):
         self.children = []
-        self.positions = []
-        self.orientations = []
+        self.matrices = []
 
         self._vertices = None
         self._faces = None
@@ -59,29 +58,16 @@ class MultiShape(object):
 
     def add(self, child, position=None, orientation=None):
         self.children.append(child)
-        self.positions.append(position)
-        self.orientations.append(orientation)
+        self.matrices.append(Matrix(position, orientation))
 
 
     @property
     def vertices(self):
-        matrices = (
-            Matrix(self.positions[index], self.orientations[index])
-            for index in xrange(len(self.children))
-        )
         return list(
             matrix.transform(vertex)
-            for index, matrix in enumerate(matrices)
+            for index, matrix in enumerate(self.matrices)
             for vertex in self.children[index].vertices
         )
-        # TODO delete this explicit list version
-        # if self._vertices is None:
-            # self._vertices = []
-            # for index, child in enumerate(self.children):
-                # matrix = Matrix(self.positions[index], self.orientations[index])
-                # for vertex in child.vertices:
-                    # self._vertices.append(matrix.transform(vertex))
-        # return self._vertices
 
 
     @property
