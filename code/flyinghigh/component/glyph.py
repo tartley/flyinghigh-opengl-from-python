@@ -6,6 +6,19 @@ from OpenGL import GL as gl
 from ..engine.shape import face_normal
 
 
+def get_index_type(num_indices):
+    '''
+    return the integer GL type needed to store the given number of values
+    '''
+    if num_indices < 256:
+        index_type = gl.GLubyte
+    elif num_indices < 65536:
+        index_type = gl.GLushort
+    else:
+        index_type = gl.GLuint
+    return index_type
+
+
 def glarray(gltype, seq, length):
     '''
     Convert a list of lists into a flattened ctypes array, eg:
@@ -40,24 +53,11 @@ class Glyph(object):
         self.glnormals = None
 
 
-    def _get_num_glvertices(_, faces):
+    def get_num_glvertices(_, faces):
         return len(list(chain(*faces)))
 
 
-    def _get_index_type(_, num_indices):
-        '''
-        return the numeric GL type needed to store the given number of values
-        '''
-        if num_indices < 256:
-            index_type = gl.GLubyte
-        elif num_indices < 65536:
-            index_type = gl.GLushort
-        else:
-            index_type = gl.GLuint
-        return index_type
-
-
-    def _get_glvertices(self, vertices, faces):
+    def get_glvertices(self, vertices, faces):
         glverts = chain.from_iterable(
             vertices[index]
             for face in faces
@@ -66,24 +66,24 @@ class Glyph(object):
         return glarray(gl.GLfloat, glverts, self.num_glvertices * 3)
 
 
-    def _get_glindices(self, faces):
-        indices = []
+    def get_glindices(self, faces):
+        glindices = []
         face_offset = 0
         for face in faces:
-            face_indices = xrange(face_offset, face_offset + len(face))
-            indices.extend(chain(*triangulate(face_indices)))
+            indices = xrange(face_offset, face_offset + len(face))
+            glindices.extend(chain(*triangulate(indices)))
             face_offset += len(face)
-        return glarray(self.index_type, indices, len(indices))
+        return glarray(self.index_type, glindices, len(glindices))
 
 
-    def _get_glcolors(self, faces, face_colors):
+    def get_glcolors(self, faces, face_colors):
         glcolors = []
         for face, color in zip(faces, face_colors):
             glcolors.extend(repeat(color, len(face)))
         return glarray(gl.GLubyte, chain(*glcolors), self.num_glvertices * 4) 
 
 
-    def _get_glnormals(self, vertices, faces):
+    def get_glnormals(self, vertices, faces):
         normals = (
             face_normal(vertices, face)
             for face in faces
@@ -100,10 +100,10 @@ class Glyph(object):
         vertices = list(shape.vertices)
         faces = list(shape.faces)
 
-        self.num_glvertices = self._get_num_glvertices(faces)
-        self.glvertices = self._get_glvertices(vertices, faces)
-        self.index_type = self._get_index_type(self.num_glvertices)
-        self.glindices = self._get_glindices(faces)
-        self.glcolors = self._get_glcolors(faces, shape.face_colors)
-        self.glnormals = self._get_glnormals(vertices, faces)
+        self.num_glvertices = self.get_num_glvertices(faces)
+        self.glvertices = self.get_glvertices(vertices, faces)
+        self.index_type = get_index_type(self.num_glvertices)
+        self.glindices = self.get_glindices(faces)
+        self.glcolors = self.get_glcolors(faces, shape.face_colors)
+        self.glnormals = self.get_glnormals(vertices, faces)
 

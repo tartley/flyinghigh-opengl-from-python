@@ -58,7 +58,7 @@ using an optimal algorithm, i.e. when *much* effort has been expended
 refining the algorithm for a well-understood problem, does C's runtime
 performance start to nose ahead.
 
-All of the examples we'll see in this talk run at 60fps on my 2005-era laptop
+All of the examples we'll see in this talk run at 60fps on my 2005-era laptop 
 with rubbish graphics hardware (ATI Radeon X1400.)
 
 
@@ -164,8 +164,8 @@ Later we will see that even if the colors were the same, the redundant vertex
 position is still necessary, because other attributes of the vertex, such as
 the vertex normal, will still differ.
 
-In short, don't worry about these redundant vertex positions, they are required
-and there is nothing you can do about them.
+So in short, don't worry about these redundant vertex positions, they are
+required.
 
 That was a lot of talk, but the code is quite small::
 
@@ -190,36 +190,22 @@ That was a lot of talk, but the code is quite small::
             num_glverts = sum(len(face) for face in shape.faces)
             self.glverts = self.get_glverts(shape, num_glverts)
 
-So a Glyph class converts our Shape instance into some arrays that OpenGL can
-draw. We call glyph.from_shape(shape), and then we use the resulting
-glyph.glverts in our renderer, like this::
+So Glyph.from_shape() converts our Shape instance into a vertex array that
+OpenGL can use.
 
-    class Render(object):
-
-        def __init__(self, world):
-            self.world = world
-
-        def init(self):
-            gl.glEnableClientState(gl.GL_VERTEX_ARRAY)
-            # any other GL init
-
-
-For performance, we send our vertex array to OpenGL as an *indexed* array.
+For performance, we'll be using *indexed* vertex arrays.
 
     TODO: opengl api diagram:
         draw contiguous vertex array
         vs
         draw indexed vertex array
-    
+
 This reduces the number of vertices needed in the vertex array, and can help
 help the GPU cache the results of vertex processing, speeding things up
 when the same vertex is re-used for adjacent triangles (which will happen
-about often, as we are about to see).
+often, as we are about to see).
 
-So we need to generate the array of indices.
-
-(Or glindices will need to be GLushort or GLuint for longer vertex arrays.)
-
+So Glyph also needs to generate an array of indices.
 
     wireframe, showing vertices and faces
 
@@ -231,7 +217,8 @@ So we need to generate the array of indices.
                            -------   -----------------
                           triangle    square, triangulated
 
-
+Note that the gltype of glindices will need to be GLushort or GLuint for longer
+vertex arrays::
 
 
 Shape Factories
