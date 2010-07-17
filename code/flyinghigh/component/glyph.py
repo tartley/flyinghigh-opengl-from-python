@@ -6,7 +6,7 @@ from OpenGL import GL as gl
 from ..engine.shape import face_normal
 
 
-def get_index_type(num_indices):
+def get_glindex_type(num_indices):
     '''
     return the integer GL type needed to store the given number of values
     '''
@@ -45,7 +45,7 @@ class Glyph(object):
     def __init__(self):
         self.num_glvertices = None
         self.glvertices = None
-        self.index_type = None
+        self.glindex_type = None
         self.glindices = None
         self.glcolors = None
         self.glnormals = None
@@ -61,6 +61,7 @@ class Glyph(object):
             for face in faces
             for index in face
         )
+        self.num_glvertices = self.get_num_glvertices(faces)
         return glarray(gl.GLfloat, glverts, self.num_glvertices * 3)
 
 
@@ -71,7 +72,8 @@ class Glyph(object):
             indices = xrange(face_offset, face_offset + len(face))
             glindices.extend(chain(*tessellate(indices)))
             face_offset += len(face)
-        return glarray(self.index_type, glindices, len(glindices))
+        self.glindex_type = get_glindex_type(self.num_glvertices)
+        return glarray(self.glindex_type, glindices, len(glindices))
 
 
     def get_glcolors(self, faces, face_colors):
@@ -97,9 +99,7 @@ class Glyph(object):
     def from_shape(self, shape):
         vertices = list(shape.vertices)
         faces = list(shape.faces)
-        self.num_glvertices = self.get_num_glvertices(faces)
         self.glvertices = self.get_glvertices(vertices, faces)
-        self.index_type = get_index_type(self.num_glvertices)
         self.glindices = self.get_glindices(faces)
         self.glcolors = self.get_glcolors(faces, shape.face_colors)
         self.glnormals = self.get_glnormals(vertices, faces)

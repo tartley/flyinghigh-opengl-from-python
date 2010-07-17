@@ -62,7 +62,7 @@ class Render(object):
             gl.glDrawElements(
                 gl.GL_TRIANGLES,
                 len(glyph.glindices),
-                type_to_enum[glyph.index_type],
+                type_to_enum[glyph.glindex_type],
                 glyph.glindices)
 
             gl.glPopMatrix()
