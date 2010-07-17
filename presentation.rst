@@ -167,11 +167,14 @@ the vertex normal, will still differ.
 In short, don't worry about these redundant vertex positions, they are required
 and there is nothing you can do about them.
 
-That was a lot of talk, but the code is really small::
+That was a lot of talk, but the code is quite small::
 
     def glarray(datatype, data, length):
-        gltype = datatype * length
-        return gltype(*data)
+        '''
+        convert a list of list of elements into a flattened ctypes array, eg:
+        [ [ 1, 2, 3], [4, 5, 6] ] -> (GLfloat*6)(1, 2, 3, 4, 5, 6)
+        '''
+        return (datatype * length)(*data)
 
     class Glyph(object):
 
@@ -181,14 +184,25 @@ That was a lot of talk, but the code is really small::
                 for face in shape.faces
                 for index in face
             )
-            return glarray(GLfloat, chain(*glverts), num_glverts * 4)
+            return glarray(GLfloat, glverts, num_glverts * 4)
 
         def from_shape(self, shape):
             num_glverts = sum(len(face) for face in shape.faces)
             self.glverts = self.get_glverts(shape, num_glverts)
 
 So a Glyph class converts our Shape instance into some arrays that OpenGL can
-draw.
+draw. We call glyph.from_shape(shape), and then we use the resulting
+glyph.glverts in our renderer, like this::
+
+    class Render(object):
+
+        def __init__(self, world):
+            self.world = world
+
+        def init(self):
+            gl.glEnableClientState(gl.GL_VERTEX_ARRAY)
+            # any other GL init
+
 
 For performance, we send our vertex array to OpenGL as an *indexed* array.
 
