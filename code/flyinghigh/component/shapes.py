@@ -11,6 +11,21 @@ from ..geometry.vec3 import (
 )
 
 
+def TriangleSquare():
+    RED = (255, 0, 0, 255)
+    YELLOW = (255, 255, 0, 255)
+    return Shape(
+        vertices=[
+            ( 1,  1,   0), # v0
+            ( 1, -1,   0), # v1
+            (-1, -1,   0), # v2
+            (-1,  1,   0), # v3
+            ( 1,  0.5, 2), # v4
+        ],
+        faces=[ [0, 1, 4], [3, 2, 1, 0],
+                [4, 1, 0], [0, 1, 2, 3], ],
+        face_colors=[RED, YELLOW],
+    )
 
 def Cube(edge, face_colors=None):
     e2 = edge/2
