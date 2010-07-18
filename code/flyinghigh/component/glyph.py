@@ -1,5 +1,5 @@
 
-from itertools import chain, repeat
+from itertools import chain, izip, repeat
 
 from OpenGL import GL as gl
 
@@ -80,7 +80,7 @@ class Glyph(object):
     def get_glcolors(self, faces, face_colors):
         glcolors = chain.from_iterable(
             repeat(color, len(face))
-            for face, color in zip(faces, face_colors)
+            for face, color in izip(faces, face_colors)
         )
         return glarray(gl.GLubyte, chain(*glcolors), self.num_glvertices * 4) 
         
@@ -92,7 +92,7 @@ class Glyph(object):
         )
         glnormals = chain.from_iterable(
             repeat(normal, len(face))
-            for face, normal in zip(faces, normals)
+            for face, normal in izip(faces, normals)
         )
         return glarray(
             gl.GLfloat, chain(*glnormals), self.num_glvertices * 3) 
