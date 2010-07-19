@@ -9,11 +9,19 @@ class GameItem(object):
         self.id = GameItem._next_id
         GameItem._next_id += 1
 
-        # store the components of this gameitem on our attributes
+        # store the given components on our attributes
+        self.__dict__.update(**kwargs)
+
+        # TODO: this should be in some event handler for world.add_item
+        # so that GameItem doesn't need to frig with its attached components
         for name, value in kwargs.iteritems():
-            if name == 'orientation' and isinstance(value, tuple):
-                value = Orientation(value)
-            self.attach(name, value)
+            if hasattr(value, 'item'):
+                setattr(value, 'item', self)
+
+        # TODO: this should be in some event handler for world.add_item
+        # so that GameItem doesn't need to frig with its attached components
+        if hasattr(self, 'orientation') and isinstance(self.orientation, tuple):
+            self.orientation = Orientation(self.orientation)
 
 
     def _attributes(self):
@@ -22,18 +30,4 @@ class GameItem(object):
 
     def __repr__(self):
         return '<GameItem %x %s>' % (id(self), self._attributes())
-
-
-    def attach(self, name, component):
-        '''
-        attach a new component to this game item
-        '''
-        if hasattr(component, 'item'):
-            setattr(component, 'item', self)
-        
-        setattr(self, name, component)
-
-
-    def detach(self, name):
-        delattr(self, name)
 
