@@ -33,7 +33,6 @@ def populate(world, camera):
     camitem = GameItem(
         position=(-5, 0, 0),
         camera=camera,
-        # move=WobblyOrbit(80, 75, speed=0.5),
     )
     world.add(camitem)
 
@@ -47,6 +46,7 @@ def populate(world, camera):
 
     world.add( GameItem(
         shape=TriangleSquare(),
+        position=Origin,
     ) )
 
     # world.add( GameItem(

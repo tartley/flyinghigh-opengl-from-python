@@ -91,33 +91,33 @@ produce simple but effective graphics engines for games.
 Modelling Polyhedra
 -------------------
 
-Where a Polyhedron is a 3D shape with flat faces and straight edges.
-
-We can model this using a simple class:
+A 3D shape with flat faces and straight edges.
 
 .. sourcecode:: python
 
-    Vec3 = namedtuple('Vec3Base', 'x y z')
+    Vec3 = namedtuple('Vec3', 'x y z')
 
     class Shape(object):
-        '''
-        e.g.
-        v0 = Vec3(x0, y0, z0)
-        v1 = Vec3(x1, y1, z1)
-        v2 = Vec3(x2, y2, z2)
-        vertices = [ v0, v1, v2... ]
-        faces = [ [0, 1, 2], [2, 1, 3]... ]
-        face_colors = [ c0, c1... ]
-        '''
-        def __init__(self, vertices, faces, face_colors):
-            self.vertices = vertices
-            self.faces = faces
-            self.face_colors = face_colors
+
+      def __init__(self, verts, faces, colors):
+        # list of Vec3s
+        self.vertices = verts
+
+        # list of faces, each face a list of
+        # indices into 'vertices'
+        self.faces = faces
+
+        # List of (r, g, b, a) colors,
+        # one per face
+        self.face_colors = colors
+
+* Vertices is a list of (x, y, z) named tuples.
+* Faces is a list of faces. Each face is a list of integer indices into 'vertices'
+* face_colors is a list of (r, g, b, a) colors, one per face.
 
 
-Vertices is a list of (x, y, z) named tuples.
-Each face is a list of indices into the vertex list.
-Each face has a corresponding color, as (r, g, b, a) tuples.
+Simple Example
+--------------
 
 A simple example is a geometry consisting of a triangle joined to a square:
 
