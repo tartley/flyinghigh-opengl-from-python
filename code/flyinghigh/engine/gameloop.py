@@ -8,7 +8,9 @@ from .projection import Projection
 from .render import Render
 from .shader import FragmentShader, ShaderProgram, VertexShader
 from .world import World
+
 from ..component.camera import Camera
+from ..geometry.vec3 import Origin
 
 
 class Gameloop(object):
@@ -52,7 +54,7 @@ class Gameloop(object):
     def draw(self):
         self.window.clear()
         self.projection.set_perspective(45)
-        self.camera.look_at()
+        self.camera.look_at(Origin)
         self.render.draw()
         self.projection.set_screen()
         self.camera.reset()

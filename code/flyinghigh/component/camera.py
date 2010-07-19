@@ -4,8 +4,6 @@ from math import sin, cos
 
 from OpenGL import GL as gl, GLU as glu
 
-from ..geometry.vec3 import Origin
-
 
 class CameraBase(object):
 
@@ -21,15 +19,17 @@ class Camera(CameraBase):
 
     def __init__(self):
         super(Camera, self).__init__()
-        self.lookAt = Origin
 
-    def look_at(self):
+    def look_at(self, lookat):
+        '''
+        lookat is a tuple (x, y, z), towards which the camera should point
+        '''
         position = self.item.position
         gl.glMatrixMode(gl.GL_MODELVIEW)
         gl.glLoadIdentity()
         glu.gluLookAt(
             position.x, position.y, position.z,
-            self.lookAt.x, self.lookAt.y, self.lookAt.z,
+            lookat.x, lookat.y, lookat.z,
             0, 1, 0)
 
 
@@ -39,11 +39,14 @@ class CameraOrtho(CameraBase):
         super(CameraOrtho, self).__init__()
         self.angle = 0.0
 
-    def look_at(self):
+    def look_at(self, lookat):
+        '''
+        lookat is a tuple (x, y), towards which the camera should point
+        '''
         gl.glMatrixMode(gl.GL_MODELVIEW)
         gl.glLoadIdentity()
         glu.gluLookAt(
             self.position.x, self.position.y, +1.0,
-            self.position.x, self.position.y, -1.0,
+            lookat.x, lookat.y, -1.0,
             sin(self.angle), cos(self.angle), 0.0)
 

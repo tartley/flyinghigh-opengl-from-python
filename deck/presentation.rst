@@ -78,9 +78,9 @@ Whichever framework or library you use, this minimal application takes about
 
 
 The idea of this talk is that I will show (or at least mention) *all* of the
-code you need to add on top of this minimal canonical OpenGL loop. I want to
-demonstrate that producing pretty graphics is quite easy, and can be done with
-a surprisingly small amount of code. I want you to leave here enthused to
+code you need to add on top of this minimal OpenGL loop. I want to demonstrate
+that producing pretty graphics is quite easy, and can be done with a
+surprisingly small amount of code. I want you to leave here enthused to
 generate your own virtual sculptures and animations, and maybe build on that to
 produce simple but effective graphics engines for games.
 
@@ -260,44 +260,30 @@ rendering.
 Rendering
 ---------
 
-Now we have generated our vertex and normal arrays, we can pass them to OpenGL
-for rendering! So our renderer class, which handles window.draw events, contains
-standard OpenGL code, to set the MODELVIEW matrix depending on the 
-position of the object and call glDrawArrays on the arrays we created:
+.. class:: handout
+
+    Now we have generated our vertex and normal arrays, we can pass them to
+    OpenGL for rendering! So our renderer class, which handles window.draw
+    events, contains standard OpenGL code, to set the MODELVIEW matrix
+    depending on the position of the object and call glDrawArrays on the arrays
+    we created:
 
 .. sourcecode:: python
 
-    class Render(object):
+    VERT_LEN = 3
+    COLOR_LEN = 4
+    glVertexPointer(VERT_LEN, GL_FLOAT, 0,
+        glyph.glvertices)
+    glColorPointer(COLOR_LEN, GL_UNSIGNED_BYTE, 0,
+        glyph.glcolors)
+    glDrawElements(
+        GL_TRIANGLES,
+        len(glyph.glindices),
+        type_to_enum[glyph.glindex_type],
+        glyph.glindices)
 
-        def init(self):
-            gl.glEnableClientState(gl.GL_VERTEX_ARRAY)
-            gl.glEnableClientState(gl.GL_COLOR_ARRAY)
-            gl.glEnableClientState(gl.GL_NORMAL_ARRAY)
-            # and any other OpenGL initialisation
-
-        def draw(self, world):
-            for item in world:
-                gl.glPushMatrix()
-
-                gl.glTranslatef(* item.position)
-
-                glyph = item.glyph
-                gl.glVertexPointer(
-                    vertex_components, gl.GL_FLOAT, 0, glyph.glvertices)
-                gl.glColorPointer(
-                    color_components, gl.GL_UNSIGNED_BYTE, 0, glyph.glcolors)
-                gl.glNormalPointer(
-                    gl.GL_FLOAT, 0, glyph.glnormals)
-                gl.glDrawElements(
-                    gl.GL_TRIANGLES,
-                    len(glyph.glindices),
-                    type_to_enum[glyph.glindex_type],
-                    glyph.glindices)
-
-                gl.glPopMatrix()
-
-This code is standard OpenGL boilerplate. There are cleverer ways of using
-OpenGL, but this is a bog standard canonical way.
+This code is standard OpenGL boilerplate. There are cleverer ways of rendering
+in OpenGL, but this is pretty standard.
 
 
 First Light
@@ -305,44 +291,69 @@ First Light
 
 .. class:: handout
 
-    So. It's been a bit of a slog to get here, but finally, we now in a position
-    to run this code and get some visuals out.
+    So. It's been a bit of a slog to get here, but finally, we now in a
+    position to run this code and get some visuals out.
 
 .. image:: images/triangle-square.png
     :width: 1175
     :height: 775
 
+Our camera class 
 
 
 Shape Factories
 ---------------
 
-Factory functions can return instances of Shape. e.g. Tetrahedron:
+So, now we can start creating simple factory functions to create basic shapes:
 
 .. sourcecode:: python
 
     def Tetrahedron(edge, face_colors):
         size = edge / sqrt(2)/2
         vertices = [
-            (+size, +size, +size), # v0
-            (-size, -size, +size), # v1
-            (-size, +size, -size), # v2
-            (+size, -size, -size), # v3
-        ]
-        faces = [ [0, 2, 1], [1, 3, 0], [2, 3, 1], [0, 3, 2] ]
+            (+size, +size, +size),   # v0
+            (-size, -size, +size),   # v1
+            (-size, +size, -size),   # v2
+            (+size, -size, -size), ] # v3
+        faces = [
+            [0, 2, 1],  # f0
+            [1, 3, 0],  # f1
+            [2, 3, 1],  # f2
+            [0, 3, 2] ] # f3
         return Shape(vertices, faces, face_colors)
 
-TODO: diagram of wireframe tetra
-    
-TODO: a bunch of different shapes: cube, platonic solids, elite ships
+TODO: diagram of a tetrahedron. Label vertices, faces.
+
+Cube
+----
+
+.. class:: handout
+
+    Or we can create a cube.
+
+.. sourcecode:: python
+
+    def Cube(edge, face_colors=None):
+        e2 = edge/2
+        verts = [
+            (-e2, -e2, -e2), (-e2, -e2, +e2), (-e2, +e2, -e2), (-e2, +e2, +e2),
+            (+e2, -e2, -e2), (+e2, -e2, +e2), (+e2, +e2, -e2), (+e2, +e2, +e2),
+        ]
+        faces = [
+            [0, 1, 3, 2], # left
+            [4, 6, 7, 5], # right
+            [7, 3, 1, 5], # front
+            [0, 2, 6, 4], # back
+            [3, 7, 6, 2], # top
+            [1, 0, 4, 5], # bottom
+        ]
+        return Shape(verts, faces, face_colors)
+
+.. class:: handout
+
+    TODO: a bunch of different shapes: platonic solids, elite ships
+
 
 Using Shaders
---------------
-
-
-
-Compiled inner loops
---------------------
-
-
+-------------
 
