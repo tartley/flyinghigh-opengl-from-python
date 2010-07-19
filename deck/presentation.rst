@@ -4,37 +4,54 @@ Flying High: Hobbyist OpenGL from Python
 
 Jonathan Hartley
 
-Intro
------
+http://code.google.com/p/flyinghigh-opengl-from-python
 
-Hey. Right off the bat I should say that the OpenGL applications I'm talking
-about don't display very well on any of the projectors. I'll throw some
-animations up on the big screen, but they look significantly corrupted.
-You'll have to peer very closely, or take my word for it, to see that they
-run fine on the little laptop screen here. I think my graphics hardware has
-always been flaky connected to projectors.
+.. class:: handout
+
+    Intro
+    -----
+
+    Hey. Right off the bat I should say that the OpenGL code I'm talking about
+    doesn't display very well on any of the projectors.
+
+    You'll have to peer very closely, or take my word for it, to see that these
+    animations run fine on the little laptop screen here. My graphics hardware
+    has always been flaky when connected to projectors.
+
+    So that's a little disappointing. But I've got lots of screenshots, and
+    I'll wave the laptop screen at you to peer at a couple of times, and of
+    course you're welcome to grab the code. Search google code for
+    'flyinghigh', all one word, and it's the only result.
 
 
 Inspiratons
 -----------
 
-As the field of computer graphics advances, there is an understandable
-tendency to strive for more photorealism, This is laudable and inevitable,
-but I also feel that the effort expended on achieving this technical goal
-is often undertaken without considering whether photorealism is the best
-aesthetic choice for a particular project.
+.. class:: handout
 
-In particular, the kind of minimal, clean-lined aesthetic that amateaur
-OpenGL programs tend towards are useful for their crisp precision, as
-visualisation tools. But above that, I love them for their austere beauty,
-and I wish more game developers had the balls to voluntarily restrict
-themselves to more traditional vintage vector-graphics.
+    TODO, images:
+    * Rez
+    * Tron (with 'bit')
+    * Love
+    * AAAaaaAAAaaAAAA
+    * RunJesusRun
+    * that FPS that is black and white with red bits
+    * Demoscene
 
-In the past, games and other applications were non-photorealistic by
-neccesity. This resulted in a set of distinctive visual styles.
+    As the field of computer graphics advances, there is an understandable
+    tendency to strive for more photorealism, This is laudable and inevitable,
+    but I also feel that the effort expended on achieving this technical goal
+    is often undertaken without considering whether photorealism is the best
+    aesthetic choice for a particular project.
 
-* Rez
-* Tron (with 'bit')
+    In particular, the kind of minimal, clean-lined aesthetic that amateaur
+    OpenGL programs tend towards are useful for their crisp precision, as
+    visualisation tools. But above that, I love them for their austere beauty,
+    and I wish more game developers had the balls to voluntarily restrict
+    themselves to more traditional vintage vector-graphics.
+
+    In the past, games and other applications were non-photorealistic by
+    neccesity. This resulted in a set of distinctive visual styles.
 
     Modern projects which pro-actively choose a particular aesthetic style,
     whether in emulation of a retro look, or striking out in a new direction of
@@ -42,41 +59,36 @@ neccesity. This resulted in a set of distinctive visual styles.
     than any project which merely strives for photorealism. Programs like these
     are my inspiration.
 
-* Love
-* AAAaaaAAAaaAAAA
-* RunJesusRun
-* that FPS that is black and white with red bits
-* Demoscene
+    The demoscene in particular is relevant to this talk, because one of my
+    other inspirations has been to create some pretty geometry just for the
+    sake of it. As a sculptor might put it, exploring the nature of space.
 
-The demoscene in particular is relevant to this talk, because one of my other
-inspirations has been to create some pretty geometry just for the sake of it.
-As a sculptor might put it, exploring the nature of space.
-
-All of the examples we'll see in this talk run at 60fps on my 2005-era laptop 
-with rubbish graphics hardware (ATI Radeon X1400.)
+    All of the examples we'll see in this talk run at 60fps on my 2005-era
+    laptop with rubbish graphics hardware (ATI Radeon X1400.)
 
 
 Starting Point
 --------------
 
-I'm assuming we're starting with a simple, vanilla OpenGL application, that
-will:
+Assuming we already have a minimal OpenGL application:
 
 * Open a window
 * Provide an OpenGL context
 * Set an appropriate 3D projection matrix
-* Set a modelview matrix, possibly be using a 'Camera' class, which maintains
-  it's own position in space, and a 'lookat' point, towards which it faces
-* Draw all objects in the world by iterating through them, modifying the
-  modelview matrix to repreent their position, and then calling DrawElements
-  or some similar OpenGL function on the object's arrays.
+* Set a modelview matrix for a moveable 3D camera
 
-I'm using pyglet for this, but this would work equally well from pygame, or
-simply with PyOpenGL along with some utility library to create the window and
-context.
+*Code count: 150 lines*
 
-Whichever framework or library you use, this minimal application takes about
-100 lines or so. This results in a blank screen, redrawn at 60fps.
+.. class:: handout
+
+    I'm assuming we're starting with a simple, vanilla OpenGL application, that
+    will [do the list above.]
+    I'm using pyglet for this, but this would work equally well from pygame, or
+    simply with PyOpenGL along with some utility library to create the window
+    and context.
+
+    Whichever framework or library you use, this minimal application takes
+    about 100 lines or so. This results in a blank screen, redrawn at 60fps.
 
 
 
@@ -110,11 +122,6 @@ A 3D shape with flat faces and straight edges.
         # List of (r, g, b, a) colors,
         # one per face
         self.face_colors = colors
-
-* Vertices is a list of (x, y, z) named tuples.
-* Faces is a list of faces. Each face is a list of integer indices into 'vertices'
-* face_colors is a list of (r, g, b, a) colors, one per face.
-
 
 Simple Example
 --------------
