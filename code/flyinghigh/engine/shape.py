@@ -43,7 +43,9 @@ class Shape(object):
 
         if face_colors is None:
             face_colors = repeat(WHITE)
-        self.face_colors = islice(cycle(face_colors), len(self.faces))
+        # TODO: colors of koch_cube/tetra break if we remove this 'list'
+        # and set face_colors to the return of 'islice'. Don't know why.
+        self.face_colors = list(islice(cycle(face_colors), len(self.faces)))
 
 
 class MultiShape(object):
