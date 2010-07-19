@@ -10,6 +10,15 @@ VERSION := `python -c "from ${PACKAGE}.version import version; print version"`
 RUN = run.py
 
 
+stats:
+	@echo "non-blank lines of code:"
+	@echo -n 'product: '
+	@find ${PACKAGE} -name '*.py' | grep -v "/tests/" | xargs cat | grep -cve "^\W*$$"
+	@echo -n 'tests: '
+	@find ${PACKAGE} -name '*.py' | grep "/tests/" | xargs cat | grep -cve "^\W*$$"
+.PHONY: stats
+
+
 clean:
 	rm -rf build dist tags pip-log.txt
 	-find ${PACKAGE} \( -name "*.py[oc]" -o -name "*.orig" \) -exec rm {} \;
@@ -19,14 +28,6 @@ clean:
 tags:
 	ctags -R ${PACKAGE}
 .PHONY: tags
-
-
-stats:
-	@echo -n 'product: '
-	@find ${PACKAGE} -name '*.py' | grep -v "/tests/" | xargs cat | grep -cve "^\W*$$"
-	@echo -n 'tests: '
-	@find ${PACKAGE} -name '*.py' | grep "/tests/" | xargs cat | grep -cve "^\W*$$"
-.PHONY: stats
 
 
 # runsnake is a GUI profile visualiser, very useful. See readme for install.
