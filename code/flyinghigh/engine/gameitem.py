@@ -1,5 +1,6 @@
 
 from ..geometry.orientation import Orientation
+from ..geometry.vec3 import Vec3
 
 class GameItem(object):
 
@@ -18,9 +19,14 @@ class GameItem(object):
             if hasattr(value, 'item'):
                 setattr(value, 'item', self)
 
-        # TODO: this should be in some event handler for world.add_item
-        # so that GameItem doesn't need to frig with its attached components
-        if hasattr(self, 'orientation') and isinstance(self.orientation, tuple):
+        # if position is a plain old tuple, convert it to Vec3
+        if hasattr(self, 'position') and not isinstance(self.position, Vec3):
+            self.position = Vec3(*self.position)
+        # if orientation is a plain old tuple, convert it to Orientation
+        if (
+            hasattr(self, 'orientation') and
+            not isinstance(self.orientation, Orientation)
+        ):
             self.orientation = Orientation(self.orientation)
 
 

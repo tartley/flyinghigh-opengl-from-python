@@ -31,9 +31,9 @@ def color_invert(color):
 
 def populate(world, camera):
     camitem = GameItem(
-        position=Origin,
+        position=(-5, 0, 0),
         camera=camera,
-        move=WobblyOrbit(80, 75, speed=0.5),
+        # move=WobblyOrbit(80, 75, speed=0.5),
     )
     world.add(camitem)
 
