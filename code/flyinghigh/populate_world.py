@@ -6,7 +6,7 @@ from random import uniform
 
 from .component.shapes import (
     MultiShape, Cube, CubeCorners, CubeCross, CubeLattice, RgbCubeCluster,
-    Tetrahedron,
+    Tetrahedron, TriangleSquare
 )
 from .component.slowmo import SlowMo
 from .component.spinner import Spinner
@@ -44,6 +44,10 @@ def populate(world, camera):
     blue = (0, 0, 255, 255)
     purple = (255, 0, 255, 255)
     white = (255, 255, 255, 255)
+
+    # world.add( GameItem(
+        # shape=TriangleSquare(),
+    # ) )
 
     world.add( GameItem(
         shape=SierpinskiTetra(
