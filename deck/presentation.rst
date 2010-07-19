@@ -4,16 +4,25 @@ Flying High: Hobbyist OpenGL from Python
 
 Jonathan Hartley
 
-.. sourcecode:: python
+Intro
+-----
+
+Hey. Right off the bat I should say that the OpenGL applications I'm talking
+about don't display very well on any of the projectors. I'll throw some
+animations up on the big screen, but they look significantly corrupted.
+You'll have to peer very closely, or take my word for it, to see that they
+run fine on the little laptop screen here. I think my graphics hardware has
+always been flaky connected to projectors.
+
 
 Inspiratons
 -----------
 
-As the field of computer graphics advances, there is an understandable tendency
-to strive for more photorealism, This is laudable and inevitable, but I also
-feel that the effort expended on achieving this technical goal is often
-undertaken without considering whether photorealism is the best aesthetic
-choice for a particular project.
+As the field of computer graphics advances, there is an understandable
+tendency to strive for more photorealism, This is laudable and inevitable,
+but I also feel that the effort expended on achieving this technical goal
+is often undertaken without considering whether photorealism is the best
+aesthetic choice for a particular project.
 
 In particular, the kind of minimal, clean-lined aesthetic that amateaur
 OpenGL programs tend towards are useful for their crisp precision, as
@@ -21,19 +30,17 @@ visualisation tools. But above that, I love them for their austere beauty,
 and I wish more game developers had the balls to voluntarily restrict
 themselves to more traditional vintage vector-graphics.
 
-In the past, games and other applications were non-photorealistic by neccesity.
-This resulted in a set of distinctive visual styles.
-
-TODO, get images.
+In the past, games and other applications were non-photorealistic by
+neccesity. This resulted in a set of distinctive visual styles.
 
 * Rez
 * Tron (with 'bit')
 
-Modern projects which pro-actively choose a particular aesthetic style, whether
-in emulation of a retro look, or striking out in a new direction of their own,
-are often more distinctive, artistically succesful and memorable than any
-project which merely strives for photorealism. Programs like these are my
-inspiration.
+    Modern projects which pro-actively choose a particular aesthetic style,
+    whether in emulation of a retro look, or striking out in a new direction of
+    their own, are often more distinctive, artistically succesful and memorable
+    than any project which merely strives for photorealism. Programs like these
+    are my inspiration.
 
 * Love
 * AAAaaaAAAaaAAAA
@@ -44,26 +51,6 @@ inspiration.
 The demoscene in particular is relevant to this talk, because one of my other
 inspirations has been to create some pretty geometry just for the sake of it.
 As a sculptor might put it, exploring the nature of space.
-
-
-Performance
------------
-
-Python might be considered to be the antithesis of the demoscene, which has a
-reputation for requiring hardcore C skills and tortured micro-optimisations.
-Python generally runs about 100x slower than C.
-
-This isn't as crippling as you might expect, especially if you stick to jobs
-for which you can hand a lot of the grunt work off to the GPU. Additionally,
-I'm a big believer in the idea that algorithm choice is far moe important for
-performance than language choice. Even for problems as trivial as finding
-primes, the optimal algorithm is far from obvious. My resultant belief is that
-for non-trivial problems (i.e. real-world problems, as opposed to
-straightforward number crunching benchmarks), given the same amount of
-development time, Python can hold its own against C. Only when everyone is
-using an optimal algorithm, i.e. when *much* effort has been expended
-refining the algorithm for a well-understood problem, does C's runtime
-performance start to nose ahead.
 
 All of the examples we'll see in this talk run at 60fps on my 2005-era laptop 
 with rubbish graphics hardware (ATI Radeon X1400.)
@@ -88,6 +75,8 @@ context.
 Whichever framework or library you use, this minimal application takes about
 100 lines or so. This results in a blank screen, redrawn at 60fps.
 
+
+
 The idea of this talk is that I will show (or at least mention) *all* of the
 code you need to add on top of this minimal canonical OpenGL loop. I want to
 demonstrate that producing pretty graphics is quite easy, and can be done with
@@ -101,22 +90,35 @@ Modelling Polyhedra
 
 Where a Polyhedron is a 3D shape with flat faces and straight edges.
 
-We can model this using a simple class::
+We can model this using a simple class:
+
+.. sourcecode:: python
+
+    Vec3 = namedtuple('Vec3Base', 'x y z')
 
     class Shape(object):
         '''
-        model a polyhedron
+        e.g.
+        v0 = Vec3(x0, y0, z0)
+        v1 = Vec3(x1, y1, z1)
+        v2 = Vec3(x2, y2, z2)
+        vertices = [ v0, v1, v2... ]
+        faces = [ [0, 1, 2], [2, 1, 3]... ]
+        face_colors = [ c0, c1... ]
         '''
         def __init__(self, vertices, faces, face_colors):
             self.vertices = vertices
             self.faces = faces
             self.face_colors = face_colors
 
+
 Vertices is a list of (x, y, z) named tuples.
 Each face is a list of indices into the vertex list.
 Each face has a corresponding color, as (r, g, b, a) tuples.
 
-A simple example is a geometry consisting of a triangle joined to a square::
+A simple example is a geometry consisting of a triangle joined to a square:
+
+.. sourcecode:: python
 
         RED = (255, 0, 0, 255)
         YELLOW = (255, 255, 0, 255)
@@ -132,20 +134,16 @@ A simple example is a geometry consisting of a triangle joined to a square::
             face_colors=[RED, YELLOW],
         )
 
-TODO: diagram of wireframe
+TODO: diagram of wireframe, showing how shape relates to the geometry
 
 
 OpenGL Arrays
 -------------
 
-A Shape can be converted into the ctype arrays that OpenGL needs.
+In order for OpenGL to render it, our Shape instance needs converting into
+a set of ctypes arrays.
 
-I'm going to use indexed arrays of GL_TRIANGLES throughout, which is a good
-default choice for all-round performance, and keeps things simple.
-
-Firstly, we need to generate the array of vertex positions.
-
-* TODO Diagram of our tetrahedron and opengl arrays: vertices, colors
+* TODO Diagram of our tetrahedron and opengl arrays: vertices, indices, colors
 
     wireframe, showing vertices but not faces
 
@@ -155,39 +153,40 @@ Firstly, we need to generate the array of vertex positions.
     verttype = GLfloat * 12
     glvertices = verttype( v0, v1, v4, v0, v1, v2, v3, )
 
-This array contains GLfloats, and here we see a common ctypes idiom for
-creating the type of this array: The actual type is obtained by multiplying
-GLfloat by the length of the array.
+So firstly, we need to generate the array of vertex positions.
 
-For the contents of this array, the glvertices have been recreated by
-dereferencing the indices in the shape's faces, to produce the sequence of
+For the contents of glvertices array, we need to 
+dereference the indices in the shape's faces list, to produce the sequence of
 vertices in the order in which OpenGL should draw them. Note that this
 introduces redundant vertex positions - for example v0 now occurs twice in
-glvertices. This is necessary whenever a vertex attribute differs from one use
-of a vertex to the next. In this case, the color of v0 differs depending on
-whether it is used in the square or the triangle.
+glvertices. This redundancy is necessary whenever any attribute of the vertex
+differs from one use of it to the next. In this case, it is the color of the
+two instances of v0 which is different, depending on whether we are using it
+to draw the red triangle or the yellow square.
 
-Later we will see that even if the colors were the same, the redundant vertex
+Even if the colors were the same, the redundant vertex
 position is still necessary, because other attributes of the vertex, such as
-the vertex normal, will still differ.
+the vertex normals we'll introduce later, will still differ.
 
 So in short, don't worry about these redundant vertex positions, they are
 required.
 
-That was a lot of talk, but the code is quite small::
+That was a lot of talk, but the code is quite small.
+
+.. sourcecode:: python
 
     def glarray(datatype, length, data):
-        return (datatype * length)(*data)
+      return (datatype * length)(* data)
 
     class Glyph(object):
 
-        def get_glvertices(self, shape, num_glverts):
-            glverts = chain.from_iterable(
-                shape.vertices[index]
-                for face in shape.faces
-                for index in face
-            )
-            return glarray(GLfloat, num_glverts * 4, glverts)
+      def get_glverts(self, shape, num_glverts):
+        glverts = chain.from_iterable(
+          shape.vertices[index]
+          for face in shape.faces
+          for index in face
+        )
+      return glarray(GLfloat, num_glverts * 4, glverts)
 
 So the Glyph class converts our Shape instance into a vertex array that
 OpenGL can use.
@@ -195,13 +194,17 @@ OpenGL can use.
 Before we can actually render this vertex array though, there are two other
 arrays we also need. We add methods appropriate methods to Glyph:
 
+.. sourcecode:: python
+
     get_glvertices()
     get_glindices()
     get_glcolors()
 
 Each of these are similar to get_glvertices shown above, but with
 their own wrinkles. The output of get_glindices, in particular, looks like
-this::
+this:
+
+.. sourcecode:: python
 
     glvertices = verttype( v0, v1, v4, v0, v1, v2, v3, )
     glindices = indextype( 0, 1, 2,  3, 4, 5,  5, 4, 6 )
@@ -215,16 +218,18 @@ GL_TRIANGLES, and so all faces of greater than three vertices need to be broken
 into separate triangles passing them to OpenGL.
 
 There are well-known algorithms to tesselate arbitrary polygons.
-An implementation using the GLU library takes about 150 lines of Python.
-For the moment though, too keep things simple,
-let's restrict outselves just to convex faces. This lets us tesselate faces
-using a substantially simpler algorithm: Just take one arbitrarily-chosen
-vertex, and join it up to all the other vertices in the face::
+An implementation I wrote using the GLU library takes about 150 lines of Python
+For the moment though, too keep things simple, let's restrict outselves just to
+convex faces. This lets us tesselate faces using a substantially simpler
+algorithm: Just take one arbitrarily-chosen vertex, and join it up to all the
+other vertices in the face::
 
     TODO: diagram of simple tesselation algorithm
           doesn't work for concave faces
 
-The code to do this is really simple::
+The code to do this is really simple:
+
+.. sourcecode:: python
 
     def tessellate(face):
         '''
@@ -238,7 +243,7 @@ The code to do this is really simple::
         )
 
 This means we can't render shapes with concave faces. But that turns out not
-to be much of a restriction::
+to be much of a restriction:
 
     TODO: diagram:
         Can't do polygons with concave faces
@@ -258,11 +263,13 @@ Rendering
 Now we have generated our vertex and normal arrays, we can pass them to OpenGL
 for rendering! So our renderer class, which handles window.draw events, contains
 standard OpenGL code, to set the MODELVIEW matrix depending on the 
-position of the object and call glDrawArrays on the arrays we created::
+position of the object and call glDrawArrays on the arrays we created:
+
+.. sourcecode:: python
 
     class Render(object):
 
-        def __init__(self):
+        def init(self):
             gl.glEnableClientState(gl.GL_VERTEX_ARRAY)
             gl.glEnableClientState(gl.GL_COLOR_ARRAY)
             gl.glEnableClientState(gl.GL_NORMAL_ARRAY)
@@ -272,7 +279,7 @@ position of the object and call glDrawArrays on the arrays we created::
             for item in world:
                 gl.glPushMatrix()
 
-                gl.glTranslatef(*item.position)
+                gl.glTranslatef(* item.position)
 
                 glyph = item.glyph
                 gl.glVertexPointer(
@@ -289,16 +296,30 @@ position of the object and call glDrawArrays on the arrays we created::
 
                 gl.glPopMatrix()
 
-I'm not going to discuss that code at all - it's standard OpenGL boilerplate.
+This code is standard OpenGL boilerplate. There are cleverer ways of using
+OpenGL, but this is a bog standard canonical way.
 
-So. It's been a bit of a slog to get here, but finally, we get some visuals:
+
+First Light
+-----------
+
+.. class:: handout
+
+    So. It's been a bit of a slog to get here, but finally, we now in a position
+    to run this code and get some visuals out.
+
+.. image:: images/triangle-square.png
+    :width: 1175
+    :height: 775
 
 
 
 Shape Factories
 ---------------
 
-Factory functions can return instances of Shape. e.g. Tetrahedron::
+Factory functions can return instances of Shape. e.g. Tetrahedron:
+
+.. sourcecode:: python
 
     def Tetrahedron(edge, face_colors):
         size = edge / sqrt(2)/2
