@@ -4,6 +4,7 @@ Flying High: Hobbyist OpenGL from Python
 
 Jonathan Hartley
 
+.. sourcecode:: python
 
 Inspiratons
 -----------
@@ -200,7 +201,7 @@ arrays we also need. We add methods appropriate methods to Glyph:
 
 Each of these are similar to get_glvertices shown above, but with
 their own wrinkles. The output of get_glindices, in particular, looks like
-this:
+this::
 
     glvertices = verttype( v0, v1, v4, v0, v1, v2, v3, )
     glindices = indextype( 0, 1, 2,  3, 4, 5,  5, 4, 6 )
@@ -220,8 +221,8 @@ let's restrict outselves just to convex faces. This lets us tesselate faces
 using a substantially simpler algorithm: Just take one arbitrarily-chosen
 vertex, and join it up to all the other vertices in the face::
 
-TODO: diagram of simple tesselation algorithm
-      doesn't work for concave faces
+    TODO: diagram of simple tesselation algorithm
+          doesn't work for concave faces
 
 The code to do this is really simple::
 
@@ -237,12 +238,12 @@ The code to do this is really simple::
         )
 
 This means we can't render shapes with concave faces. But that turns out not
-to be much of a restriction.
+to be much of a restriction::
 
-TODO: diagram:
-    Can't do polygons with concave faces
-    But concave polyhedra using only concave faces are OK
-    And if we really need to, we can manually conpose concave faces out of
+    TODO: diagram:
+        Can't do polygons with concave faces
+        But concave polyhedra using only concave faces are OK
+        And if we really need to, we can manually conpose concave faces out of
         several convex faces.
 
 So now we have a simple tesselator, we can implement gl_getindices. It's a lot
