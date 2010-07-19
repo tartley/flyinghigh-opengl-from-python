@@ -25,8 +25,12 @@ class Gameloop(object):
 
     def prepare(self):
         self.window = Window(
-            vsync=True, fullscreen=True, visible=False, resizable=True)
-        self.window.set_exclusive_mouse(True)
+            width=1000,
+            height=800,
+            fullscreen=False,
+            vsync=True,
+            visible=False,
+            resizable=True)
         self.window.on_draw = self.draw
         self.projection = Projection(self.window.width, self.window.height)
         self.window.on_resize = self.projection.resize
