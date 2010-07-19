@@ -62,11 +62,14 @@ Starting Point
 I'm assuming we're starting with a simple, vanilla OpenGL application, that
 will:
 
-* open a window
-* provide an OpenGL context
-* set an appropriate 3D projection matrix
-* call our 'World.update()' every frame
-* call our 'Render.draw(world)' after that
+* Open a window
+* Provide an OpenGL context
+* Set an appropriate 3D projection matrix
+* Set a modelview matrix, possibly be using a 'Camera' class, which maintains
+  it's own position in space, and a 'lookat' point, towards which it faces
+* Draw all objects in the world by iterating through them, modifying the
+  modelview matrix to repreent their position, and then calling DrawElements
+  or some similar OpenGL function on the object's arrays.
 
 I'm using pyglet for this, but this would work equally well from pygame, or
 simply with PyOpenGL along with some utility library to create the window and
@@ -272,18 +275,21 @@ Rendering
 
     VERT_LEN = 3
     COLOR_LEN = 4
-    glVertexPointer(VERT_LEN, GL_FLOAT, 0,
-        glyph.glvertices)
-    glColorPointer(COLOR_LEN, GL_UNSIGNED_BYTE, 0,
-        glyph.glcolors)
-    glDrawElements(
-        GL_TRIANGLES,
-        len(glyph.glindices),
-        type_to_enum[glyph.glindex_type],
-        glyph.glindices)
 
-This code is standard OpenGL boilerplate. There are cleverer ways of rendering
-in OpenGL, but this is pretty standard.
+    def render_glyph(glyph):
+        glVertexPointer(VERT_LEN, GL_FLOAT, 0,
+            glyph.glvertices)
+        glColorPointer(COLOR_LEN, GL_UNSIGNED_BYTE, 0,
+            glyph.glcolors)
+        glDrawElements(
+            GL_TRIANGLES,
+            len(glyph.glindices),
+            type_to_enum[glyph.glindex_type],
+            glyph.glindices)
+
+.. class:: handout
+
+    This code is pretty standard OpenGL boilerplate for rendering from arrays.
 
 
 First Light
@@ -298,7 +304,9 @@ First Light
     :width: 1175
     :height: 775
 
-Our camera class 
+.. class:: handout
+
+    So, finally, we can see our red triangle and yellow square.
 
 
 Shape Factories
@@ -324,12 +332,11 @@ So, now we can start creating simple factory functions to create basic shapes:
 
 TODO: diagram of a tetrahedron. Label vertices, faces.
 
+DEMO of a tetrahedron
+
+
 Cube
 ----
-
-.. class:: handout
-
-    Or we can create a cube.
 
 .. sourcecode:: python
 
@@ -351,7 +358,18 @@ Cube
 
 .. class:: handout
 
-    TODO: a bunch of different shapes: platonic solids, elite ships
+DEMO of a cube
+
+TODO: a bunch of different shapes: platonic solids, elite ships
+
+
+Moving Shapes
+-------------
+
+
+
+Composite shapes
+----------------
 
 
 Using Shaders
