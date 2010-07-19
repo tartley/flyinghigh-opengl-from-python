@@ -54,9 +54,9 @@ class Gameloop(object):
         self.projection.set_perspective(45)
         self.camera.look_at()
         self.render.draw()
-        # self.projection.set_screen()
-        # self.camera.reset()
-        # self.clock_display.draw()
+        self.projection.set_screen()
+        self.camera.reset()
+        self.clock_display.draw()
         return EVENT_HANDLED
 
 
