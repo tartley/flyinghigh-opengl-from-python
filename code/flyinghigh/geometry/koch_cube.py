@@ -15,15 +15,16 @@ def add_vertex(vertices, vert):
 
 
 def get_new_color(orig, tip):
+    RATE = 0.25
     r, g, b, _ = orig
     tr, tg, tb, _ = tip
     rdiff = tr - r
     gdiff = tg - g
     bdiff = tb - b
     return (
-        int(r + rdiff * 0.25),
-        int(g + gdiff * 0.25),
-        int(b + bdiff * 0.25),
+        int(r + rdiff * RATE),
+        int(g + gdiff * RATE),
+        int(b + bdiff * RATE),
         255)
 
 
@@ -80,10 +81,6 @@ def koch_cube_next(original, tip_color):
     return Shape(verts, faces, face_colors)
 
 
-def KochCube(shape, n, tip_color):
-    return koch_outer(koch_cube_next, shape, n, tip_color)
-
-
 def koch_outer(transform, shape, n, tip_color):
     multi = MultiShape()
     multi.add(shape)
@@ -91,4 +88,8 @@ def koch_outer(transform, shape, n, tip_color):
         shape = transform(shape, tip_color)
         multi.add(shape)
     return multi
+
+
+def KochCube(shape, n, tip_color):
+    return koch_outer(koch_cube_next, shape, n, tip_color)
 
