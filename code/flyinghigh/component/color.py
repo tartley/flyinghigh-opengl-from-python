@@ -1,6 +1,6 @@
 
 from collections import namedtuple
-from random import uniform
+from random import randint, uniform
 
 class Color(namedtuple('ColorBase', 'r g b a')):
 
@@ -8,6 +8,14 @@ class Color(namedtuple('ColorBase', 'r g b a')):
 
     def __repr__(self):
         return 'Color(%d, %d, %d, %d)' %  (self.r, self.g, self.b, self.a)
+
+    @staticmethod
+    def Random():
+        return Color(
+            randint(0, 255),
+            randint(0, 255),
+            randint(0, 255),
+            255)
 
     def inverted(self):
         return Color(
@@ -17,7 +25,9 @@ class Color(namedtuple('ColorBase', 'r g b a')):
             255
         )
 
-    def tinted(self, other, proportion=0.5):
+    def tinted(self, other=None, proportion=0.5):
+        if other is None:
+            other = white
         return Color(
             int(self.r * (1 - proportion) + other.r * proportion),
             int(self.g * (1 - proportion) + other.g * proportion),
@@ -25,7 +35,7 @@ class Color(namedtuple('ColorBase', 'r g b a')):
             int(self.a * (1 - proportion) + other.a * proportion),
         )
 
-    def variations(self, other):
+    def variations(self, other=None):
         while True:
             yield self.tinted(other, uniform(0, 1))
 

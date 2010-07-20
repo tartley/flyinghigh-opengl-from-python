@@ -11,7 +11,7 @@ from .component.slowmo import SlowMo
 from .component.spinner import Spinner
 from .component.wobblyorbit import WobblyOrbit
 from .component.color import (
-    red, orange, yellow, green, cyan, blue, purple, white, grey, black,
+    Color, red, orange, yellow, green, cyan, blue, purple, white, grey, black,
 )
 from .engine.gameitem import GameItem
 from .geometry.koch_cube import KochCube
@@ -49,6 +49,38 @@ def get_bestiary(world):
         position=Origin,
     )
 
+    bestiary[key.Q] = GameItem(
+        shape=CubeCross(),
+        spin=Spinner(speed=3),
+        position=Origin,
+    )
+
+    bestiary[key.Q] = GameItem(
+        shape=CubeCross(),
+        spin=Spinner(speed=3),
+        position=Origin,
+    )
+
+    dualtetrahedron = MultiShape()
+    colors = Color.Random().variations()
+    dualtetrahedron.add(
+        Tetrahedron(
+            1,
+            face_colors=colors,
+        )
+    )
+    dualtetrahedron.add(
+        Tetrahedron(
+            1,
+            face_colors=colors,
+        ),
+        orientation=Orientation(XAxis),
+    )
+    bestiary[key.Q] = GameItem(
+        shape=dualtetrahedron,
+        position=Origin,
+    )
+
     # world.add( GameItem(
         # shape=SierpinskiTetra(
             # Tetrahedron(4), 6, scale=0.52,
@@ -77,26 +109,7 @@ def get_bestiary(world):
         # position=(-5, 0, 0),
     # ) )
 
-    # world.add( GameItem(
-        # shape=CubeCross(),
-        # spin=Spinner(speed=3),
-    # ) )
-
     # for color in (orange, green, red, blue, yellow, purple, white):
-        # shape = MultiShape()
-        # shape.add(
-            # Tetrahedron(
-                # 1,
-                # face_colors=repeat(color),
-            # )
-        # )
-        # shape.add(
-            # Tetrahedron(
-                # 1,
-                # face_colors=repeat(color.inverted())),
-            # ),
-            # orientation=Orientation(XAxis),
-        # )
         # world.add( GameItem(
             # shape=shape,
             # spin=Spinner(speed=uniform(8, 12)),
