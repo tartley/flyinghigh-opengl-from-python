@@ -10,8 +10,8 @@ from .render import Render
 from .shader import FragmentShader, ShaderProgram, VertexShader
 from .world import World
 
-from ..component.camera import Camera
 from ..component.wobblyorbit import WobblyOrbit
+from ..component.camera import Camera
 from ..geometry.vec3 import Origin
 
 
@@ -43,6 +43,7 @@ class Gameloop(object):
         self.world.add( GameItem(
             camera=self.camera,
             move=WobblyOrbit(2, 1),
+
         ) )
 
         self.render = Render(self.world)

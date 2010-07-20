@@ -28,7 +28,7 @@ def color_invert(color):
     )
 
 
-def get_bestiary(world, camera):
+def get_bestiary(world):
 
     red = (255, 0, 0, 255)
     orange = (255, 127, 0, 255)
@@ -120,7 +120,7 @@ def get_bestiary(world, camera):
 
     # def is_inside():
         # '''True if camera is inside cube of the given edge at the origin'''
-        # position = camera.item.position
+        # position = world.camera.position
         # dist = max(abs(position.x), abs(position.y), abs(position.z))
         # return dist < edge / 2
 
@@ -132,4 +132,7 @@ def get_bestiary(world, camera):
         # shape=shape,
         # slowmo=SlowMo(is_inside, 0.2),
     # ) )
+
+    return bestiary
+
 

@@ -24,6 +24,7 @@ class World(object):
         self.time = Time(self)
         self.items = {}
         self.add_item = Event()
+        self.camera = None
 
     def __iter__(self):
         return self.items.itervalues()
@@ -31,6 +32,9 @@ class World(object):
     def add(self, item):
         self.items[item.id] = item
         self.add_item.fire(item)
+
+        if hasattr(item, 'camera'):
+            self.camera = item
 
     def update(self, dt):
         self.time.tick(dt)
