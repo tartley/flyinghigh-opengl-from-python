@@ -4,12 +4,14 @@ import pyglet
 from pyglet.event import EVENT_HANDLED
 from pyglet.window import Window
 
+from .gameitem import GameItem
 from .projection import Projection
 from .render import Render
 from .shader import FragmentShader, ShaderProgram, VertexShader
 from .world import World
 
 from ..component.camera import Camera
+from ..component.wobblyorbit import WobblyOrbit
 from ..geometry.vec3 import Origin
 
 
@@ -35,8 +37,13 @@ class Gameloop(object):
         self.projection = Projection(self.window.width, self.window.height)
         self.window.on_resize = self.projection.resize
 
-        self.camera = Camera()
         self.world = World()
+
+        self.camera = Camera()
+        self.world.add( GameItem(
+            camera=self.camera,
+            move=WobblyOrbit(2, 1),
+        ) )
 
         self.render = Render(self.world)
         self.render.init()
@@ -60,9 +67,9 @@ class Gameloop(object):
         self.projection.set_perspective(45)
         self.camera.look_at(Origin)
         self.render.draw()
-        self.projection.set_screen()
-        self.camera.reset()
-        self.clock_display.draw()
+        # self.projection.set_screen()
+        # self.camera.reset()
+        # self.clock_display.draw()
         return EVENT_HANDLED
 
 

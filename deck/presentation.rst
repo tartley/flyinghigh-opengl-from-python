@@ -401,20 +401,22 @@ Cube
     :width: 1175
     :height: 775
 
-
-
 TODO: a bunch of different shapes: platonic solids, elite ships
 
 
 Moving Shapes
 -------------
 
+.. class:: handout
+
+    We've already sneakily added some code I didn't tell you about. The camera
+    moves around the object under observation using a WobblyOrbit class.
+
+.. sourcecode:: python
+
 
 
 Composite shapes
 ----------------
 
-
-Using Shaders
--------------
 

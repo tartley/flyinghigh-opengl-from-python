@@ -30,13 +30,6 @@ def color_invert(color):
 
 
 def populate(world, camera):
-    camitem = GameItem(
-        position=(-5, 0, 0),
-        camera=camera,
-        move=WobblyOrbit(2, 1),
-    )
-    world.add(camitem)
-
     red = (255, 0, 0, 255)
     orange = (255, 127, 0, 255)
     yellow = (255, 255, 0, 255)
@@ -118,7 +111,7 @@ def populate(world, camera):
 
     # def is_inside():
         # '''True if camera is inside cube of the given edge at the origin'''
-        # position = camitem.position
+        # position = camera.item.position
         # dist = max(abs(position.x), abs(position.y), abs(position.z))
         # return dist < edge / 2
 

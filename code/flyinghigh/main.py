@@ -14,7 +14,6 @@ def run_game():
     try:
         gameloop = Gameloop()
         gameloop.prepare()
-        populate(gameloop.world, gameloop.camera)
 
         bestiary = get_bestiary(gameloop.world, gameloop.camera)
         keyhandler = KeyHandler(gameloop.world, bestiary)
