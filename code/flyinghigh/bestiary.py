@@ -76,29 +76,31 @@ def get_bestiary(world):
     bestiary[key.T] = GameItem(
         shape=CubeRing(1, 3, 23, green.tinted(black).variations()),
         position=Origin,
+        spinner=Spinner(speed=-1.5),
     )
 
     bestiary[key.Y] = GameItem(
         shape=CubeRing(1, 4, 24, green.tinted(white).variations()),
         position=Origin,
         orientation=XAxis,
+        spinner=Spinner(speed=1.5),
     )
 
     bestiary[key.U] = GameItem(
         shape=TriRing(1, 6, 32, orange.tinted(white).variations()),
         position=Origin,
         orientation=XAxis,
-        spinner=Spinner(),
+        spinner=Spinner(speed=2.5),
     )
 
-    # world.add( GameItem(
-        # shape=SierpinskiTetra(
-            # Tetrahedron(4), 6, scale=0.52,
-            # face_colors=repeat(yellow),
-        # ),
-        # position=Vec3(0, 0, 5),
-        # spin=Spinner(speed=0.75),
-    # ) )
+    bestiary[key.Z] = GameItem(
+        shape=SierpinskiTetra(
+            Tetrahedron(240), 6, scale=0.52,
+            face_colors=[yellow],
+        ),
+        position=Vec3(0, 0, 5),
+        spin=Spinner(speed=0.75),
+    )
 
     # world.add( GameItem(
         # shape=KochCube(
@@ -126,9 +128,9 @@ def get_bestiary(world):
             # move=WobblyOrbit(2, speed=uniform(4, 5)),
         # ) )
 
-    # world.add( GameItem(
-        # shape=RgbCubeCluster(1.0, 60, 5000),
-    # ) )
+    world.add( GameItem(
+        shape=RgbCubeCluster(1.0, 60, 5000),
+    ) )
 
     # edge = 38
 
