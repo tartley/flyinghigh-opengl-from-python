@@ -145,12 +145,11 @@ Modelling Polyhedra
         # list of Vec3s
         self.vertices = verts
 
-        # list of faces, each face a list of
-        # indices into 'vertices'
+        # list of faces, each face is a list of indices
+        # into 'vertices'
         self.faces = faces
 
-        # List of (r, g, b, a) colors,
-        # one per face
+        # List of (r, g, b, a) colors, one per face
         self.face_colors = colors
 
 .. class:: handout
@@ -234,8 +233,8 @@ Glyph.get_glverts() performs this defererincing.
           for face in shape.faces
           for index in face
         )
-      return glarray(
-        GLfloat, num_glverts * 4, glverts)
+        return glarray(
+          GLfloat, num_glverts * 4, glverts)
 
 
 Create glIndices array
@@ -292,8 +291,10 @@ tessellate()
     if their faces are all convex.
 
 
-Glyph again
------------
+Glyph generates the arrays
+--------------------------
+
+class Glyph continued...
 
 .. sourcecode:: python
 
@@ -448,23 +449,19 @@ Using a Mover
     world.add( GameItem(
         shape=Cube(1, repeat(red)),
         move=Orbit(distance=20, speed=4),
-    )
+    ) )
 
     # then, in world.update():
     for item in self.items:
         if hasattr(item, 'move'):
             item.position = item.move(self.time)
    
-Demo of moving things
+Demo of movers
+TODO: other types of mover
+
 
 Composite shapes
 ----------------
-
-.. class:: handout
-
-    So this is all well and good, but to create really complex shapes this way
-    is tedious. What we really need is a way to compose new shapes out of
-    combinations of the existing ones.
 
 .. sourcecode:: python
 
@@ -474,11 +471,17 @@ Composite shapes
             self.children = []
             self.matrices = []
 
-        def add(self, child, position=None, orientation=None):
+        def add(self, child, pos=None, orientation=None):
             self.children.append(child)
-            self.matrices.append(Matrix(position, orientation))
+            self.matrices.append(Matrix(pos, orientation))
 
 .. class:: handout
+
+    So this is all well and good, but to create complex shapes this way is
+    quite tedious. In addition, rendering each shape independantly, using a
+    distinct call to glDrawArrays for each Shape, gets very slow after a few
+    hundred shapes are added. What we really need is a way to compose new
+    shapes out of combinations of the existing ones.
 
     Introducing MultiShape, the composite shape. As you can see, this is a
     really simple class, it just contains a collection of child shapes,
@@ -501,11 +504,11 @@ Class MultiShape continued...
 
     @property
     def vertices(self):
-        return (
-            matrix.transform(vertex)
-            for index, matrix in enumerate(self.matrices)
-            for vertex in self.children[index].vertices
-        )
+      return (
+        matrix.transform(vertex)
+        for idx, matrix in enumerate(self.matrices)
+        for vertex in self.children[idx].vertices
+      )
 
 .. class:: handout
 
@@ -521,7 +524,6 @@ Class MultiShape continued...
 Some Composite Shapes
 ---------------------
 
-TODO
 
 
 Lighting
