@@ -25,11 +25,9 @@ class Gameloop(object):
         self.world = None
 
 
-    def prepare(self):
+    def prepare(self, options):
         self.window = Window(
-            fullscreen=False,
-            width=800,
-            height=600,
+            fullscreen=options.fullscreen,
             vsync=True,
             visible=False,
             resizable=True)

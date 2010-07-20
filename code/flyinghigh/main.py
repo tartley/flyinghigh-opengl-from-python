@@ -1,4 +1,6 @@
 
+from sys import argv
+
 from .engine import startup
 startup
 
@@ -9,10 +11,17 @@ from .bestiary import get_bestiary
 from .keyhandler import KeyHandler
 
 
+class Options(object):
+
+    def __init__(self, argv):
+        self.fullscreen = '--fullscreen' in argv or '-f' in argv
+
+
 def run_game():
     try:
+        options = Options(argv)
         gameloop = Gameloop()
-        gameloop.prepare()
+        gameloop.prepare(options)
 
         bestiary = get_bestiary(gameloop.world)
         keyhandler = KeyHandler(gameloop.world, bestiary)

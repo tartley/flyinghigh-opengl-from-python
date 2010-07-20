@@ -401,22 +401,41 @@ Cube
     :width: 1175
     :height: 775
 
-TODO: a bunch of different shapes: platonic solids, elite ships
+Demo, some solids.
 
 
 Moving Shapes
 -------------
 
-.. class:: handout
-
-    We've already sneakily added some code I didn't tell you about. The camera
-    moves around the object under observation using a WobblyOrbit class.
-
 .. sourcecode:: python
 
+    class Orbit(object):
+
+        def __init__(self, distance, speed, phase=None):
+            self.distance = distance
+            self.speed = speed
+            if phase is None:
+                phase = uniformr(0, 2 * pi)
+            self.phase = phase
+
+        def __call__(self, time):
+            bearing = sin(time * self.speed + self.phase)
+            x1 = self.distance * sin(bearing)
+            z1 = self.distance * cos(bearing)
+            return Vec3(x2, y2, z2)
+
+
+.. class:: handout
+
+    I've already sneakily added a class to move items around in the world, I'm
+    currently using it to move the camera around. We can add an instance of
+    this or similar classes to any item. If it's attached as the item's 'mover'
+    attribute, then it will be used to move the item around in the world.
+    Here we see an example of 'orbit', which will orbit the origin. You
+    can imagine more complex move behaviours, the one I attached to the camera
+    is called WobblyOrbit
 
 
 Composite shapes
 ----------------
-
 
