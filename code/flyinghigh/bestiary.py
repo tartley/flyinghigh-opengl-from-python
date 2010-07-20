@@ -30,12 +30,12 @@ def get_bestiary(world):
     )
 
     bestiary[key._1] = GameItem(
-        shape=Tetrahedron(1, [red, yellow, orange, white]),
+        shape=Tetrahedron(2, blue.variations(grey)),
         position=Origin,
     )
 
     bestiary[key._2] = GameItem(
-        shape=Cube(1, [green, blue, purple, cyan]),
+        shape=Cube(0.9, green.variations(yellow)),
         position=Origin,
     )
 
@@ -45,7 +45,7 @@ def get_bestiary(world):
     )
 
     bestiary[key._4] = GameItem(
-        shape=SpaceStation(1),
+        shape=SpaceStation(1.1),
         position=Origin,
     )
 
