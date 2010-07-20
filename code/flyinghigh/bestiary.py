@@ -1,6 +1,8 @@
 
 from __future__ import division
 
+from math import pi
+
 from pyglet.window import key
 
 from .component.shapes import (
@@ -10,7 +12,7 @@ from .component.shapes import (
 )
 from .component.slowmo import SlowMo
 from .component.spinner import Spinner
-from .component.wobblyorbit import WobblyOrbit
+from .component.wobblyorbit import Orbit, WobblyOrbit
 from .component.color import (
     Color, red, orange, yellow, green, cyan, blue, purple, white, grey, black,
 )
@@ -99,6 +101,26 @@ def get_bestiary(world):
     )
 
     bestiary[key.A] = GameItem(
+        shape=KochCube(
+            Cube(3, face_colors=[red]),
+            5,
+            tip_color=yellow,
+        ),
+        spin=Spinner(speed=0.2),
+        move=Orbit(10, speed=0.5),
+    )
+
+    bestiary[key.S] = GameItem(
+        shape=KochTetra(
+            Tetrahedron(10, face_colors=[purple]),
+            5,
+            tip_color=white,
+        ),
+        move=Orbit(10, speed=0.5, phase=pi),
+        spin=Spinner(speed=0.2),
+    )
+
+    bestiary[key.D] = GameItem(
         shape=SierpinskiTetra(
             Tetrahedron(240), 6, scale=0.52,
             face_colors=[yellow],
@@ -107,48 +129,17 @@ def get_bestiary(world):
         spin=Spinner(speed=0.75),
     )
 
-    # world.add( GameItem(
-        # shape=KochCube(
-            # Cube(3, face_colors=repeat(red)),
-            # 5,
-            # tip_color=yellow,
-        # ),
-        # spin=Spinner(speed=0.2),
-        # position=(5, 5, 0),
-    # ) )
+    def is_inside():
+        '''True if camera is inside cube of the given edge at the origin'''
+        edge = 40
+        position = world.camera.position
+        dist = max(abs(position.x), abs(position.y), abs(position.z))
+        return dist < edge / 2
 
-    # world.add( GameItem(
-        # shape=KochTetra(
-            # Tetrahedron(10, face_colors=repeat(purple)),
-            # 5,
-            # tip_color=white,
-        # ),
-        # position=(-5, 0, 0),
-    # ) )
-
-    # for color in (orange, green, red, blue, yellow, purple, white):
-        # world.add( GameItem(
-            # shape=shape,
-            # spin=Spinner(speed=uniform(8, 12)),
-            # move=WobblyOrbit(2, speed=uniform(4, 5)),
-        # ) )
-
-    # edge = 38
-
-    # def is_inside():
-        # '''True if camera is inside cube of the given edge at the origin'''
-        # position = world.camera.position
-        # dist = max(abs(position.x), abs(position.y), abs(position.z))
-        # return dist < edge / 2
-
-    # darkgrey = (20, 20, 20, 80)
-    # shape = MultiShape()
-    # shape.add(CubeLattice(1.0, edge, 8, white))
-    # shape.add(Cube(edge, face_colors=repeat(darkgrey)))
-    # world.add( GameItem(
-        # shape=shape,
-        # slowmo=SlowMo(is_inside, 0.2),
-    # ) )
+    bestiary[key.F] = GameItem(
+        slowmo=SlowMo(is_inside, 0.2),
+        position=Origin,
+    )
 
     return bestiary
 

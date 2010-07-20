@@ -33,7 +33,6 @@ class World(object):
     def add(self, item):
         self.items[item.id] = item
         self.add_item.fire(item)
-
         if hasattr(item, 'camera'):
             self.camera = item
 

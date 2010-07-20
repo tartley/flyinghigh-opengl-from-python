@@ -396,14 +396,14 @@ Moving Shapes
             self.distance = distance
             self.speed = speed
             if phase is None:
-                phase = uniformr(0, 2 * pi)
+                phase = uniform(0, 2 * pi)
             self.phase = phase
 
         def __call__(self, time):
             bearing = time * self.speed + self.phase
-            x1 = self.distance * sin(bearing)
-            z1 = self.distance * cos(bearing)
-            return Vec3(x2, y2, z2)
+            x = self.distance * sin(bearing)
+            z = self.distance * cos(bearing)
+            return Vec3(x, 0, z)
 
 
 .. class:: handout

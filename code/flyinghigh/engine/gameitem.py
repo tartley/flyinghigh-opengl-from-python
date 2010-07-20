@@ -31,7 +31,11 @@ class GameItem(object):
 
 
     def _attributes(self):
-        return ' '.join('%s' % (name,) for name in dir(self))
+        return ' '.join(
+            '%s=%s' % (name, getattr(self, name))
+            for name in dir(self)
+            if not name.startswith('_')
+        )
 
 
     def __repr__(self):

@@ -40,6 +40,7 @@ class Gameloop(object):
         self.camera = Camera()
         self.world.add( GameItem(
             camera=self.camera,
+            position=Origin,
             move=WobblyOrbit(4, 1, speed=-0.5),
 
         ) )

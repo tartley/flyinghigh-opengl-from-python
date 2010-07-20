@@ -4,6 +4,24 @@ from random import uniform
 from ..geometry.vec3 import Vec3
 
 
+class Orbit(object):
+
+    def __init__(self, distance, speed, phase=None):
+        self.distance = distance
+        self.speed = speed
+        if phase is None:
+            phase = uniform(0, 2 * pi)
+        self.phase = phase
+
+    def __call__(self, time):
+        time = time.current
+        bearing = time * self.speed + self.phase
+        x = self.distance * sin(bearing)
+        z = self.distance * cos(bearing)
+        return Vec3(x, 0, z)
+
+
+
 class WobblyOrbit(object):
 
     def __init__(self, mean, variance=0.0, speed=1.0):
@@ -21,7 +39,7 @@ class WobblyOrbit(object):
         # move smoothly between transitions
         self.mean += (self.desired_mean - self.mean) * 0.1
         self.variance = min (
-            self.mean - 1,
+            self.mean - 2,
             self.variance + (self.desired_variance - self.variance) * 0.1
         )
 

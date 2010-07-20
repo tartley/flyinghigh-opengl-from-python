@@ -31,10 +31,11 @@ class KeyHandler(object):
             else:
 
                 if modifiers & key.MOD_SHIFT:
+                    item.old_move = item.move
                     item.move = WobblyOrbit(3, 1)
                 else:
-                    item.move = None
-                    item.position = Origin
+                    if hasattr(item, 'old_move'):
+                        item.move = item.old_move
 
-                self.world.add( self.bestiary[symbol] )
+                self.world.add( item )
 
