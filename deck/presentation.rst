@@ -6,10 +6,10 @@ Jonathan Hartley
 
 http://code.google.com/p/flyinghigh-opengl-from-python
 
+
 .. class:: handout
 
     Intro
-    -----
 
     Hey. Right off the bat I should say that the OpenGL code I'm talking about
     doesn't display very well on any of the projectors.
@@ -70,12 +70,13 @@ Inspiratons
 Starting Point
 --------------
 
-Assuming we already have a minimal OpenGL application:
+Assume we already have a minimal OpenGL application:
 
 * Open a window
 * Provide an OpenGL context
 * Set an appropriate 3D projection matrix
 * Set a modelview matrix for a moveable 3D camera
+* Call an empty 'draw' function at 60fps
 
 *Code count: 150 lines*
 
@@ -88,22 +89,51 @@ Assuming we already have a minimal OpenGL application:
     and context.
 
     Whichever framework or library you use, this minimal application takes
-    about 100 lines or so. This results in a blank screen, redrawn at 60fps.
+    about 150 lines or so. This results in a blank screen, redrawn at 60fps.
 
+Screenshot
+----------
 
+.. image:: images/blank.png
+    :width: 1175
+    :height: 775
 
-The idea of this talk is that I will show (or at least mention) *all* of the
-code you need to add on top of this minimal OpenGL loop. I want to demonstrate
-that producing pretty graphics is quite easy, and can be done with a
-surprisingly small amount of code. I want you to leave here enthused to
-generate your own virtual sculptures and animations, and maybe build on that to
-produce simple but effective graphics engines for games.
+.. class:: handout
+
+    The idea of this talk is that I will show (or at least describe) *all* of
+    the code you need to add on top of this minimal OpenGL loop. I want to
+    demonstrate that producing chunky retro graphics is easy, and can be
+    done with with a surprisingly small amount of code. I want you to leave
+    here enthused to generate your own virtual sculptures or animations or
+    games.
+    
+
+Goal
+----
+
+.. image:: images/goal.png
+
+.. class:: handout
+
+    To begin with, I'm going to lead you as quickly as I can through a couple
+    of classes that take some shapes defined in a useful way, and convert them
+    in to OpenGL calls.
+
+Goal
+----
+
+.. image:: images/fun-stuff.png
+
+.. class:: handout
+
+    The point of all this, though, is that once that infrastructure is in
+    place, we can have some fun generating fun and interesting shapes to make
+    pretty pictures with. In particular, I'm interested in how we can maximise
+    our fun with a minimum amount of code.
 
 
 Modelling Polyhedra
 -------------------
-
-A 3D shape with flat faces and straight edges.
 
 .. sourcecode:: python
 
@@ -123,10 +153,22 @@ A 3D shape with flat faces and straight edges.
         # one per face
         self.face_colors = colors
 
+.. class:: handout
+
+    A polyhedron is a 3D shape with flat faces and straight edges. You can 
+    see this is a really simple class to model one. So instances of this
+    class might represent a particular cube, or teapot shape, or whatever.
+
+
 Simple Example
 --------------
 
-A simple example is a geometry consisting of a triangle joined to a square:
+.. image:: images/triangle-square.png
+    :width: 600
+
+
+Instance of Shape
+-----------------
 
 .. sourcecode:: python
 
@@ -134,54 +176,50 @@ A simple example is a geometry consisting of a triangle joined to a square:
         YELLOW = (255, 255, 0, 255)
         shape = Shape(
             vertices=[
-                ( 1,  1,   0), # v0
-                ( 1, -1,   0), # v1
-                (-1, -1,   0), # v2
-                (-1   1,   0), # v3
-                ( 1,  0.5, 2), # v4
+                ( 1,  1, 0), # v0
+                ( 1, -1, 0), # v1
+                (-1, -1, 0), # v2
+                (-1   1, 0), # v3
+                ( 1,  0, 2), # v4
             ],
-            faces=[ [0, 1, 4], [0, 1, 2, 3], ],
+            faces=[
+                [0, 1, 4],    # f0, triangle
+                [0, 1, 2, 3], # f1, square
+            ],
             face_colors=[RED, YELLOW],
         )
 
-TODO: diagram of wireframe, showing how shape relates to the geometry
+.. class:: handout
+
+    A simple example is a geometry consisting of a triangle joined to a square:
 
 
-OpenGL Arrays
--------------
+Create OpenGL arrays
+--------------------
 
-In order for OpenGL to render it, our Shape instance needs converting into
-a set of ctypes arrays.
+.. class:: handout
 
-* TODO Diagram of our tetrahedron and opengl arrays: vertices, indices, colors
+    In order to render our Shape instance, we need to convert it into a set of
+    ctypes arrays that OpenGL will eat.
 
-    wireframe, showing vertices but not faces
+Step 1: Dereference the indices to produce a new vertex list in the order
+in which they will need to be drawn.
 
-    vertices = [ v0, v1, v2, v3, v4, ]
-    faces = [ [0, 1, 4], [0, 1, 2, 3], ]
-    ->
-    verttype = GLfloat * 12
-    glvertices = verttype( v0, v1, v4, v0, v1, v2, v3, )
+.. image:: images/dereference-indices.png
+    :width: 600
 
-So firstly, we need to generate the array of vertex positions.
+.. class:: handout
 
-For the contents of glvertices array, we need to 
-dereference the indices in the shape's faces list, to produce the sequence of
-vertices in the order in which OpenGL should draw them. Note that this
-introduces redundant vertex positions - for example v0 now occurs twice in
-glvertices. This redundancy is necessary whenever any attribute of the vertex
-differs from one use of it to the next. In this case, it is the color of the
-two instances of v0 which is different, depending on whether we are using it
-to draw the red triangle or the yellow square.
+    The first step in this conversion is to dereference the indices to
+    produce a new list of vertices, which are now sorted into the order
+    in which they are going to be drawn. Note that this introduces
+    redundancies into the vertex array. For example, position v0 now
+    occurs twice in the vertex list.
 
-Even if the colors were the same, the redundant vertex
-position is still necessary, because other attributes of the vertex, such as
-the vertex normals we'll introduce later, will still differ.
+Glyph Class
+-----------
 
-So in short, don't worry about these redundant vertex positions, they are
-required.
-
-That was a lot of talk, but the code is quite small.
+Glyph.get_glverts() performs this defererincing.
 
 .. sourcecode:: python
 
@@ -196,107 +234,86 @@ That was a lot of talk, but the code is quite small.
           for face in shape.faces
           for index in face
         )
-      return glarray(GLfloat, num_glverts * 4, glverts)
+      return glarray(
+        GLfloat, num_glverts * 4, glverts)
 
-So the Glyph class converts our Shape instance into a vertex array that
-OpenGL can use.
 
-Before we can actually render this vertex array though, there are two other
-arrays we also need. We add methods appropriate methods to Glyph:
+Create glIndices array
+----------------------
 
-.. sourcecode:: python
+Step 2: Modify the indices to tessellate all faces into triangles.
 
-    get_glvertices()
-    get_glindices()
-    get_glcolors()
+.. image:: images/tessellate.png
+    :width: 800
 
-Each of these are similar to get_glvertices shown above, but with
-their own wrinkles. The output of get_glindices, in particular, looks like
-this:
+.. class:: handout
 
-.. sourcecode:: python
+    There are well-known algorithms to tesselate arbitrary polygons. An
+    implementation using the GLU library takes about 150 lines of Python. For
+    the moment though, too keep things simple, let's restrict outselves just to
+    convex faces. This lets us get away with a tessellation algorithm which
+    is simply this:
 
-    glvertices = verttype( v0, v1, v4, v0, v1, v2, v3, )
-    glindices = indextype( 0, 1, 2,  3, 4, 5,  5, 4, 6 )
-                           -------   -----------------
-                          triangle    square, tessellated
 
-The glindices for the triangular face are straightforward. Something strange
-has happened to the indices for the square face though: It now consists of six
-indices instead of four. This is because we are passing geometry to OpenGL as
-GL_TRIANGLES, and so all faces of greater than three vertices need to be broken
-into separate triangles passing them to OpenGL.
+Simple Tessellation
+-------------------
+    
+.. image:: images/tessellation.png
+    :width: 800
 
-There are well-known algorithms to tesselate arbitrary polygons.
-An implementation I wrote using the GLU library takes about 150 lines of Python
-For the moment though, too keep things simple, let's restrict outselves just to
-convex faces. This lets us tesselate faces using a substantially simpler
-algorithm: Just take one arbitrarily-chosen vertex, and join it up to all the
-other vertices in the face::
+.. class:: handout
 
-    TODO: diagram of simple tesselation algorithm
-          doesn't work for concave faces
+    Here you can see that our poor-man's tessellation algorithm is simply to
+    take vertex zero (or any arbitrary vertex) and join it up to all the
+    other vertices in the face.
 
-The code to do this is really simple:
+
+tessellate()
+------------
 
 .. sourcecode:: python
 
     def tessellate(face):
         '''
-        Return the given face broken into a list of triangles, wound in the
-        same direction as the original poly. Does not work on concave faces.
-        e.g. [0, 1, 2, 3, 4] -> [[0, 1, 2], [0, 2, 3], [0, 3, 4]]
+        Break the given face into triangles.
+        e.g. [0, 1, 2, 3, 4] ->
+             [[0, 1, 2], [0, 2, 3], [0, 3, 4]]
+        Does not work on concave faces.
         '''
         return (
-            [face[0], face[index], face[index + 1]]
-            for index in xrange(1, len(face) - 1)
+            [face[0], face[i], face[i + 1]]
+            for i in xrange(1, len(face) - 1)
         )
-
-This means we can't render shapes with concave faces. But that turns out not
-to be much of a restriction:
-
-    TODO: diagram:
-        Can't do polygons with concave faces
-        But concave polyhedra using only concave faces are OK
-        And if we really need to, we can manually conpose concave faces out of
-        several convex faces.
-
-So now we have a simple tesselator, we can implement gl_getindices. It's a lot
-like get_glvertices we saw earlier. Once that's done, and our Glyph class
-provides vertex, index and color arrays, we're finally ready to to do some
-rendering.
-
-
-Rendering
----------
 
 .. class:: handout
 
-    Now we have generated our vertex and normal arrays, we can pass them to
-    OpenGL for rendering! So our renderer class, which handles window.draw
-    events, contains standard OpenGL code, to set the MODELVIEW matrix
-    depending on the position of the object and call glDrawArrays on the arrays
-    we created:
+    This means we can't render shapes with concave faces. But that turns out
+    not to be much of a restriction - we can still make concave polyhedra, even
+    if their faces are all convex.
+
+
+Glyph again
+-----------
 
 .. sourcecode:: python
 
-    VERT_LEN = 3
-    COLOR_LEN = 4
+    class Glyph(object):
 
-    def render_glyph(glyph):
-        glVertexPointer(VERT_LEN, GL_FLOAT, 0,
-            glyph.glvertices)
-        glColorPointer(COLOR_LEN, GL_UNSIGNED_BYTE, 0,
-            glyph.glcolors)
-        glDrawElements(
-            GL_TRIANGLES,
-            len(glyph.glindices),
-            type_to_enum[glyph.glindex_type],
-            glyph.glindices)
+      def from_shape(self, shape):
+
+        self.glverts = self.get_glverts(
+            shape.vertices, shape.faces)
+
+        self.glindices = self.get_glindices(
+            shape.faces)
+
+        self.glcolors = self.get_glcolors(
+            shape.faces, shape.face_colors)
 
 .. class:: handout
 
-    This code is pretty standard OpenGL boilerplate for rendering from arrays.
+    Given the tessellation function, Glyph can now create the index and color
+    arrays, in much the same way it created the vertex array.
 
 
 First Light
@@ -307,25 +324,33 @@ First Light
     So. It's been a bit of a slog to get here, but finally, we now in a
     position to run this code and get some visuals out.
 
-.. image:: images/triangle-square.png
+.. image:: images/screen-triangle-square.png
     :width: 1175
     :height: 775
 
 .. class:: handout
 
-    So, finally, we can see our red triangle and yellow square.
+    Hooray, we can see our red triangle and yellow square. \o/
+
+
+Code size check
+---------------
+
+Now we have a minimal infrastructure in place.
+
+*Code size: 320 lines*
 
 
 Shape Factories
 ---------------
 
-So, now we can start creating simple factory functions to create basic shapes:
+Now let's use our infrastructure for some fun!
 
 .. sourcecode:: python
 
     def Tetrahedron(edge, face_colors):
         size = edge / sqrt(2)/2
-        vertices = [
+        verts = [
             (+size, +size, +size),   # v0
             (-size, -size, +size),   # v1
             (-size, +size, -size),   # v2
@@ -335,12 +360,14 @@ So, now we can start creating simple factory functions to create basic shapes:
             [1, 3, 0],  # f1
             [2, 3, 1],  # f2
             [0, 3, 2] ] # f3
-        return Shape(vertices, faces, face_colors)
+        return Shape(verts, faces, face_colors)
 
-TODO: diagram of a tetrahedron. Label vertices, faces.
+Tetrahedron
+-----------
 
-DEMO of a tetrahedron
-
+.. image:: images/screen-tetrahedron.png
+    :width: 1175
+    :height: 775
 
 Cube
 ----
@@ -365,7 +392,16 @@ Cube
 
 .. class:: handout
 
-DEMO of a cube
+    Here we see the eight vertices of a cube, and its six faces.
+
+Cube
+----
+
+.. image:: images/screen-cube.png
+    :width: 1175
+    :height: 775
+
+
 
 TODO: a bunch of different shapes: platonic solids, elite ships
 

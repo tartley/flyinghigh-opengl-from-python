@@ -33,6 +33,7 @@ def populate(world, camera):
     camitem = GameItem(
         position=(-5, 0, 0),
         camera=camera,
+        move=WobblyOrbit(2, 1),
     )
     world.add(camitem)
 
@@ -44,8 +45,13 @@ def populate(world, camera):
     purple = (255, 0, 255, 255)
     white = (255, 255, 255, 255)
 
+    # world.add( GameItem(
+        # shape=TriangleSquare(),
+        # position=Origin,
+    # ) )
+
     world.add( GameItem(
-        shape=TriangleSquare(),
+        shape=Tetrahedron(1, [red, yellow, orange, white]),
         position=Origin,
     ) )
 
