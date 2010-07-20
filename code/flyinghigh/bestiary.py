@@ -1,8 +1,7 @@
 
 from __future__ import division
 
-from itertools import repeat
-from random import uniform
+from pyglet.window import key
 
 from .component.shapes import (
     MultiShape, Cube, CubeCorners, CubeCross, CubeLattice, RgbCubeCluster,
@@ -29,24 +28,34 @@ def color_invert(color):
     )
 
 
-def populate(world, camera):
+def get_bestiary(world, camera):
+
     red = (255, 0, 0, 255)
     orange = (255, 127, 0, 255)
     yellow = (255, 255, 0, 255)
     green = (0, 255, 0, 255)
+    cyan = (0, 255, 255, 255)
     blue = (0, 0, 255, 255)
     purple = (255, 0, 255, 255)
     white = (255, 255, 255, 255)
+    gray = (127, 127, 127, 255)
 
-    # world.add( GameItem(
-        # shape=TriangleSquare(),
-        # position=Origin,
-    # ) )
+    bestiary = {}
 
-    world.add( GameItem(
+    bestiary[key._0] = GameItem(
+        shape=TriangleSquare(),
+        position=Origin,
+    )
+
+    bestiary[key._1] = GameItem(
         shape=Tetrahedron(1, [red, yellow, orange, white]),
         position=Origin,
-    ) )
+    )
+
+    bestiary[key._2] = GameItem(
+        shape=Cube(1, [green, blue, purple, cyan]),
+        position=Origin,
+    )
 
     # world.add( GameItem(
         # shape=SierpinskiTetra(
