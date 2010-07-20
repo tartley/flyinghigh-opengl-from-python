@@ -30,7 +30,7 @@ def get_bestiary(world):
     )
 
     bestiary[key._1] = GameItem(
-        shape=Tetrahedron(2, blue.variations(grey)),
+        shape=Tetrahedron(1.8, blue.variations(cyan)),
         position=Origin,
     )
 
