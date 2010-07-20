@@ -7,7 +7,7 @@ from ..geometry.vec3 import XAxis
 
 class Spinner(object):
 
-    def __init__(self, speed):
+    def __init__(self, speed=1.0):
         self.speed = speed
         self.orientation = Orientation(XAxis)
 

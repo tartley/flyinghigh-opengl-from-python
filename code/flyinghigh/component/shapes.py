@@ -2,16 +2,17 @@
 from __future__ import division
 
 from itertools import chain, repeat
-from math import sqrt
+from math import sqrt, pi, sin, cos
 from random import randint
 
 from .color import (
-    red, orange, yellow, green, cyan, blue, purple, white, grey, black,
+    Color, red, orange, yellow, green, cyan, blue, purple, white, grey, black,
 )
 from ..engine.shape import Shape, MultiShape
 from ..geometry.vec3 import (
     NegXAxis, NegYAxis, NegZAxis, Origin, Vec3, XAxis, YAxis, ZAxis,
 )
+from ..geometry.orientation import Orientation
 
 
 def TriangleSquare():
@@ -40,6 +41,16 @@ def Tetrahedron(edge, face_colors=None):
     ]
     faces = [ [0, 2, 1], [1, 3, 0], [2, 3, 1], [0, 3, 2] ]
     return Shape(vertices, faces, face_colors)
+
+
+def DualTetrahedron(edge, color1=None, color2=None):
+    if color1 is None:
+        color1 = Color.Random()
+        color2 = Color.Random()
+    m = MultiShape()
+    m.add( Tetrahedron(edge, color1.variations()) )
+    m.add( Tetrahedron(edge, color2.variations()), orientation=Orientation(XAxis) )
+    return m
 
 
 def Cube(edge, face_colors=None):
@@ -145,6 +156,77 @@ def SpaceStation(edge):
     return shape
 
 
+def CubeCross(edge, color1, color2):
+    multi = MultiShape()
+
+    multi.add(Cube(edge, face_colors=repeat(color1)))
+
+    for pos in [XAxis, YAxis, ZAxis, NegXAxis, NegYAxis, NegZAxis]:
+        center = pos * (edge / 2)
+        multi.add(
+            Cube(1/2, repeat(color2)),
+            position=center,
+        )
+    return multi
+
+
+def CubeCorners(edge, color1, color2):
+    multi = MultiShape()
+
+    multi.add(
+        Cube(edge, repeat(color1)),
+        position=Origin,
+    )
+
+    for pos in [
+        (+1, +1, +1),
+        (+1, +1, -1),
+        (+1, -1, +1),
+        (+1, -1, -1),
+        (-1, +1, +1),
+        (-1, +1, -1),
+        (-1, -1, +1),
+        (-1, -1, -1),
+    ]:
+        center = Vec3(*pos)
+        center = center * (edge / 2)
+        multi.add(
+            Cube(edge/2, repeat(color2)),
+            position=Vec3(*center),
+        )
+
+    return multi
+
+
+def CubeRing(edge, radius, number, colors):
+    multi = MultiShape()
+
+    child = Cube(edge, colors)
+
+    angle = 0
+    orientation = Orientation()
+    delta_angle = 2 * pi / number
+    while angle < 2 * pi:
+        angle += delta_angle
+        pos = Vec3(
+            0,
+            radius * sin(angle),
+            radius * cos(angle),
+        )
+        orientation.pitch(delta_angle)
+        multi.add(child, pos, orientation)
+    return multi
+
+
+def TriRing(edge, radius, number, colors):
+    multi = MultiShape()
+    c1 = CubeRing(edge, radius, number, colors)
+    multi.add(c1, orientation=Orientation(XAxis))
+    multi.add(c1, orientation=Orientation(YAxis))
+    multi.add(c1, orientation=Orientation(ZAxis, XAxis))
+    return multi
+
+
 def RgbCubeCluster(edge, cluster_edge, cube_count):
     shape = MultiShape()
     for i in xrange(cube_count):
@@ -189,44 +271,3 @@ def CubeLattice(edge, cluster_edge, freq, color):
                 )
     return shape
 
-
-def CubeCross():
-    multi = MultiShape()
-
-    center_color = (150, 150, 150, 255)
-    multi.add(Cube(2, face_colors=repeat(center_color)))
-
-    outer_color = (170, 170, 170, 255)
-    for pos in [XAxis, YAxis, ZAxis, NegXAxis, NegYAxis, NegZAxis]:
-        multi.add(
-            Cube(1, repeat(outer_color)),
-            position=pos,
-        )
-    return multi
-
-
-def CubeCorners():
-    multi = MultiShape()
-    center_color = (150, 150, 150, 255)
-    multi.add(
-        Cube(2, repeat(center_color)),
-        position=Origin,
-    )
-    outer_color = (170, 170, 170, 255)
-
-    for pos in [
-        (+1, +1, +1),
-        (+1, +1, -1),
-        (+1, -1, +1),
-        (+1, -1, -1),
-        (-1, +1, +1),
-        (-1, +1, -1),
-        (-1, -1, +1),
-        (-1, -1, -1),
-    ]:
-        multi.add(
-            Cube(1, repeat(outer_color)),
-            position=pos,
-        )
-    return multi
-    

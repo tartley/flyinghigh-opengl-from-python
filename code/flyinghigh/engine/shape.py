@@ -50,7 +50,7 @@ class Shape(object):
 
 class MultiShape(object):
 
-    def __init__(self):
+    def __init__(self, *args):
         self.children = []
         self.matrices = []
 

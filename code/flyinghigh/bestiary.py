@@ -4,8 +4,9 @@ from __future__ import division
 from pyglet.window import key
 
 from .component.shapes import (
-    MultiShape, Cube, CubeCorners, CubeCross, CubeLattice, RgbCubeCluster,
-    Tetrahedron, TriangleSquare, TruncatedCube, SpaceStation,
+    MultiShape, Cube, CubeCorners, CubeCross, CubeLattice, CubeRing,
+    DualTetrahedron, TriRing,
+    RgbCubeCluster, Tetrahedron, TriangleSquare, TruncatedCube, SpaceStation,
 )
 from .component.slowmo import SlowMo
 from .component.spinner import Spinner
@@ -50,35 +51,44 @@ def get_bestiary(world):
     )
 
     bestiary[key.Q] = GameItem(
-        shape=CubeCross(),
+        shape=DualTetrahedron(1.8),
         spin=Spinner(speed=3),
         position=Origin,
     )
 
-    bestiary[key.Q] = GameItem(
-        shape=CubeCross(),
+    bestiary[key.W] = GameItem(
+        shape=CubeCross(1, red, red.tinted(yellow)),
         spin=Spinner(speed=3),
         position=Origin,
     )
 
-    dualtetrahedron = MultiShape()
-    colors = Color.Random().variations()
-    dualtetrahedron.add(
-        Tetrahedron(
-            1,
-            face_colors=colors,
-        )
-    )
-    dualtetrahedron.add(
-        Tetrahedron(
-            1,
-            face_colors=colors,
-        ),
-        orientation=Orientation(XAxis),
-    )
-    bestiary[key.Q] = GameItem(
-        shape=dualtetrahedron,
+    bestiary[key.E] = GameItem(
+        shape=CubeCorners(1, yellow.tinted(white), yellow),
+        spin=Spinner(speed=3),
         position=Origin,
+    )
+
+    bestiary[key.R] = GameItem(
+        shape=CubeRing(1, 2, 7, white.variations()),
+        position=Origin,
+    )
+
+    bestiary[key.T] = GameItem(
+        shape=CubeRing(1, 3, 23, green.tinted(black).variations()),
+        position=Origin,
+    )
+
+    bestiary[key.Y] = GameItem(
+        shape=CubeRing(1, 4, 24, green.tinted(white).variations()),
+        position=Origin,
+        orientation=XAxis,
+    )
+
+    bestiary[key.U] = GameItem(
+        shape=TriRing(1, 6, 32, orange.tinted(white).variations()),
+        position=Origin,
+        orientation=XAxis,
+        spinner=Spinner(),
     )
 
     # world.add( GameItem(

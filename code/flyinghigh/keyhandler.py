@@ -2,6 +2,7 @@
 from pyglet.window import key 
 
 from .component.wobblyorbit import WobblyOrbit
+from .geometry.vec3 import Origin
 
 
 class KeyHandler(object):
@@ -33,6 +34,7 @@ class KeyHandler(object):
                     item.move = WobblyOrbit(3, 1)
                 else:
                     item.move = None
+                    item.position = Origin
 
                 self.world.add( self.bestiary[symbol] )
 
