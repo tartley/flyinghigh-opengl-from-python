@@ -7,5 +7,10 @@ class KeyHandler(object):
         self.bestiary = bestiary
 
     def on_key_press(self, symbol, modifers):
-        print symbol, type(symbol)
+        if symbol in self.bestiary:
+            item = self.bestiary[symbol]
+            if item in self.world:
+                self.world.remove( self.bestiary[symbol] )
+            else:
+                self.world.add( self.bestiary[symbol] )
 

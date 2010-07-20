@@ -24,6 +24,7 @@ class World(object):
         self.time = Time(self)
         self.items = {}
         self.add_item = Event()
+        self.remove_item = Event()
         self.camera = None
 
     def __iter__(self):
@@ -35,6 +36,10 @@ class World(object):
 
         if hasattr(item, 'camera'):
             self.camera = item
+
+    def remove(self, item):
+        del self.items[item.id]
+        self.remove_item.fire(item)
 
     def update(self, dt):
         self.time.tick(dt)
