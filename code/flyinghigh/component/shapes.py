@@ -1,7 +1,7 @@
 
 from __future__ import division
 
-from itertools import chain, repeat
+from itertools import chain, product, repeat
 from math import sqrt, pi, sin, cos
 from random import randint
 
@@ -75,6 +75,31 @@ def Cube(edge, face_colors=None):
     ]
     return Shape(verts, faces, face_colors)
 
+
+def Cuboid(x, y, z, face_colors=None):
+    x = x/2
+    y = y/2
+    z = z/2
+    verts = [
+        (-x, -y, -z),
+        (-x, -y, +z),
+        (-x, +y, -z),
+        (-x, +y, +z),
+        (+x, -y, -z),
+        (+x, -y, +z),
+        (+x, +y, -z),
+        (+x, +y, +z),
+    ]
+    faces = [
+        [0, 1, 3, 2], # left
+        [4, 6, 7, 5], # right
+        [7, 3, 1, 5], # front
+        [0, 2, 6, 4], # back
+        [3, 7, 6, 2], # top
+        [1, 0, 4, 5], # bottom
+    ]
+    return Shape(verts, faces, face_colors)
+    
 
 def TruncatedCube(edge, truncation=0.67, colors=None):
     e2 = edge / 2
@@ -172,29 +197,26 @@ def CubeCross(edge, color1, color2):
 
 def CubeCorners(edge, color1, color2):
     multi = MultiShape()
-
     multi.add(
         Cube(edge, repeat(color1)),
         position=Origin,
     )
-
     for pos in [
-        (+1, +1, +1),
-        (+1, +1, -1),
-        (+1, -1, +1),
-        (+1, -1, -1),
-        (-1, +1, +1),
-        (-1, +1, -1),
-        (-1, -1, +1),
-        (-1, -1, -1),
+       (+1, +1, +1),
+       (+1, +1, -1),
+       (+1, -1, +1),
+       (+1, -1, -1),
+       (-1, +1, +1),
+       (-1, +1, -1),
+       (-1, -1, +1),
+       (-1, -1, -1),
     ]:
         center = Vec3(*pos)
-        center = center * (edge / 2)
+        center = center * edge / 2
         multi.add(
             Cube(edge/2, repeat(color2)),
-            position=Vec3(*center),
+            position=center,
         )
-
     return multi
 
 
@@ -231,19 +253,14 @@ def RgbCubeCluster(edge, cluster_edge, cube_count):
     shape = MultiShape()
     for i in xrange(cube_count):
         while True:
-            r = randint(1, cluster_edge-1)
-            g = randint(1, cluster_edge-1)
-            b = randint(1, cluster_edge-1)
-            color = (
-                int(r / cluster_edge * 255),
-                int(g / cluster_edge * 255),
-                int(b / cluster_edge * 255),
-                255)
+            color = Color.Random()
             pos = Vec3(
-                r - cluster_edge / 2,
-                g - cluster_edge / 2,
-                b - cluster_edge / 2,
+                color.r - 128,
+                color.g - 128,
+                color.b - 128,
             )
+            pos = pos * cluster_edge / 256
+            # make a hole in the center
             if pos.length > 8:
                 break
         shape.add(
@@ -251,6 +268,14 @@ def RgbCubeCluster(edge, cluster_edge, cube_count):
             position=Vec3(*pos)
         )
     return shape
+
+
+def CubeCluster(edge, positions):
+    multi = MultiShape()
+    cube = Cube(1, Color.Random().variations())
+    for pos in positions:
+        multi.add(cube, pos)
+    return multi
 
 
 def CubeLattice(edge, cluster_edge, freq, color):

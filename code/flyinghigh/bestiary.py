@@ -129,15 +129,11 @@ def get_bestiary(world):
         spin=Spinner(speed=0.75),
     )
 
-    def is_inside():
-        '''True if camera is inside cube of the given edge at the origin'''
-        edge = 40
-        position = world.camera.position
-        dist = max(abs(position.x), abs(position.y), abs(position.z))
-        return dist < edge / 2
+    def camera_inside_everything():
+        return world.camera.position.length < 40
 
     bestiary[key.F] = GameItem(
-        slowmo=SlowMo(is_inside, 0.2),
+        slowmo=SlowMo(camera_inside_everything, 0.2),
         position=Origin,
     )
 

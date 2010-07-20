@@ -31,7 +31,8 @@ class KeyHandler(object):
             else:
 
                 if modifiers & key.MOD_SHIFT:
-                    item.old_move = item.move
+                    if hasattr(item, 'move'):
+                        item.old_move = item.move
                     item.move = WobblyOrbit(3, 1)
                 else:
                     if hasattr(item, 'old_move'):
