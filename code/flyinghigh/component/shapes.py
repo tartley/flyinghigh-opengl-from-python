@@ -6,8 +6,7 @@ from math import sqrt
 from random import randint
 
 from .color import (
-    red, orange, yellow, green, cyan, blue, purple, white, lightGrey, grey,
-    darkGrey, black,
+    red, orange, yellow, green, cyan, blue, purple, white, grey, black,
 )
 from ..engine.shape import Shape, MultiShape
 from ..geometry.vec3 import (
@@ -118,21 +117,22 @@ def TruncatedCube(edge, truncation=0.67, colors=None):
         [18, 20, 19],
         [21, 22, 23],
     ]
-    face_colors = None
+    face_colors = chain(
+        repeat(colors[0], 6),
+        repeat(colors[1], 8),
+    )
     return Shape(verts, faces, face_colors)
 
 
 def SpaceStation(edge):
-    face_colors = chain(
-        repeat(lightGrey, 6),
-        repeat(grey, 8),
-        [black])
 
+    colors = [grey.tinted(white, 0.5), grey]
+    shape = TruncatedCube(edge, truncation=0.999, colors=colors)
 
-    shape = TruncatedCube(edge, truncation=0.999)
+    # add the door
     e2 = edge / 2
-    DOORH = 0.1
-    DOORW = 0.3
+    DOORH = 0.075
+    DOORW = 0.25
     shape.vertices.extend( [
         Vec3(+e2 * 1.001, +e2 * DOORH, +e2 * DOORW),
         Vec3(+e2 * 1.001, +e2 * DOORH, -e2 * DOORW),
@@ -141,6 +141,7 @@ def SpaceStation(edge):
     ] )
     shape.faces.append( [27, 26, 25, 24] )
     shape.face_colors.append( black )
+
     return shape
 
 

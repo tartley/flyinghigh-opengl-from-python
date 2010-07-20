@@ -11,8 +11,7 @@ from .component.slowmo import SlowMo
 from .component.spinner import Spinner
 from .component.wobblyorbit import WobblyOrbit
 from .component.color import (
-    red, orange, yellow, green, cyan, blue, purple, white, lightGrey, grey,
-    darkGrey, black,
+    red, orange, yellow, green, cyan, blue, purple, white, grey, black,
 )
 from .engine.gameitem import GameItem
 from .geometry.koch_cube import KochCube
@@ -41,7 +40,7 @@ def get_bestiary(world):
     )
 
     bestiary[key._3] = GameItem(
-        shape=TruncatedCube(1, colors=[lightGrey, grey, black]),
+        shape=TruncatedCube(1, colors=[orange, orange.tinted(red, 0.5)]),
         position=Origin,
     )
 
@@ -94,7 +93,7 @@ def get_bestiary(world):
         # shape.add(
             # Tetrahedron(
                 # 1,
-                # face_colors=repeat(color_invert(color)),
+                # face_colors=repeat(color.inverted())),
             # ),
             # orientation=Orientation(XAxis),
         # )
