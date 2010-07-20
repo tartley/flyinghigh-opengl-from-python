@@ -107,7 +107,7 @@ def get_bestiary(world):
             tip_color=yellow,
         ),
         spin=Spinner(speed=0.2),
-        move=Orbit(10, speed=0.5),
+        move=Orbit(10, speed=0.1, phase=0),
     )
 
     bestiary[key.S] = GameItem(
@@ -116,7 +116,7 @@ def get_bestiary(world):
             5,
             tip_color=white,
         ),
-        move=Orbit(10, speed=0.5, phase=pi),
+        move=Orbit(10, speed=0.1, phase=pi),
         spin=Spinner(speed=0.2),
     )
 
