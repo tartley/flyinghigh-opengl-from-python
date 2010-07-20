@@ -425,11 +425,6 @@ Moving Shapes
             return Vec3(x2, y2, z2)
 
 
-Creating Moving Shapes
-----------------------
-
-
-
 .. class:: handout
 
     I've already sneakily added a class to move items around in the world, I'm
@@ -441,6 +436,126 @@ Creating Moving Shapes
     is called WobblyOrbit
 
 
+Using a Mover
+-------------
+
+.. sourcecode:: python
+
+    class GameItem(object):
+        def __init__(self, ** kwargs):
+            self.__dict__.update(** kwargs)
+
+    world.add( GameItem(
+        shape=Cube(1, repeat(red)),
+        move=Orbit(distance=20, speed=4),
+    )
+
+    # then, in world.update():
+    for item in self.items:
+        if hasattr(item, 'move'):
+            item.position = item.move(self.time)
+   
+Demo of moving things
+
 Composite shapes
 ----------------
+
+.. class:: handout
+
+    So this is all well and good, but to create really complex shapes this way
+    is tedious. What we really need is a way to compose new shapes out of
+    combinations of the existing ones.
+
+.. sourcecode:: python
+
+    class MultiShape(object):
+
+        def __init__(self):
+            self.children = []
+            self.matrices = []
+
+        def add(self, child, position=None, orientation=None):
+            self.children.append(child)
+            self.matrices.append(Matrix(position, orientation))
+
+.. class:: handout
+
+    Introducing MultiShape, the composite shape. As you can see, this is a
+    really simple class, it just contains a collection of child shapes,
+    and a parallel collection of matrices. These matrices represent the
+    transformation that should be applied to each child shape. For example,
+    a 'Car' multishape could contain four 'wheel' child shapes, but each
+    wheel would have an offset applied relative to the centre of the car.
+    I'm storing these transformation as a matrix like this because this
+    makes it easy to encapsulate any sort of transformation - the wheels
+    could be at different orientations, or different scales, or even
+    have non affine transformations like shearing applied.
+
+
+Generating MultiShape Vertices
+------------------------------
+
+Class MultiShape continued...
+
+.. sourcecode:: python
+
+    @property
+    def vertices(self):
+        return (
+            matrix.transform(vertex)
+            for index, matrix in enumerate(self.matrices)
+            for vertex in self.children[index].vertices
+        )
+
+.. class:: handout
+
+    If MultiShape is going to be useable wherever Shape is useable, it has to
+    provide the same interface. Luckily the interface to Shape is nice and
+    simple. Here we see how multishape provides a sequence of vertices, by
+    applying the relevant matrix transoformation to each of its child shapes.
+
+    The same sort of property can be added to MultiShape to provide the
+    other members of Shape, faces and face_colors.
+
+
+Some Composite Shapes
+---------------------
+
+TODO
+
+
+Lighting
+--------
+
+.. image:: images/generating-normals.png
+    :width: 1175
+    :height: 775
+
+
+Generating Normals
+------------------
+
+.. sourcecode:: python
+
+    class Glyph(object):
+
+       def get_glnormals(self, vertices, faces):
+        normals = (
+            face_normal(vertices, face)
+            for face in faces
+        )
+        glnormals = chain.from_iterable(
+            repeat(normal, len(face))
+            for face, normal in izip(faces, normals)
+        )
+        return glarray(
+            gl.GLfloat, chain(* glnormals), self.num_glvertices * 3) 
+
+
+.. class:: handout
+
+    Some of you will have spotted that I've been lying to you a little
+    throughout, in that I've also got a rudimentary directional light source in
+    the code. This requires adding surface normals to each vertex. This turned
+    out to be dead simple
 
