@@ -5,6 +5,10 @@ from itertools import chain, repeat
 from math import sqrt
 from random import randint
 
+from .color import (
+    red, orange, yellow, green, cyan, blue, purple, white, lightGrey, grey,
+    darkGrey, black,
+)
 from ..engine.shape import Shape, MultiShape
 from ..geometry.vec3 import (
     NegXAxis, NegYAxis, NegZAxis, Origin, Vec3, XAxis, YAxis, ZAxis,
@@ -118,18 +122,27 @@ def TruncatedCube(edge, truncation=0.67, colors=None):
     return Shape(verts, faces, face_colors)
 
 
+def SpaceStation(edge):
+    face_colors = chain(
+        repeat(lightGrey, 6),
+        repeat(grey, 8),
+        [black])
 
-# def SpaceStation(edge):
-    # face_colors = chain(
-        # repeat(lightGrey, 6),
-        # repeat(grey, 8),
-        # [black])
-    # shape = TruncatedCube(edge, truncation=0.9)
-        # (+e2, +e2 * DOORH, +e2 * DOORW),
-        # (+e2, 0, 0),
-        # (+e2, 0, 0),
-        # (+e2, 0, 0),
-    # return shape
+
+    shape = TruncatedCube(edge, truncation=0.999)
+    e2 = edge / 2
+    DOORH = 0.1
+    DOORW = 0.3
+    shape.vertices.extend( [
+        Vec3(+e2 * 1.001, +e2 * DOORH, +e2 * DOORW),
+        Vec3(+e2 * 1.001, +e2 * DOORH, -e2 * DOORW),
+        Vec3(+e2 * 1.001, -e2 * DOORH, -e2 * DOORW),
+        Vec3(+e2 * 1.001, -e2 * DOORH, +e2 * DOORW),
+    ] )
+    shape.faces.append( [27, 26, 25, 24] )
+    shape.face_colors.append( black )
+    return shape
+
 
 def RgbCubeCluster(edge, cluster_edge, cube_count):
     shape = MultiShape()

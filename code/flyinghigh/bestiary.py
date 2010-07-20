@@ -5,11 +5,15 @@ from pyglet.window import key
 
 from .component.shapes import (
     MultiShape, Cube, CubeCorners, CubeCross, CubeLattice, RgbCubeCluster,
-    Tetrahedron, TriangleSquare, TruncatedCube,
+    Tetrahedron, TriangleSquare, TruncatedCube, SpaceStation,
 )
 from .component.slowmo import SlowMo
 from .component.spinner import Spinner
 from .component.wobblyorbit import WobblyOrbit
+from .component.color import (
+    red, orange, yellow, green, cyan, blue, purple, white, lightGrey, grey,
+    darkGrey, black,
+)
 from .engine.gameitem import GameItem
 from .geometry.koch_cube import KochCube
 from .geometry.koch_tetra import KochTetra
@@ -18,33 +22,7 @@ from .geometry.orientation import Orientation
 from .geometry.vec3 import Origin, Vec3, XAxis, ZAxis, NegZAxis
 
 
-def color_invert(color):
-    r, g, b, _ = color
-    return (
-        255 - r,
-        255 - g,
-        255 - b,
-        255
-    )
-
-
 def get_bestiary(world):
-
-    red = (255, 0, 0, 255)
-    orange = (255, 127, 0, 255)
-    yellow = (255, 255, 0, 255)
-    green = (0, 255, 0, 255)
-    cyan = (0, 255, 255, 255)
-    blue = (0, 0, 255, 255)
-    purple = (255, 0, 255, 255)
-    white = (255, 255, 255, 255)
-    lightGrey = (192, 192, 192, 255)
-    grey = (128, 128, 128, 255)
-    darkGrey = (64, 64, 64, 255)
-    black = (0, 0, 0, 255)
-    all_colors = [
-        red, orange, yellow, green, cyan, blue, purple, white, grey, black]
-
     bestiary = {}
 
     bestiary[key._0] = GameItem(
@@ -64,6 +42,11 @@ def get_bestiary(world):
 
     bestiary[key._3] = GameItem(
         shape=TruncatedCube(1, colors=[lightGrey, grey, black]),
+        position=Origin,
+    )
+
+    bestiary[key._4] = GameItem(
+        shape=SpaceStation(1),
         position=Origin,
     )
 
