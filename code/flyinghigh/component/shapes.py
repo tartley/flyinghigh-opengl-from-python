@@ -1,7 +1,7 @@
 
 from __future__ import division
 
-from itertools import repeat
+from itertools import chain, repeat
 from math import sqrt
 from random import randint
 
@@ -26,8 +26,21 @@ def TriangleSquare():
         face_colors=[RED, YELLOW],
     )
 
+
+def Tetrahedron(edge, face_colors=None):
+    size = edge / sqrt(2)/2
+    vertices = [
+        (+size, +size, +size),
+        (-size, -size, +size),
+        (-size, +size, -size),
+        (+size, -size, -size), 
+    ]
+    faces = [ [0, 2, 1], [1, 3, 0], [2, 3, 1], [0, 3, 2] ]
+    return Shape(vertices, faces, face_colors)
+
+
 def Cube(edge, face_colors=None):
-    e2 = edge/2
+    e2 = edge / 2
     verts = [
         (-e2, -e2, -e2),
         (-e2, -e2, +e2),
@@ -49,17 +62,74 @@ def Cube(edge, face_colors=None):
     return Shape(verts, faces, face_colors)
 
 
-def Tetrahedron(edge, face_colors=None):
-    size = edge / sqrt(2)/2
-    vertices = [
-        (+size, +size, +size),
-        (-size, -size, +size),
-        (-size, +size, -size),
-        (+size, -size, -size), 
-    ]
-    faces = [ [0, 2, 1], [1, 3, 0], [2, 3, 1], [0, 3, 2] ]
-    return Shape(vertices, faces, face_colors)
+def TruncatedCube(edge, truncation=0.67, colors=None):
+    e2 = edge / 2
+    verts = [
+        (-e2 + e2 * truncation, -e2, -e2),
+        (-e2, -e2 + e2 * truncation, -e2),
+        (-e2, -e2, -e2 + e2 * truncation),
 
+        (-e2 + e2 * truncation, -e2, +e2),
+        (-e2, -e2 + e2 * truncation, +e2),
+        (-e2, -e2, +e2 - e2 * truncation),
+
+        (-e2 + e2 * truncation, +e2, -e2),
+        (-e2, +e2 - e2 * truncation, -e2),
+        (-e2, +e2, -e2 + e2 * truncation),
+
+        (-e2 + e2 * truncation, +e2, +e2),
+        (-e2, +e2 - e2 * truncation, +e2),
+        (-e2, +e2, +e2 - e2 * truncation),
+
+        (+e2 - e2 * truncation, -e2, -e2),
+        (+e2, -e2 + e2 * truncation, -e2),
+        (+e2, -e2, -e2 + e2 * truncation),
+
+        (+e2 - e2 * truncation, -e2, +e2),
+        (+e2, -e2 + e2 * truncation, +e2),
+        (+e2, -e2, +e2 - e2 * truncation),
+
+        (+e2 - e2 * truncation, +e2, -e2),
+        (+e2, +e2 - e2 * truncation, -e2),
+        (+e2, +e2, -e2 + e2 * truncation),
+
+        (+e2 - e2 * truncation, +e2, +e2),
+        (+e2, +e2 - e2 * truncation, +e2),
+        (+e2, +e2, +e2 - e2 * truncation),
+    ]
+    faces = [
+        [ 1,  2,  5,  4, 10, 11,  8,  7], # left
+        [14, 13, 19, 20, 23, 22, 16, 17], # right
+        [22, 21,  9, 10,  4,  3, 15, 16], # front
+        [ 0,  1,  7,  6, 18, 19, 13, 12], # back
+        [11,  9, 21, 23, 20, 18, 6,  8], # top
+        [ 3,  5,  2,  0, 12, 14, 17, 15], # bottom
+
+        [0, 2, 1],
+        [3, 4, 5],
+        [6, 7, 8],
+        [9, 11, 10],
+        [12, 13, 14],
+        [15, 17, 16],
+        [18, 20, 19],
+        [21, 22, 23],
+    ]
+    face_colors = None
+    return Shape(verts, faces, face_colors)
+
+
+
+# def SpaceStation(edge):
+    # face_colors = chain(
+        # repeat(lightGrey, 6),
+        # repeat(grey, 8),
+        # [black])
+    # shape = TruncatedCube(edge, truncation=0.9)
+        # (+e2, +e2 * DOORH, +e2 * DOORW),
+        # (+e2, 0, 0),
+        # (+e2, 0, 0),
+        # (+e2, 0, 0),
+    # return shape
 
 def RgbCubeCluster(edge, cluster_edge, cube_count):
     shape = MultiShape()

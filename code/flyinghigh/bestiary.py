@@ -5,7 +5,7 @@ from pyglet.window import key
 
 from .component.shapes import (
     MultiShape, Cube, CubeCorners, CubeCross, CubeLattice, RgbCubeCluster,
-    Tetrahedron, TriangleSquare
+    Tetrahedron, TriangleSquare, TruncatedCube,
 )
 from .component.slowmo import SlowMo
 from .component.spinner import Spinner
@@ -38,7 +38,12 @@ def get_bestiary(world):
     blue = (0, 0, 255, 255)
     purple = (255, 0, 255, 255)
     white = (255, 255, 255, 255)
-    gray = (127, 127, 127, 255)
+    lightGrey = (192, 192, 192, 255)
+    grey = (128, 128, 128, 255)
+    darkGrey = (64, 64, 64, 255)
+    black = (0, 0, 0, 255)
+    all_colors = [
+        red, orange, yellow, green, cyan, blue, purple, white, grey, black]
 
     bestiary = {}
 
@@ -57,13 +62,17 @@ def get_bestiary(world):
         position=Origin,
     )
 
+    bestiary[key._3] = GameItem(
+        shape=TruncatedCube(1, colors=[lightGrey, grey, black]),
+        position=Origin,
+    )
+
     # world.add( GameItem(
         # shape=SierpinskiTetra(
             # Tetrahedron(4), 6, scale=0.52,
             # face_colors=repeat(yellow),
         # ),
         # position=Vec3(0, 0, 5),
-        # orientation=Orientation(ZAxis),
         # spin=Spinner(speed=0.75),
     # ) )
 
