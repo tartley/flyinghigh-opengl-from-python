@@ -20,7 +20,10 @@ class WobblyOrbit(object):
 
         # move smoothly between transitions
         self.mean += (self.desired_mean - self.mean) * 0.1
-        self.variance += (self.desired_variance - self.variance) * 0.1
+        self.variance = min (
+            self.mean - 1,
+            self.variance + (self.desired_variance - self.variance) * 0.1
+        )
 
         # camera position at distance, bearing
         distance = self.mean + sin(time * self.speed) * self.variance

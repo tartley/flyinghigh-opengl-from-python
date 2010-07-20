@@ -9,25 +9,7 @@ http://code.google.com/p/flyinghigh-opengl-from-python
 
 .. class:: handout
 
-    Intro
-
-    Hey. Right off the bat I should say that the OpenGL code I'm talking about
-    doesn't display very well on any of the projectors.
-
-    You'll have to peer very closely, or take my word for it, to see that these
-    animations run fine on the little laptop screen here. My graphics hardware
-    has always been flaky when connected to projectors.
-
-    So that's a little disappointing. But I've got lots of screenshots, and
-    I'll wave the laptop screen at you to peer at a couple of times, and of
-    course you're welcome to grab the code. Search google code for
-    'flyinghigh', all one word, and it's the only result.
-
-
-Inspiratons
------------
-
-.. class:: handout
+    Inspiratons
 
     TODO, images:
     * Rez
