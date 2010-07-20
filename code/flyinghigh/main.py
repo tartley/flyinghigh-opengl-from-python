@@ -5,6 +5,7 @@ startup
 import pyglet
 
 from .engine.gameloop import Gameloop
+from .bestiary import get_bestiary
 from .populate_world import populate
 from .keyhandler import KeyHandler
 
@@ -15,10 +16,11 @@ def run_game():
         gameloop.prepare()
         populate(gameloop.world, gameloop.camera)
 
-        keyhandler = KeyHandler()
+        bestiary = get_bestiary(gameloop.world, gameloop.camera)
+        keyhandler = KeyHandler(gameloop.world, bestiary)
         keyhandler.world = gameloop.world
 
-        gameloop.window.push_handler(on_key_press)
+        gameloop.window.push_handlers(keyhandler.on_key_press)
         gameloop.world.update(0)
         gameloop.window.set_visible()
         pyglet.app.run()
