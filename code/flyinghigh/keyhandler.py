@@ -19,6 +19,10 @@ class KeyHandler(object):
             else:
                 self.world.camera.move.desired_mean *= zoom
 
+        if symbol == key.BACKSPACE:
+            itemid = max(i for i in self.world.items.iterkeys())
+            self.world.items.pop(itemid)
+
         elif symbol in self.bestiary:
             item = self.bestiary[symbol]
             if item in self.world:

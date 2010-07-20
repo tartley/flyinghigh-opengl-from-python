@@ -395,14 +395,12 @@ Cube
 
     Here we see the eight vertices of a cube, and its six faces.
 
-Cube
-----
+Demo Cube & Others
+------------------
 
 .. image:: images/screen-cube.png
     :width: 1175
     :height: 775
-
-Demo, some solids.
 
 
 Moving Shapes
@@ -521,8 +519,14 @@ Class MultiShape continued...
     other members of Shape, faces and face_colors.
 
 
-Some Composite Shapes
+Using Composite Shape
 ---------------------
+
+TODO
+
+Demo Composite Shapes
+---------------------
+
 
 
 
