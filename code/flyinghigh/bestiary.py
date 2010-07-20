@@ -50,55 +50,60 @@ def get_bestiary(world):
         position=Origin,
     )
 
-    bestiary[key.Q] = GameItem(
+    bestiary[key._5] = GameItem(
         shape=DualTetrahedron(1.8),
         spin=Spinner(speed=3),
         position=Origin,
     )
 
-    bestiary[key.W] = GameItem(
+    bestiary[key._6] = GameItem(
         shape=CubeCross(1, red, red.tinted(yellow)),
         spin=Spinner(speed=3),
         position=Origin,
     )
 
-    bestiary[key.E] = GameItem(
+    bestiary[key._7] = GameItem(
         shape=CubeCorners(1, yellow.tinted(white), yellow),
         spin=Spinner(speed=3),
         position=Origin,
     )
 
-    bestiary[key.R] = GameItem(
+    bestiary[key.Q] = GameItem(
         shape=CubeRing(1, 2, 7, white.variations()),
         position=Origin,
     )
 
-    bestiary[key.T] = GameItem(
-        shape=CubeRing(1, 3, 23, green.tinted(black).variations()),
+    bestiary[key.W] = GameItem(
+        shape=CubeRing(1, 3, 23, blue.tinted(black).variations()),
         position=Origin,
-        spinner=Spinner(speed=-1.5),
+        spin=Spinner(speed=-1.5),
     )
 
-    bestiary[key.Y] = GameItem(
+    bestiary[key.E] = GameItem(
         shape=CubeRing(1, 4, 24, green.tinted(white).variations()),
         position=Origin,
         orientation=XAxis,
-        spinner=Spinner(speed=1.5),
+        spin=Spinner(speed=1.5),
     )
 
-    bestiary[key.U] = GameItem(
+    bestiary[key.R] = GameItem(
         shape=TriRing(1, 6, 32, orange.tinted(white).variations()),
         position=Origin,
         orientation=XAxis,
-        spinner=Spinner(speed=2.5),
+        spin=Spinner(speed=2.5),
     )
 
-    bestiary[key.Z] = GameItem(
+    bestiary[key.T] = GameItem(
+        shape=RgbCubeCluster(1.0, 60, 5000),
+        position=Origin,
+    )
+
+    bestiary[key.A] = GameItem(
         shape=SierpinskiTetra(
             Tetrahedron(240), 6, scale=0.52,
             face_colors=[yellow],
         ),
-        position=Vec3(0, 0, 5),
+        position=Origin,
         spin=Spinner(speed=0.75),
     )
 
@@ -127,10 +132,6 @@ def get_bestiary(world):
             # spin=Spinner(speed=uniform(8, 12)),
             # move=WobblyOrbit(2, speed=uniform(4, 5)),
         # ) )
-
-    world.add( GameItem(
-        shape=RgbCubeCluster(1.0, 60, 5000),
-    ) )
 
     # edge = 38
 
