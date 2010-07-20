@@ -7,20 +7,16 @@ Jonathan Hartley
 http://code.google.com/p/flyinghigh-opengl-from-python
 
 
+Inspiratons
+-----------
+
+.. image:: images/inspirations.jpg
+    :width: 900
+    :height: 600
+
 .. class:: handout
 
-    Inspiratons
-
-    TODO, images:
-    * Rez
-    * Tron (with 'bit')
-    * Love
-    * AAAaaaAAAaaAAAA
-    * RunJesusRun
-    * that FPS that is black and white with red bits
-    * Demoscene
-
-    As the field of computer graphics advances, there is an understandable
+    As the field of computer graphics advances, there's an understandable
     tendency to strive for more photorealism, This is laudable and inevitable,
     but I also feel that the effort expended on achieving this technical goal
     is often undertaken without considering whether photorealism is the best
@@ -77,8 +73,8 @@ Screenshot
 ----------
 
 .. image:: images/blank.png
-    :width: 1175
-    :height: 775
+    :width: 900
+    :height: 600
 
 .. class:: handout
 
@@ -94,6 +90,7 @@ Goal
 ----
 
 .. image:: images/goal.png
+    :width: 900
 
 .. class:: handout
 
@@ -105,6 +102,7 @@ Goal
 ----
 
 .. image:: images/fun-stuff.png
+    :width: 900
 
 .. class:: handout
 
@@ -308,8 +306,8 @@ First Light
     position to run this code and get some visuals out.
 
 .. image:: images/screen-triangle-square.png
-    :width: 1175
-    :height: 775
+    :width: 900
+    :height: 600
 
 .. class:: handout
 
@@ -349,8 +347,8 @@ Tetrahedron
 -----------
 
 .. image:: images/screen-tetrahedron.png
-    :width: 1175
-    :height: 775
+    :width: 900
+    :height: 600
 
 Cube
 ----
@@ -381,8 +379,8 @@ Demo Cube & Others
 ------------------
 
 .. image:: images/screen-cube.png
-    :width: 1175
-    :height: 775
+    :width: 900
+    :height: 600
 
 
 Moving Shapes
@@ -437,7 +435,12 @@ Using a Mover
             item.position = item.move(self.time)
    
 Demo of movers
-TODO: other types of mover
+
+*Code count: 480 lines*
+
+.. class:: handout
+
+    Create some other sorts of mover
 
 
 Composite shapes
@@ -501,23 +504,40 @@ Class MultiShape continued...
     other members of Shape, faces and face_colors.
 
 
-Using Composite Shape
+Using Composite Shapes
+----------------------
+
+.. sourcecode:: python
+
+    def RgbCubeCluster(edge, cluster_edge, cube_count):
+        shape = MultiShape()
+        for i in xrange(cube_count):
+            color = Color.Random()
+            pos = Vec3(* color[:3])
+            pos = pos - (128, 128, 128)
+            pos = pos * (cluster_edge / 256)
+            shape.add(
+                Cube(edge, repeat(color)),
+                position=pos,
+            )
+        return shape
+
+
+Recursively Generated
 ---------------------
 
-TODO
+Composite shapes are great for iteratively adding stuff.
 
-Demo Composite Shapes
----------------------
-
-
+But we're programmers, right? How about recursively
+generated geometry?
 
 
 Lighting
 --------
 
 .. image:: images/generating-normals.png
-    :width: 1175
-    :height: 775
+    :width: 900
+    :height: 600
 
 
 Generating Normals
