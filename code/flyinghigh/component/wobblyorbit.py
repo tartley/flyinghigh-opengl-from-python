@@ -12,8 +12,16 @@ class WobblyOrbit(object):
         self.speed = speed
         self.phase = uniform(0, 2 * pi)
 
+        self.desired_mean = mean
+        self.desired_variance = variance
+
     def __call__(self, time):
         time = time.current
+
+        # move smoothly between transitions
+        self.mean += (self.desired_mean - self.mean) * 0.1
+        self.variance += (self.desired_variance - self.variance) * 0.1
+
         # camera position at distance, bearing
         distance = self.mean + sin(time * self.speed) * self.variance
         bearing = sin(time * self.speed / 4.0 + self.phase + 3 * pi / 4.0) * 10
