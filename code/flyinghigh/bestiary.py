@@ -54,19 +54,16 @@ def get_bestiary(world):
 
     bestiary[key._5] = GameItem(
         shape=DualTetrahedron(1.8),
-        spin=Spinner(speed=3),
         position=Origin,
     )
 
     bestiary[key._6] = GameItem(
         shape=CubeCross(1, red, red.tinted(yellow)),
-        spin=Spinner(speed=3),
         position=Origin,
     )
 
     bestiary[key._7] = GameItem(
         shape=CubeCorners(1, yellow.tinted(white), yellow),
-        spin=Spinner(speed=3),
         position=Origin,
     )
 
@@ -78,21 +75,21 @@ def get_bestiary(world):
     bestiary[key.W] = GameItem(
         shape=CubeRing(1, 3, 23, blue.tinted(black).variations()),
         position=Origin,
-        spin=Spinner(speed=-1.5),
+        spin=Spinner(speed=-0.5),
     )
 
     bestiary[key.E] = GameItem(
         shape=CubeRing(1, 4, 24, green.tinted(white).variations()),
         position=Origin,
         orientation=XAxis,
-        spin=Spinner(speed=1.5),
+        spin=Spinner(speed=1),
     )
 
     bestiary[key.R] = GameItem(
         shape=TriRing(1, 6, 32, orange.tinted(white).variations()),
         position=Origin,
         orientation=XAxis,
-        spin=Spinner(speed=2.5),
+        spin=Spinner(speed=1.5),
     )
 
     bestiary[key.T] = GameItem(
@@ -129,12 +126,15 @@ def get_bestiary(world):
         spin=Spinner(speed=0.75),
     )
 
-    def camera_inside_everything():
-        return world.camera.position.length < 40
+    edge = 40
+
+    def camera_inside():
+        return all(abs(dist) < edge/2 for dist in world.camera.position)
 
     bestiary[key.F] = GameItem(
-        slowmo=SlowMo(camera_inside_everything, 0.2),
+        slowmo=SlowMo(camera_inside, 0.2),
         position=Origin,
+        shape=CubeLattice(1, edge, 2, white),
     )
 
     return bestiary
