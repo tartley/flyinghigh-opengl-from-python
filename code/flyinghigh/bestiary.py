@@ -6,9 +6,9 @@ from math import pi
 from pyglet.window import key
 
 from .component.shapes import (
-    MultiShape, Cube, Cuboid, CubeCorners, CubeCross, CubeLattice, CubeRing,
-    DualTetrahedron, TriRing,
-    RgbCubeCluster, Tetrahedron, TriangleSquare, TruncatedCube, SpaceStation,
+    MultiShape, Cube, Cuboid, CubeCorners, CubeCross, CubeFrame, CubeLattice,
+    CubeRing, DualTetrahedron, TriRing, RgbCubeCluster, Tetrahedron,
+    TriangleSquare, TruncatedCube, SpaceStation,
 )
 from .component.slowmo import SlowMo
 from .component.spinner import Spinner
@@ -93,7 +93,8 @@ def get_bestiary(world):
     )
 
     bestiary[key.T] = GameItem(
-        shape=Cuboid(1, 2, 3, blue.variations(black))
+        shape=CubeFrame(10, blue.variations(black)),
+        position=Origin,
     )
 
     bestiary[key.Y] = GameItem(

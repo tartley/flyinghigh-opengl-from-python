@@ -1,7 +1,7 @@
 
 from __future__ import division
 
-from itertools import chain, product, repeat
+from itertools import chain, islice, product, repeat
 from math import sqrt, pi, sin, cos
 from random import randint
 
@@ -231,6 +231,41 @@ def TriRing(edge, radius, number, colors):
     return multi
 
 
+def CubeFrame(edge, colors):
+
+    timbers = (
+        ((edge + 1, 1, 1), (0, +edge/2, +edge/2)),
+        ((edge + 1, 1, 1), (0, +edge/2, -edge/2)),
+        ((edge + 1, 1, 1), (0, -edge/2, +edge/2)),
+        ((edge + 1, 1, 1), (0, -edge/2, -edge/2)),
+
+        ((1, edge + 1, 1), (+edge/2, 0, +edge/2)),
+        ((1, edge + 1, 1), (+edge/2, 0, -edge/2)),
+        ((1, edge + 1, 1), (-edge/2, 0, +edge/2)),
+        ((1, edge + 1, 1), (-edge/2, 0, -edge/2)),
+
+        ((1, 1, edge + 1), (+edge/2, +edge/2, 0)),
+        ((1, 1, edge + 1), (+edge/2, -edge/2, 0)),
+        ((1, 1, edge + 1), (-edge/2, +edge/2, 0)),
+        ((1, 1, edge + 1), (-edge/2, -edge/2, 0)),
+    )
+
+    face_colors = list(islice(colors, 0, 6))
+    multi = MultiShape()
+    for dims, posn in timbers:
+        timber = Cuboid(dims[0], dims[1], dims[2], face_colors)
+        multi.add(timber, Vec3(*posn))
+    return multi
+
+
+def CubeCluster(edge, positions):
+    multi = MultiShape()
+    cube = Cube(1, Color.Random().variations())
+    for pos in positions:
+        multi.add(cube, pos)
+    return multi
+
+
 def RgbCubeCluster(edge, cluster_edge, cube_count):
     shape = MultiShape()
     for i in xrange(cube_count):
@@ -250,18 +285,6 @@ def RgbCubeCluster(edge, cluster_edge, cube_count):
             position=Vec3(*pos)
         )
     return shape
-
-
-def CubeFrame(edge, colors):
-    face_colors = list(colors[:6])
-
-
-def CubeCluster(edge, positions):
-    multi = MultiShape()
-    cube = Cube(1, Color.Random().variations())
-    for pos in positions:
-        multi.add(cube, pos)
-    return multi
 
 
 def CubeLattice(edge, cluster_edge, freq, color):
