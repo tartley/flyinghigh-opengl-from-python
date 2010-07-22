@@ -6,7 +6,7 @@ from math import pi
 from pyglet.window import key
 
 from .component.shapes import (
-    MultiShape, Cube, CubeCorners, CubeCross, CubeLattice, CubeRing,
+    MultiShape, Cube, Cuboid, CubeCorners, CubeCross, CubeLattice, CubeRing,
     DualTetrahedron, TriRing,
     RgbCubeCluster, Tetrahedron, TriangleSquare, TruncatedCube, SpaceStation,
 )
@@ -93,6 +93,10 @@ def get_bestiary(world):
     )
 
     bestiary[key.T] = GameItem(
+        shape=Cuboid(1, 2, 3, blue.variations(black))
+    )
+
+    bestiary[key.Y] = GameItem(
         shape=RgbCubeCluster(1.0, 60, 5000),
         position=Origin,
     )

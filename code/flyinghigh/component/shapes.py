@@ -55,16 +55,7 @@ def DualTetrahedron(edge, color1=None, color2=None):
 
 def Cube(edge, face_colors=None):
     e2 = edge / 2
-    verts = [
-        (-e2, -e2, -e2),
-        (-e2, -e2, +e2),
-        (-e2, +e2, -e2),
-        (-e2, +e2, +e2),
-        (+e2, -e2, -e2),
-        (+e2, -e2, +e2),
-        (+e2, +e2, -e2),
-        (+e2, +e2, +e2),
-    ]
+    verts = list(product(*repeat([-e2, +e2], 3)))
     faces = [
         [0, 1, 3, 2], # left
         [4, 6, 7, 5], # right
@@ -80,16 +71,7 @@ def Cuboid(x, y, z, face_colors=None):
     x = x/2
     y = y/2
     z = z/2
-    verts = [
-        (-x, -y, -z),
-        (-x, -y, +z),
-        (-x, +y, -z),
-        (-x, +y, +z),
-        (+x, -y, -z),
-        (+x, -y, +z),
-        (+x, +y, -z),
-        (+x, +y, +z),
-    ]
+    verts = list(product((-x, +x), (-y, +y), (-z, +z)))
     faces = [
         [0, 1, 3, 2], # left
         [4, 6, 7, 5], # right
@@ -268,6 +250,10 @@ def RgbCubeCluster(edge, cluster_edge, cube_count):
             position=Vec3(*pos)
         )
     return shape
+
+
+def CubeFrame(edge, colors):
+    face_colors = list(colors[:6])
 
 
 def CubeCluster(edge, positions):
