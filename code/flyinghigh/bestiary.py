@@ -96,12 +96,12 @@ def get_bestiary(world):
     )
 
     bestiary[key.T] = GameItem(
-        shape=CubeFrame(10, blue.variations(grey)),
+        shape=CubeFrame(10, grey.tinted(white)),
         position=Origin,
     )
 
     bestiary[key.Y] = GameItem(
-        shape=CubeFrame(12, grey.variations(black)),
+        shape=CubeFrame(12, [grey]),
         position=Origin,
         spin=Spinner(),
     )

@@ -3,9 +3,7 @@ from itertools import chain, cycle, islice, repeat
 
 from ..geometry.matrix import Matrix
 from ..geometry.vec3 import Vec3
-
-
-WHITE = (255, 255, 255, 255)
+from ..component.color import Color, white
 
 
 def face_normal(vertices, face):
@@ -42,7 +40,9 @@ class Shape(object):
         self.faces = faces
 
         if face_colors is None:
-            face_colors = repeat(WHITE)
+            face_colors = white
+        elif isinstance(face_colors, Color):
+            face_colors = repeat(face_colors)
         # TODO: colors of koch_cube/tetra break if we remove this 'list'
         # and set face_colors to the return of 'islice'. Don't know why.
         self.face_colors = list(islice(cycle(face_colors), len(self.faces)))
