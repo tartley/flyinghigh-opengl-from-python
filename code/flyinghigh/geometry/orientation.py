@@ -28,7 +28,7 @@ class Orientation(object):
             forward = NegZAxis
         elif not isinstance(forward, Vec3):
             forward = Vec3(*forward)
-        self._forward = forward.normalize()
+        self._forward = forward.normalized()
 
         if up is None:
             up = self._default_up()
@@ -38,7 +38,7 @@ class Orientation(object):
             assert abs(angle_between - pi/2) < EPSILON, \
                 "up (%s) must be 90deg to forward (%s), actually %f deg" % \
                 (up, forward, degrees(angle_between))
-        self._up = up.normalize()
+        self._up = up.normalized()
 
         self.right = self._get_right()
 
@@ -78,7 +78,7 @@ class Orientation(object):
         axis = flat.cross(YAxis)
         # rotate 'forward' by 90 deg about 'axis'
         up = self.forward.rotate(axis, -pi/2)
-        return up.normalize()
+        return up.normalized()
 
 
     def _get_right(self):
@@ -115,7 +115,7 @@ class Orientation(object):
         '''
         rotate about the 'backward' axis (ie. +ve angle rolls to the right)
         '''
-        self.up = self.up.rotate(self.forward, -angle).normalize()
+        self.up = self.up.rotate(self.forward, -angle).normalized()
         self.right = self._get_right()
 
 
@@ -123,7 +123,7 @@ class Orientation(object):
         '''
         rotate about the 'up' axis (ie. +ve angle yaws to the right)
         '''
-        self.forward = self.forward.rotate(self.up, angle).normalize()
+        self.forward = self.forward.rotate(self.up, angle).normalized()
         self.right = self._get_right()
 
 
@@ -131,8 +131,8 @@ class Orientation(object):
         '''
         rotate about the 'left' axis (ie. +ve angle pitches up)
         '''
-        self.forward = self.forward.rotate(self.right, -angle).normalize()
-        self.up = self.up.rotate(self.right, -angle).normalize()
+        self.forward = self.forward.rotate(self.right, -angle).normalized()
+        self.up = self.up.rotate(self.right, -angle).normalized()
 
 
     @property

@@ -86,7 +86,7 @@ class testVec3(TestCase):
     def testNormalize(self):
         v = Vec3(3, 4, 5)
         self.assertEqual(
-            v.normalize(),
+            v.normalized(),
             Vec3(3/v.length, 4/v.length, 5/v.length) )
 
     def testNeg(self):

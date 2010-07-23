@@ -26,7 +26,7 @@ class Vec3(namedtuple('Vec3Base', 'x y z')):
     # __neq__ as 'not __eq__' seems to be inherited from tuple
 
     def __hash__(self):
-        raise NotImplementedError
+        return hash(self.x) ^ hash(self.x) ^ hash(self.x)
 
     def __neg__(self):
         return Vec3(-self.x, -self.y, -self.z)
@@ -61,15 +61,19 @@ class Vec3(namedtuple('Vec3Base', 'x y z')):
     def __truediv__(self, scalar):
         return Vec3(self.x / scalar, self.y / scalar, self.z / scalar)
 
-
     @staticmethod
-    def Random(length):
-        return Vec3(
-            uniform(-length, +length),
-            uniform(-length, +length),
-            uniform(-length, +length),
+    def Random(radius=None, manhatten=None):
+        assert radius or manhatten
+        size = radius or manhatten
+        v = Vec3(
+            uniform(-size/2, +size/2),
+            uniform(-size/2, +size/2),
+            uniform(-size/2, +size/2),
         )
-
+        if radius:
+            v = v.normalized()
+            v = v * uniform(0, radius)
+        return v
 
     @property
     def length(self):
@@ -85,7 +89,7 @@ class Vec3(namedtuple('Vec3Base', 'x y z')):
         '''
         return self.x ** 2 + self.y ** 2 + self.z ** 2
 
-    def normalize(self):
+    def normalized(self):
         '''
         return a new vector in the same direction, but of length 1
         '''

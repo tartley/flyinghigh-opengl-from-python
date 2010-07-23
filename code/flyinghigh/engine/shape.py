@@ -19,7 +19,7 @@ def face_normal(vertices, face):
     v2 = vertices[face[2]]
     a = v0 - v1
     b = v2 - v1
-    return b.cross(a).normalize()
+    return b.cross(a).normalized()
 
 
 class Shape(object):
