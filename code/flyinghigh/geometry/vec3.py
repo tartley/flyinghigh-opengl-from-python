@@ -2,6 +2,7 @@
 from __future__ import division
 from collections import namedtuple
 from math import acos, cos, sin, sqrt
+from random import uniform
 
 
 EPSILON = 1e-7
@@ -59,6 +60,16 @@ class Vec3(namedtuple('Vec3Base', 'x y z')):
 
     def __truediv__(self, scalar):
         return Vec3(self.x / scalar, self.y / scalar, self.z / scalar)
+
+
+    @staticmethod
+    def Random(length):
+        return Vec3(
+            uniform(-length, +length),
+            uniform(-length, +length),
+            uniform(-length, +length),
+        )
+
 
     @property
     def length(self):

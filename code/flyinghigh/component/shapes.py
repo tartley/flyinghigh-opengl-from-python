@@ -258,6 +258,14 @@ def CubeFrame(edge, colors):
     return multi
 
 
+def CubeGlob(radius, number, colors):
+    multi = MultiShape()
+    cube = Cube(1, colors)
+    for _ in xrange(number):
+        multi.add( cube, position=Vec3.Random(radius), orientation=Orientation.Random() )
+    return multi
+
+
 def CubeCluster(edge, positions):
     multi = MultiShape()
     cube = Cube(1, Color.Random().variations())

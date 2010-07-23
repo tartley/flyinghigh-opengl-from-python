@@ -1,5 +1,6 @@
 
 from math import pi, degrees
+from random import uniform
 
 from OpenGL import GL as gl
 
@@ -100,6 +101,14 @@ class Orientation(object):
         return not self.__eq__(other)
 
     __hash__ = None # Orientations are mutable, so do not allow hashing
+
+
+    @staticmethod
+    def Random():
+        fwd = Vec3.Random(1)
+        orientation = Orientation(fwd)
+        orientation.roll(uniform(-pi, +pi))
+        return orientation
 
 
     def roll(self, angle):

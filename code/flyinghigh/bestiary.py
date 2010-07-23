@@ -1,20 +1,23 @@
 
 from __future__ import division
 
+from itertools import repeat
 from math import pi
+from random import randint, uniform
 
 from pyglet.window import key
 
 from .component.shapes import (
-    MultiShape, Cube, Cuboid, CubeCorners, CubeCross, CubeFrame, CubeLattice,
-    CubeRing, DualTetrahedron, TriRing, RgbCubeCluster, Tetrahedron,
-    TriangleSquare, TruncatedCube, SpaceStation,
+    MultiShape, Cube, CubeGlob, Cuboid, CubeCorners, CubeCross, CubeFrame,
+    CubeLattice, CubeRing, DualTetrahedron, TriRing, RgbCubeCluster,
+    Tetrahedron, TriangleSquare, TruncatedCube, SpaceStation,
 )
 from .component.slowmo import SlowMo
 from .component.spinner import Spinner
 from .component.wobblyorbit import Orbit, WobblyOrbit
 from .component.color import (
-    Color, red, orange, yellow, green, cyan, blue, purple, white, grey, black,
+    all_colors, Color, red, orange, yellow, green, cyan, blue, purple, white,
+    grey, black,
 )
 from .engine.gameitem import GameItem
 from .geometry.koch_cube import KochCube
@@ -93,11 +96,22 @@ def get_bestiary(world):
     )
 
     bestiary[key.T] = GameItem(
-        shape=CubeFrame(10, blue.variations(black)),
+        shape=CubeFrame(10, blue.variations(grey)),
         position=Origin,
     )
 
     bestiary[key.Y] = GameItem(
+        shape=CubeFrame(12, grey.variations(black)),
+        position=Origin,
+        spin=Spinner(),
+    )
+
+    bestiary[key.U] = GameItem(
+        shape=CubeGlob(20, 5000, [red]),
+        position=Origin,
+    )
+
+    bestiary[key.I] = GameItem(
         shape=RgbCubeCluster(1.0, 60, 5000),
         position=Origin,
     )
@@ -141,6 +155,7 @@ def get_bestiary(world):
         position=Origin,
         shape=CubeLattice(1, edge, 2, white),
     )
+
 
     return bestiary
 
