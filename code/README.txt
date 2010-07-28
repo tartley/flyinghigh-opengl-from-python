@@ -11,9 +11,9 @@ DEPENDENCIES
 ------------
 
     Python 2.6 or 2.7
-    Pyglet
-    PyOpenGL
-    numpy (used for sierpinski generation)
+    Pyglet 1.1.4
+    PyOpenGL 3.0.1
+    numpy 1.5.0.dev8477 (just used for sierpinski generation)
 
 I can't install numpy from source for Python2.7 (configuring distutils to use
 the mingw32 compiler instead of Visual Studio doesn't work for me.) and there
