@@ -28,7 +28,7 @@ def run_game():
         keyhandler.world = gameloop.world
 
         gameloop.window.push_handlers(keyhandler.on_key_press)
-        gameloop.world.update(0)
+        gameloop.world.update(1/60.0)
         gameloop.window.set_visible()
         pyglet.app.run()
     finally:
