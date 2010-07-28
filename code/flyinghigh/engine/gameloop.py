@@ -23,12 +23,12 @@ class Gameloop(object):
         self.render = None
         self.window = None
         self.world = None
-
+        self.fpss = []
 
     def prepare(self, options):
         self.window = Window(
             fullscreen=options.fullscreen,
-            vsync=True,
+            vsync=False,
             visible=False,
             resizable=True)
         self.window.on_draw = self.draw
@@ -41,7 +41,7 @@ class Gameloop(object):
         self.world.add( GameItem(
             camera=self.camera,
             position=Origin,
-            move=WobblyOrbit(4, 1, speed=-0.5),
+            move=WobblyOrbit(16, 1, speed=-0.5),
 
         ) )
 
@@ -57,6 +57,7 @@ class Gameloop(object):
 
 
     def update(self, dt):
+        # self.fpss.append(1/max(1e-3, dt))
         dt = min(dt, 1/30.0)
         self.world.update(dt)
         self.window.invalid = True
@@ -76,4 +77,5 @@ class Gameloop(object):
     def stop(self):
         if self.window:
             self.window.close()
+        # print '  '.join("%6.1f" % (dt, ) for dt in self.fpss)
 
