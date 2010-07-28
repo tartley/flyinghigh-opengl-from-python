@@ -1,3 +1,4 @@
 glob:*/profile.out
 glob:rst-with-pygments-example
 glob:*.html
+glob:*.c

@@ -107,7 +107,7 @@ def get_bestiary(world):
     )
 
     bestiary[key.U] = GameItem(
-        shape=CubeGlob(20, 5000, [red]),
+        shape=CubeGlob(20, 13000, [red]),
         position=Origin,
     )
 
@@ -156,7 +156,13 @@ def get_bestiary(world):
         shape=CubeLattice(1, edge, 2, white),
     )
 
+    # cube = Cube(1, red)
+    # for _ in xrange(150):
+        # world.add( GameItem(
+            # shape=cube,
+            # position=Vec3.Random(10),
+            # orientation=Orientation.Random(),
+        # ) )
 
     return bestiary
-
 

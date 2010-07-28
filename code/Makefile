@@ -47,3 +47,10 @@ py2exe:
 	python setup.py --quiet py2exe
 .PHONY: py2exe
 
+
+cython: flyinghigh/engine/render.pyd
+
+flyinghigh/engine/render.pyd: flyinghigh/engine/render.pyx
+	python setup.py build_ext --inplace
+	cython -a flyinghigh/engine/render.pyx
+
