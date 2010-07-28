@@ -5,6 +5,7 @@ Flying High: Hobbyist OpenGL from Python
 Jonathan Hartley
 
 http://code.google.com/p/flyinghigh-opengl-from-python
+(search Google Code for 'flyinghigh', all one word.)
 
 
 Inspiratons
@@ -317,7 +318,7 @@ First Light
 Code size check
 ---------------
 
-Now we have a minimal infrastructure in place.
+Now we have a minimal infrastructure in place. \o/
 
 *Code size: 320 lines*
 
@@ -496,12 +497,43 @@ Class MultiShape continued...
 .. class:: handout
 
     If MultiShape is going to be useable wherever Shape is useable, it has to
-    provide the same interface. Luckily the interface to Shape is nice and
-    simple. Here we see how multishape provides a sequence of vertices, by
-    applying the relevant matrix transoformation to each of its child shapes.
+    provide the same interface. Luckily Shape's interface is very simple,
+    consisting just of collections for vertices, faces and face_colors.
+    Here we see how multishape provides a sequence of vertices, by
+    applying the relevant matrix transformation to each of its child shapes.
 
-    The same sort of property can be added to MultiShape to provide the
-    other members of Shape, faces and face_colors.
+    Similar properties can be added to MultiShape to expose collections of
+    faces and face_colors, by aggregating those of its child Shapes.
+    
+
+Demo Some Composite Shapes
+--------------------------
+
+Two interpenetrated Tetrahedrons, forming a *stellated octahedron*.
+TODO: image
+
+CubeClusters
+TODO: image
+
+Rings
+TODO: image
+TODO: image
+TODO: image
+
+Frames (composites of 'Cuboid')
+TODO: image
+TODO: image
+
+In fact we've added quite a few... how many can we add? It turns out quite
+a few.
+
+CubeGlob
+TODO: image near
+TODO: image far
+
+RgbCubeCluster
+TODO: image
+
 
 
 Using Composite Shapes
@@ -521,6 +553,8 @@ Using Composite Shapes
                 position=pos,
             )
         return shape
+
+These composite shapes are 
 
 
 Recursively Generated
