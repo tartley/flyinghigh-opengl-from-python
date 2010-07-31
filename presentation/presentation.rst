@@ -427,13 +427,13 @@ Using a Mover
 
     world.add( GameItem(
         shape=Cube(1, repeat(red)),
-        move=Orbit(distance=20, speed=4),
+        mover=Orbit(distance=20, speed=4),
     ) )
 
     # then, in world.update():
     for item in self.items:
-        if hasattr(item, 'move'):
-            item.position = item.move(self.time)
+        if item.mover:
+            item.position = item.mover(self.time)
    
 Demo of movers
 
