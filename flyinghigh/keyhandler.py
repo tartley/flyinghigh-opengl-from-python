@@ -1,8 +1,12 @@
 
+from __future__ import division
+
 from pyglet.window import key 
 
 from .component.wobblyorbit import WobblyOrbit
-from .geometry.vec3 import Origin
+
+
+ZOOM_SPEED = 1.5
 
 
 class KeyHandler(object):
@@ -14,7 +18,11 @@ class KeyHandler(object):
     def on_key_press(self, symbol, modifiers):
 
         if symbol in (key.PAGEUP, key.PAGEDOWN):
-            zoom = 2 if symbol == key.PAGEUP else 0.5
+
+            zoom = ZOOM_SPEED
+            if symbol == key.PAGEDOWN:
+                zoom = 1 / ZOOM_SPEED
+
             if modifiers & key.MOD_SHIFT:
                 self.world.camera.move.desired_variance *= zoom
             else:
