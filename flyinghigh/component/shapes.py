@@ -250,12 +250,16 @@ def CubeFrame(edge, colors):
 
 
 def CubeGlob(radius, number, colors):
+    GAP = 20
     multi = MultiShape()
     cube = Cube(1, colors)
     for _ in xrange(number):
+        pos = Vec3.Random(radius - GAP)
+        gap = pos.normalized() * GAP
+        pos = pos + gap
         multi.add(
             cube,
-            position=Vec3.Random(radius),
+            position=pos,
             orientation=Orientation.Random() )
     return multi
 
