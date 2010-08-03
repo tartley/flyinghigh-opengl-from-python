@@ -2,6 +2,8 @@
 `CURRENT--------------------------------------------------------------------`
 
 Review Mike's 'canonical opengl3 application', from his old pycon talk.
+try OpenGL.FORWARD_COMPATIBLE_ONLY = True
+see http://pyopengl.sourceforge.net/documentation/deprecations.html
 
 * Cython: how much can we improve current?
   (110 independent position and oriented cubes at 60fps)
