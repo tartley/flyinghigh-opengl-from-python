@@ -1,7 +1,7 @@
 
 from ..component.glyph import Glyph
 
-from OpenGL import GL as gl
+from pyglet.gl import gl
 
 
 vertex_components = 3
@@ -21,7 +21,6 @@ class Render(object):
     def init(self):
         gl.glEnableClientState(gl.GL_VERTEX_ARRAY)
         gl.glEnableClientState(gl.GL_COLOR_ARRAY)
-        gl.glEnableClientState(gl.GL_NORMAL_ARRAY)
         gl.glEnable(gl.GL_DEPTH_TEST)        
         gl.glEnable(gl.GL_POLYGON_SMOOTH)
         gl.glEnable(gl.GL_BLEND)
@@ -43,6 +42,7 @@ class Render(object):
 
 
     def draw(self):
+        gl.glEnableClientState(gl.GL_NORMAL_ARRAY)
         for item in self.world:
             if not hasattr(item, 'glyph'):
                 continue
@@ -67,4 +67,9 @@ class Render(object):
                 glyph.glindices)
 
             gl.glPopMatrix()
+
+
+    def draw_hud(self, clock_display):
+        gl.glDisableClientState(gl.GL_NORMAL_ARRAY)
+        clock_display.draw()
 

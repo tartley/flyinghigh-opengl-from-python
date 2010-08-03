@@ -8,7 +8,7 @@ except:
 
 from math import pi
 
-from OpenGL import GL as gl
+from pyglet.gl import gl
 
 from ..vec3 import NegXAxis, NegYAxis, NegZAxis, Vec3, XAxis, YAxis, ZAxis
 from ..orientation import Orientation

@@ -1,3 +1,5 @@
+from __future__ import division
+
 from os.path import join
 
 import pyglet
@@ -58,19 +60,22 @@ class Gameloop(object):
 
     def update(self, dt):
         # self.fpss.append(1/max(1e-3, dt))
-        dt = min(dt, 1/30.0)
+        dt = min(dt, 1 / 30)
         self.world.update(dt)
         self.window.invalid = True
 
 
     def draw(self):
         self.window.clear()
+
         self.projection.set_perspective(45)
         self.camera.look_at(Origin)
         self.render.draw()
-        # self.projection.set_screen()
-        # self.camera.reset()
-        # self.clock_display.draw()
+
+        self.projection.set_screen()
+        self.camera.reset()
+        self.render.draw_hud(self.clock_display)
+
         return EVENT_HANDLED
 
 

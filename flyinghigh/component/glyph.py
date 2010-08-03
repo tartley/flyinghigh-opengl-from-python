@@ -1,7 +1,7 @@
 
 from itertools import chain, izip, repeat
 
-from OpenGL import GL as gl
+from pyglet.gl import gl
 
 from ..engine.shape import face_normal
 

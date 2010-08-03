@@ -2,7 +2,7 @@
 from math import pi, degrees
 from random import uniform
 
-from OpenGL import GL as gl
+from pyglet.gl import gl
 
 from .vec3 import NegYAxis, NegZAxis, Vec3, YAxis, ZAxis
 

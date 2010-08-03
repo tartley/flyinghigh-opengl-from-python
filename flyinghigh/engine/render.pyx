@@ -26,7 +26,7 @@ cdef int vertex_components
 
 from flyinghigh.component.glyph import Glyph
 
-from OpenGL import GL as gl
+from pyglet.gl import gl
 
 
 vertex_components = 3
