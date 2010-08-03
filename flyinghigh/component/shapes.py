@@ -183,29 +183,16 @@ def CubeCorners(edge, color1, color2):
         Cube(edge, repeat(color1)),
         position=Origin,
     )
-    for pos in [
-       (+1, +1, +1),
-       (+1, +1, -1),
-       (+1, -1, +1),
-       (+1, -1, -1),
-       (-1, +1, +1),
-       (-1, +1, -1),
-       (-1, -1, +1),
-       (-1, -1, -1),
-    ]:
-        center = Vec3(*pos)
-        center = center * edge / 2
+    for pos in list(product(*repeat([-1, +1], 3))):
         multi.add(
             Cube(edge/2, repeat(color2)),
-            position=center,
+            position=Vec3(*pos) * (edge / 2),
         )
     return multi
 
 
-def CubeRing(edge, radius, number, colors):
+def Ring(basic_shape, radius, number):
     multi = MultiShape()
-
-    child = Cube(edge, colors)
 
     angle = 0
     orientation = Orientation()
@@ -218,8 +205,12 @@ def CubeRing(edge, radius, number, colors):
             radius * cos(angle),
         )
         orientation.pitch(delta_angle)
-        multi.add(child, pos, orientation)
+        multi.add(basic_shape, pos, orientation)
     return multi
+
+
+def CubeRing(edge, radius, number, face_colors):
+    return Ring(Cube(edge, face_colors), radius, number)
 
 
 def TriRing(edge, radius, number, colors):
@@ -278,8 +269,8 @@ def CubeCluster(edge, positions):
 
 
 def RgbCubeCluster(edge, cluster_edge, cube_count):
-    shape = MultiShape()
-    for i in xrange(cube_count):
+    cluster = MultiShape()
+    for _ in xrange(cube_count):
         while True:
             color = Color.Random()
             pos = Vec3(
@@ -291,11 +282,11 @@ def RgbCubeCluster(edge, cluster_edge, cube_count):
             # make a hole in the center
             if pos.length > 8:
                 break
-        shape.add(
+        cluster.add(
             Cube(edge, repeat(color)),
             position=Vec3(*pos)
         )
-    return shape
+    return cluster
 
 
 def CubeLattice(edge, cluster_edge, freq, color):

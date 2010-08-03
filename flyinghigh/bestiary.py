@@ -145,11 +145,10 @@ def get_bestiary(world):
 
     bestiary[key.D] = GameItem(
         shape=SierpinskiTetra(
-            Tetrahedron(240), 8, scale=0.52,
+            Tetrahedron(240), 6, scale=0.52,
             face_colors=[yellow],
         ),
         position=Origin,
-        spin=Spinner(speed=1.1),
     )
 
     edge = 40

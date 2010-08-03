@@ -1,3 +1,5 @@
+from __future__ import division
+
 from math import cos, sin, pi
 from random import uniform
 
@@ -45,7 +47,7 @@ class WobblyOrbit(object):
 
         # camera position at distance, bearing
         distance = self.mean + sin(time * self.speed) * self.variance
-        bearing = sin(time * self.speed / 4.0 + self.phase + 3 * pi / 4.0) * 10
+        bearing = sin(time * self.speed / 4 + self.phase + 3 * pi / 4) * 10
         x1 = distance * sin(bearing)
         z1 = distance * cos(bearing)
 

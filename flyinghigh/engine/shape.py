@@ -68,8 +68,8 @@ class MultiShape(object):
     def vertices(self):
         return (
             matrix.transform(vertex)
-            for index, matrix in enumerate(self.matrices)
-            for vertex in self.children[index].vertices
+            for child, matrix in zip(self.children, self.matrices)
+            for vertex in child.vertices
         )
 
 
