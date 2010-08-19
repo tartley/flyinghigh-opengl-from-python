@@ -1,12 +1,33 @@
 
 `CURRENT--------------------------------------------------------------------`
 
+Shift from vertex arrays to vertex buffer objects::
+
+    # Generate Buffers (inside Init method)
+    circle = array(circle, dtype=float32)
+    vertex_vbo = GL.GLuint(0)
+    glGenBuffers(1, vertex_vbo)
+    glBindBuffer(GL_ARRAY_BUFFER, circle)
+    # wtc is 'ADT'? Array data type!
+    glBufferData(GL_ARRAY_BUFFER, ADT.arrayByteCount(circle),
+        ADT.voidDataPointer(circle), GL_STATIC_DRAW_ARB)
+
+    # Draw buffers (inside Render method)
+    glBindBuffer(GL_ARRAY_BUFFER, vertex_vbo)
+    glVertexPointer(3, GL_FLOAT, 0, None)
+    glDrawArrays(GL_LINE_STRIP, 0, circle.shape[0])
+
+plus see this:
+http://www.siafoo.net/snippet/185
+
+Shift to interleaved VBO things.
+
 Review Mike's 'canonical opengl3 application', from his old pycon talk.
 try OpenGL.FORWARD_COMPATIBLE_ONLY = True
 see http://pyopengl.sourceforge.net/documentation/deprecations.html
 
 * Cython: how much can we improve current?
-  (110 independent position and oriented cubes at 60fps)
+  (450 independent position and oriented cubes at 60fps)
     - Cython glyph, vec3, orientation, etc, and their uses in Render.draw
 
  * I'm pretty sure I'm transforming every vertex for every child shape, at
