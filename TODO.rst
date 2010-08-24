@@ -1,6 +1,4 @@
 
-`CURRENT--------------------------------------------------------------------`
-
 Shift from vertex arrays to vertex buffer objects::
 
     # Generate Buffers (inside Init method)
@@ -44,14 +42,22 @@ GEOMETRIES
 * maze and pipe-like
 * Cube cluster generated from pixels of small bitmaps. Invader! Mario! etc.
 
-SHADERS
-* mobile in-world lightsource
-* colored lightsource
-* attach lightsource to an in-game object
-* multiple lightsources
-* specular reflection
-* texture map
-* noise
+SHADERS, fancy
+    * Add bitmaps to fragment shader, see:
+        http://www.lighthouse3d.com/opengl/glsl/index.php?textureComb
+    * noise
+    * Allow each entity (entity's shape?) to specify its own shaders.
+
+SHADERS, lighting:
+    * Add mobile light source within world space
+    * per-pixel lighting, calc normal for each pixel in fragment shader
+    * pass in light position
+    * attach light sources to a gameitem
+    * colored light
+    * pass in light color
+    * pass in ambient light color
+    * multiple light sources
+    * specular highlights
 
 GEOMETRY
 Shape and Glyph should also handle curved surfaces. In these, vertices
@@ -73,24 +79,15 @@ Startup performance:
     Try explicit loops rather than generators
     Can we pre-allocate storage in the output lists?
     Try generating gl arrays all in one loop
-    TAKE startup code to Code Clinic!
-
-* Bevel edges
-
-Are we currently sending all geometry across bus every frame?
-try VBOs. but fall back to current method (vertex arrays) if hardware is crap
+    TAKE startup code to Code Clinic! (* seq) on creating glarrays was 20% time
 
 Add to geometry while it is being displayed
-    create big array up front. Just update final few verts in it as the
-    shape grows.
-'Squaresnake'
-
-Allow each entity (entity's shape?) to specify its own shaders.
+    * recreate it from scratch
+    * colors too
+    * modify or add to an existing geometry 'Squaresnake'
 
 print some useful info to the console, to show users some progress during
 startup
-
-make python2.5 compliant to get Oscar's further input.
 
 Refactorings:
  * multishape just stores matrices, rather than positions and orientations.
@@ -112,9 +109,13 @@ User-controlled camera
 Fake skybox geometry:
     tiny triangular stars
     a ground
-    - with mountains!
+    with mountains!
     a spherical moon
-    - with rings!
+    sky changes color, moon moves
+    A sun!
+    moon has rings!
+    a real bitmap skybox thing
+    a real bitmap with vectors overlaid
 
 INNER LOOP PHASE 1
 try out numpy vec3 and matrix classes. compare performance.
@@ -124,60 +125,22 @@ try cython
 try compiled C.
 Measure performances.
 
-Consider vec3 members:
-    'normalise()' (functional, returns new instance)
-    'normalized()' (in-place, returns self)
-Consider equivalent for other methods.
-
 Consider python 2.5 and 3.1 compatibility.
 
-Try vec3d and matrix from:
-    -euclid (looks ok, stolent one or two ideas)
-    -planar (will need augmenting to make 3d)
-    -numpy
+Try augmenting euclid to cython the types, as planar does
 
-SKYBOX
-Add a real one
-
-Numpy integration
+Try using numpy for vector / matrix math
     possibly can generate geometry and glarrays really quickly with this?
 
-* Elite ships
+Automatically triangulate convex faces
 
-Cube cluster presenting different images when viewed from different angles
-    - really needs set of icons re-using same color pallette to work well
+`--DONE----------------------------------------------------------------------`
 
-Automatically triangulate *concave* faces (needs glu triangulate code from
-svgbatch)
-
-
-`DONE------------------------------------------------------------------------`
-
-Create minimal 3d gameloop application, with cube
-
-REFACTOR
-camera needs splitting into two things:
-    setter of projections, knows width, height, gets told zoom
-    maintainer of camera x, y, zoom, setter of modelview
-
-GEOMETRY PHASE 1
-Create a cube.
 Create a quick clump of interpenetrating cubes.
 
 Have camera move
 
-Automatically triangulate convex faces
-
 construct composite geometry (eg. many cubes in a single glyph)
-
-SHADERS PHASE 1
-Integrate shaders:
-    std vertex
-    pixel shader uses vertex colors, with per-pixel lighting using normals
-
-SHADERS
-combine fragment color and texture, see:
-    http://www.lighthouse3d.com/opengl/glsl/index.php?textureComb
 
 GEOMETRY
 generate normals. This implies expanding number of vertices (one copy per
@@ -189,7 +152,7 @@ Colors should be unsigned bytes, not floats.
 Turn off vsync to measure, is it faster?
 YES, 20fps faster.
 
-3d orientation of GameItem's
+3d orientation of GameItems
 
 Separate out new class Geometry, leaving Shape to manage geometry, color,
 position and orientation (the latter two relative to its containing
@@ -202,7 +165,10 @@ CompositeShapes should be nestable.
 Try using same Cube instance in populate world, to help startup performance
 Convert orientation.matrix back to a property
 
-Create serpinski gasket (tetra)
+SHADERS PHASE 1
+Integrate shaders:
+    std vertex
+    pixel shader uses vertex colors, with directional lighting using normals
 
 PERFORMANCE
 try making Vec3 not inherit from tuple, giving it plain attributes x, y & z.
