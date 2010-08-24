@@ -22,6 +22,8 @@ http://www.siafoo.net/snippet/185
 
 Shift to interleaved VBO things.
 
+* Do multiple gameitems with the same Shape all generate their own Glyph?
+
 Review Mike's 'canonical opengl3 application', from his old pycon talk.
 try OpenGL.FORWARD_COMPATIBLE_ONLY = True
 see http://pyopengl.sourceforge.net/documentation/deprecations.html

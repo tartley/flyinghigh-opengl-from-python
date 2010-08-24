@@ -3,7 +3,6 @@ from __future__ import division
 
 from itertools import chain, islice, product, repeat
 from math import sqrt, pi, sin, cos
-from random import randint
 
 from .color import (
     Color, red, orange, yellow, green, cyan, blue, purple, white, grey, black,
