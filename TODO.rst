@@ -1,4 +1,10 @@
 
+Replace the (* seq) operator on initialising gl_array in Glyph.
+instead use::
+    array = arraytype()
+    array[:] = seq # eg. [11, 22, 33... ]
+Test the speed.
+
 Shift from vertex arrays to vertex buffer objects::
 
     # Generate Buffers (inside Init method)
@@ -41,6 +47,9 @@ GEOMETRIES
 * random combos of regular solids
 * maze and pipe-like
 * Cube cluster generated from pixels of small bitmaps. Invader! Mario! etc.
+
+SHADERS, see
+    http://swiftcoder.wordpress.com/2008/12/19/simple-glsl-wrapper-for-pyglet/
 
 SHADERS, fancy
     * Add bitmaps to fragment shader, see:

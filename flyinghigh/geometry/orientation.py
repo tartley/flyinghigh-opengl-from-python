@@ -2,7 +2,7 @@
 from math import pi, degrees
 from random import uniform
 
-from pyglet.gl import gl
+from .. import gl
 
 from .vec3 import NegYAxis, NegZAxis, Vec3, YAxis, ZAxis
 
@@ -42,6 +42,8 @@ class Orientation(object):
 
         self.right = self._get_right()
 
+        # cached return value for 'matrix' property. Needs reseting to None
+        # whenever the value of this orientation changes.
         self._matrix = None
 
 
@@ -113,7 +115,7 @@ class Orientation(object):
 
     def roll(self, angle):
         '''
-        rotate about the 'backward' axis (ie. +ve angle rolls to the right)
+        rotate about the 'forward' axis (ie. +ve angle rolls to the right)
         '''
         self.up = self.up.rotate(self.forward, -angle).normalized()
         self.right = self._get_right()
@@ -121,7 +123,7 @@ class Orientation(object):
 
     def yaw(self, angle):
         '''
-        rotate about the 'up' axis (ie. +ve angle yaws to the right)
+        rotate about the 'down' axis (ie. +ve angle yaws to the right)
         '''
         self.forward = self.forward.rotate(self.up, angle).normalized()
         self.right = self._get_right()
@@ -129,7 +131,7 @@ class Orientation(object):
 
     def pitch(self, angle):
         '''
-        rotate about the 'left' axis (ie. +ve angle pitches up)
+        rotate about the 'right' axis (ie. +ve angle pitches up)
         '''
         self.forward = self.forward.rotate(self.right, -angle).normalized()
         self.up = self.up.rotate(self.right, -angle).normalized()
@@ -139,8 +141,7 @@ class Orientation(object):
     def matrix(self):
         '''
         The matrix that the OpenGL modelview matrix should be multiplied by
-        to represent this orientation. If a Vec3 offset is supplied, then
-        the returned matrix also incorporates that translation offset.
+        to represent this orientation.
         '''
         if self._matrix is None:
             self._matrix = matrix_type(

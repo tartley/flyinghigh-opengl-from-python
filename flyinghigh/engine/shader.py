@@ -2,6 +2,8 @@ from ctypes import (
     byref, c_char, c_char_p, c_int, cast, create_string_buffer, pointer,
     POINTER
 )
+
+# TODO import this from .. instead
 from pyglet import gl
 
 

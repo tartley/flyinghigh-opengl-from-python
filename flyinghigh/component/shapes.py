@@ -15,8 +15,6 @@ from ..geometry.orientation import Orientation
 
 
 def TriangleSquare():
-    RED = (255, 0, 0, 255)
-    YELLOW = (255, 255, 0, 255)
     return Shape(
         vertices=[
             ( 1, -1,  1), # v0
@@ -26,7 +24,7 @@ def TriangleSquare():
             ( 1,  1,  0), # v4
         ],
         faces=[ [0, 4, 1], [0, 1, 2, 3], ],
-        face_colors=[RED, YELLOW],
+        face_colors=[red, yellow],
     )
 
 
@@ -148,13 +146,13 @@ def SpaceStation(edge):
 
     # add the door
     e2 = edge / 2
-    DOORH = 0.075
-    DOORW = 0.25
+    HEIGHT = 0.075
+    WIDTH = 0.25
     shape.vertices.extend( [
-        Vec3(+e2 * 1.001, +e2 * DOORH, +e2 * DOORW),
-        Vec3(+e2 * 1.001, +e2 * DOORH, -e2 * DOORW),
-        Vec3(+e2 * 1.001, -e2 * DOORH, -e2 * DOORW),
-        Vec3(+e2 * 1.001, -e2 * DOORH, +e2 * DOORW),
+        Vec3(+e2 * 1.001, +e2 * HEIGHT, +e2 * WIDTH),
+        Vec3(+e2 * 1.001, +e2 * HEIGHT, -e2 * WIDTH),
+        Vec3(+e2 * 1.001, -e2 * HEIGHT, -e2 * WIDTH),
+        Vec3(+e2 * 1.001, -e2 * HEIGHT, +e2 * WIDTH),
     ] )
     shape.faces.append( [27, 26, 25, 24] )
     shape.face_colors.append( black )

@@ -1,6 +1,6 @@
 from __future__ import division
 
-from pyglet.gl import gl, glu
+from .. import gl, glu
 
 
 class Projection(object):

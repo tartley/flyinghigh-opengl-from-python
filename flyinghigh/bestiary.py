@@ -1,9 +1,8 @@
 
 from __future__ import division
 
-from itertools import repeat
-from math import pi
-from random import randint, uniform
+from math import pi, sqrt
+from random import uniform
 
 from pyglet.window import key
 
@@ -14,9 +13,9 @@ from .component.shapes import (
 )
 from .component.slowmo import SlowMo
 from .component.spinner import Spinner
-from .component.wobblyorbit import Orbit, WobblyOrbit
+from .component.wobblyorbit import Orbit
 from .component.color import (
-    all_colors, Color, red, orange, yellow, green, cyan, blue, purple, white,
+    Color, red, orange, yellow, green, cyan, blue, purple, white,
     grey, black,
 )
 from .engine.gameitem import GameItem
@@ -24,7 +23,7 @@ from .geometry.koch_cube import KochCube
 from .geometry.koch_tetra import KochTetra
 from .geometry.sierpinski_tetra import SierpinskiTetra
 from .geometry.orientation import Orientation
-from .geometry.vec3 import Origin, Vec3, XAxis, ZAxis, NegZAxis
+from .geometry.vec3 import Origin, Vec3, XAxis
 
 
 def get_bestiary(world):
@@ -119,14 +118,14 @@ def get_bestiary(world):
     )
 
     bestiary[key.I] = GameItem(
-        shape=RgbCubeCluster(1.0, 60, 1000),
+        shape=RgbCubeCluster(1.0, 80, 4000),
         position=Origin,
     )
 
     bestiary[key.A] = GameItem(
         shape=KochCube(
             Cube(3, face_colors=[red]),
-            4,
+            5,
             tip_color=yellow,
         ),
         spin=Spinner(speed=0.2),
@@ -136,7 +135,7 @@ def get_bestiary(world):
     bestiary[key.S] = GameItem(
         shape=KochTetra(
             Tetrahedron(10, face_colors=[purple]),
-            4,
+            5,
             tip_color=white,
         ),
         move=Orbit(10, speed=0.1, phase=pi),
@@ -165,16 +164,12 @@ def get_bestiary(world):
     # code to test performance with many indpendantly positioned and oriented
     # cubes in the world
 
-    # cube = Cube(1, red)
-    # from component.glyph import Glyph
-    # glyph = Glyph()
-    # glyph.from_shape(cube)
-    # for _ in xrange(450):
-        # world.add( GameItem(
-            # glyph=glyph,
-            # position=Vec3.Random(10),
-            # orientation=Orientation.Random(),
-        # ) )
+    for _ in xrange(512):
+        world.add( GameItem(
+            shape=Cube(1, Color.Random()),
+            position=Vec3.Random(16),
+            orientation=Orientation.Random(),
+        ) )
 
     return bestiary
 

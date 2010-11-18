@@ -2,7 +2,7 @@ from __future__ import division
 
 from math import sin, cos
 
-from pyglet.gl import gl, glu
+from .. import gl, glu
 
 
 class CameraBase(object):

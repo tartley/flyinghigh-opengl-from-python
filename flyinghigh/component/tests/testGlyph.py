@@ -8,7 +8,7 @@ except:
     # Python 2.7
     from unittest import TestCase, main
 
-from pyglet.gl import gl
+from ... import gl
 
 from ...engine.shape import Shape
 from ..glyph import Glyph, tessellate
