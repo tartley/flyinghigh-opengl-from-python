@@ -1,8 +1,8 @@
 
 from __future__ import division
 
-from math import pi, sqrt
-from random import uniform
+from math import pi
+from random import choice, uniform
 
 from pyglet.window import key
 
@@ -164,10 +164,20 @@ def get_bestiary(world):
     # code to test performance with many indpendantly positioned and oriented
     # cubes in the world
 
-    for _ in xrange(512):
+    NUM_CUBES = 873
+    SIZE = 16
+    colors = [
+        Color.Random(),
+        Color.Random(),
+    ]
+    for _ in xrange(NUM_CUBES):
         world.add( GameItem(
-            shape=Cube(1, Color.Random()),
-            position=Vec3.Random(16),
+            shape=Cube(1, choice(colors)),
+            position=Vec3(
+                uniform(-SIZE, SIZE),
+                uniform(-SIZE, SIZE),
+                uniform(-SIZE, SIZE),
+            ),
             orientation=Orientation.Random(),
         ) )
 

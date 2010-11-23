@@ -18,7 +18,7 @@ class Matrix(object):
     def transform(self, vert):
         '''
         return the product of the given vertex by self, to give the vertex
-        rotated and by our orientation and translated by our position.
+        rotated by our orientation and translated by our position.
         '''
         if self.orientation:
             e = self.elements

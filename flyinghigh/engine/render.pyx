@@ -5,29 +5,42 @@ cdef extern from "GL/gl.h":
     ctypedef void GLvoid
     ctypedef int GLsizei
     ctypedef float GLfloat
+
     int GL_TRIANGLES
     int GL_FLOAT
     int GL_UNSIGNED_BYTE
+
     cdef void glPushMatrix()
     cdef void glPopMatrix()
     cdef void glTranslatef(GLfloat x, GLfloat y, GLfloat z)
-    cdef void glVertexPointer(GLint size, GLenum type, GLsizei stride, GLvoid
-*ptr)
+
+    cdef void glVertexPointer(
+        GLint size, GLenum type, GLsizei stride, GLvoid *ptr)
+    cdef void glColorPointer(
+        GLint size, GLenum type, GLsizei stride, GLvoid *ptr)
+    cdef void glIndexPointer(
+        GLenum type, GLsizei stride, GLvoid *ptr)
+    cdef void glNormalPointer(
+        GLenum type, GLsizei stride, GLvoid *ptr)
+
+    cdef void  glDrawElements(GLenum, GLsizei, GLenum, GLvoid*)
+
+
+cdef extern from "Python.h":
+    ctypedef void PyTypeObject
+
+cdef struct CDataObject:
+    Py_ssize_t ob_refcnt
+    PyTypeObject *ob_type
+    char *b_ptr
 
 cdef int vertex_components
-
-# cdef void glColorPointer(GLint size, GLenum type, GLsizei stride, GLvoid *ptr)
-# cdef void glIndexPointer(GLenum type, GLsizei stride, GLvoid *ptr)
-# cdef void glNormalPointer(GLenum type, GLsizei stride, GLvoid *ptr)
-
-
-
+cdef int color_components
 
 
 from flyinghigh.component.glyph import Glyph
 
-from .. import gl
-
+from pyglet import gl
 
 vertex_components = 3
 color_components = 4
@@ -68,8 +81,11 @@ class Render(object):
 
 
     def draw(self):
-        cdef GLfloat * glverts
+        cdef object b
+        cdef CDataObject *a
+        cdef char *x
 
+        gl.glEnableClientState(gl.GL_NORMAL_ARRAY)
         for item in self.world:
             if not hasattr(item, 'glyph'):
                 continue
@@ -79,33 +95,53 @@ class Render(object):
             if hasattr(item, 'position'):
                 glTranslatef(
                     <GLfloat>item.position.x,
-                    item.position.y,
-                    item.position.z)
+                    <GLfloat>item.position.y,
+                    <GLfloat>item.position.z)
             if hasattr(item, 'orientation'):
                 gl.glMultMatrixf(
                     item.orientation.matrix)
 
             glyph = item.glyph
-            glverts = glyph.glvertices
+
+            b = glyph.glvertices
+            a = <CDataObject *>b
+            x = a.b_ptr
             glVertexPointer(
                 vertex_components,
                 GL_FLOAT,
                 0,
-                glverts)
-            gl.glColorPointer(
+                <GLvoid *>x)
+
+            b = glyph.glcolors
+            a = <CDataObject *>b
+            x = a.b_ptr
+            glColorPointer(
                 color_components,
                 GL_UNSIGNED_BYTE,
                 0,
-                glyph.glcolors)
-            gl.glNormalPointer(
+                <GLvoid *>x)
+
+            b = glyph.glnormals
+            a = <CDataObject *>b
+            x = a.b_ptr
+            glNormalPointer(
                 GL_FLOAT,
                 0,
-                glyph.glnormals)
-            gl.glDrawElements(
+                <GLvoid *>x)
+
+            b = glyph.glindices
+            a = <CDataObject *>b
+            x = a.b_ptr
+            glDrawElements(
                 GL_TRIANGLES,
                 len(glyph.glindices),
                 type_to_enum[glyph.glindex_type],
-                glyph.glindices)
+                <GLvoid *>x)
 
             glPopMatrix()
+        gl.glDisableClientState(gl.GL_NORMAL_ARRAY)
+
+
+    def draw_hud(self, clock_display):
+        clock_display.draw()
 
