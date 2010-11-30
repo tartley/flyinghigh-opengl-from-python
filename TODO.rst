@@ -2,6 +2,11 @@
 * print some useful info to the console, to show users some progress during
   startup
 
+* figure out how to keep bestiary behaviour same as now (press a key to
+  toggle items in and out of world) but also include more complex groups
+  of multiple shapes, such as the cluster of independent cube shapes that
+  is currently added into world at startup as a performance test.
+
 Refactorings:
  * multishape just stores matrices, rather than positions and orientations.
    Matrix generator near line 55/59 then becomes simple iteration over
@@ -18,7 +23,7 @@ Refactorings:
  * perform Glyph.from_verts using numpy
 
 
-`--DONE----------------------------------------------------------------------`
+--DONE----------------------------------------------------------------------
 
 Create a quick clump of interpenetrating cubes.
 

@@ -163,16 +163,11 @@ def get_bestiary(world):
 
     # code to test performance with many indpendantly positioned and oriented
     # cubes in the world
-
     NUM_CUBES = 873
     SIZE = 16
-    colors = [
-        Color.Random(),
-        Color.Random(),
-    ]
     for _ in xrange(NUM_CUBES):
         world.add( GameItem(
-            shape=Cube(1, choice(colors)),
+            shape=Cube(uniform(1, 1.2) ** 4, red.tinted(black, uniform(0, 0.5))),
             position=Vec3(
                 uniform(-SIZE, SIZE),
                 uniform(-SIZE, SIZE),
