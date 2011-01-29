@@ -2,7 +2,8 @@
 from collections import namedtuple
 from random import randint, uniform
 
-class Color(namedtuple('ColorBase', 'r g b a')):
+
+class Color(namedtuple('_ColorBase', 'r g b a')):
 
     __slots__ = []
 

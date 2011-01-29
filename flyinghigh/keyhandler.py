@@ -1,12 +1,15 @@
 
 from __future__ import division
 
+from pyglet import image
 from pyglet.window import key 
 
 from .component.wobblyorbit import WobblyOrbit
 
 
-ZOOM_SPEED = 1.5
+ZOOM_SPEED = 1.1
+
+image_no = 0
 
 
 class KeyHandler(object):
@@ -16,6 +19,7 @@ class KeyHandler(object):
         self.bestiary = bestiary
 
     def on_key_press(self, symbol, modifiers):
+        global image_no
 
         if symbol in (key.PAGEUP, key.PAGEDOWN):
 
@@ -28,9 +32,14 @@ class KeyHandler(object):
             else:
                 self.world.camera.move.desired_mean *= zoom
 
-        if symbol == key.BACKSPACE:
+        elif symbol == key.BACKSPACE:
             itemid = max(i for i in self.world.items.iterkeys())
             self.world.items.pop(itemid)
+
+        elif symbol == key.F12:
+            image.get_buffer_manager().get_color_buffer().save(
+                'screenshot%02d.png' % (image_no,))
+            image_no += 1
 
         elif symbol in self.bestiary:
             item = self.bestiary[symbol]
