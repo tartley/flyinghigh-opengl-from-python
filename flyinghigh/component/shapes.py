@@ -3,6 +3,7 @@ from __future__ import division
 
 from itertools import chain, islice, product, repeat
 from math import sqrt, pi, sin, cos
+from random import randint
 
 from .color import (
     Color, red, orange, yellow, green, cyan, blue, purple, white, grey, black,
@@ -269,19 +270,23 @@ def CubeCluster(edge, positions):
     return multi
 
 
-def RgbCubeCluster(edge, cluster_edge, cube_count):
+def RgbCubeCluster(edge, cluster_edge, cube_count, hole=0):
     cluster = MultiShape()
     for _ in xrange(cube_count):
         while True:
-            color = Color.Random()
             pos = Vec3(
-                color.r - 128,
-                color.g - 128,
-                color.b - 128,
+                randint(-cluster_edge, +cluster_edge),
+                randint(-cluster_edge, +cluster_edge),
+                randint(-cluster_edge, +cluster_edge),
             )
-            pos = pos * cluster_edge / 256
+            color = Color(
+                int((pos.x + cluster_edge) / cluster_edge / 2 * 255),
+                int((pos.y + cluster_edge) / cluster_edge / 2 * 255),
+                int((pos.z + cluster_edge) / cluster_edge / 2 * 255),
+                255
+            )
             # make a hole in the center
-            if pos.length > 8:
+            if pos.length > hole:
                 break
         cluster.add(
             Cube(edge, repeat(color)),
