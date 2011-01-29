@@ -113,12 +113,12 @@ def get_bestiary(world):
     )
 
     bestiary[key.U] = GameItem(
-        shape=CubeGlob(50, 14000, [red]),
+        shape=CubeGlob(50, 12000, [red]),
         position=Origin,
     )
 
     bestiary[key.I] = GameItem(
-        shape=RgbCubeCluster(1.0, 80, 4000),
+        shape=RgbCubeCluster(1.0, 20, 4000),
         position=Origin,
     )
 
@@ -163,18 +163,22 @@ def get_bestiary(world):
 
     # code to test performance with many indpendantly positioned and oriented
     # cubes in the world
-    NUM_CUBES = 873
-    SIZE = 16
-    for _ in xrange(NUM_CUBES):
-        world.add( GameItem(
-            shape=Cube(uniform(1, 1.2) ** 4, red.tinted(black, uniform(0, 0.5))),
-            position=Vec3(
-                uniform(-SIZE, SIZE),
-                uniform(-SIZE, SIZE),
-                uniform(-SIZE, SIZE),
-            ),
-            orientation=Orientation.Random(),
-        ) )
+    if 0:
+        NUM_CUBES = 873
+        SIZE = 16
+        for _ in xrange(NUM_CUBES):
+            world.add( GameItem(
+                shape=Cube(
+                    uniform(1, 1.2) ** 4,
+                    red.tinted(black, uniform(0, 0.5)),
+                ),
+                position=Vec3(
+                    uniform(-SIZE, SIZE),
+                    uniform(-SIZE, SIZE),
+                    uniform(-SIZE, SIZE),
+                ),
+                orientation=Orientation.Random(),
+            ) )
 
     return bestiary
 
