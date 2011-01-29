@@ -3,3 +3,4 @@ glob:rst-with-pygments-example
 glob:*.html
 glob:*.c
 glob:*.pyd
+glob:Comcepta_11_EnterpriseMetasearch.jpg
