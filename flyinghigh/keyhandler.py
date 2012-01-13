@@ -7,7 +7,7 @@ from pyglet.window import key
 from .component.wobblyorbit import WobblyOrbit
 
 
-ZOOM_SPEED = 1.1
+ZOOM_SPEED = 2.0
 
 image_no = 0
 

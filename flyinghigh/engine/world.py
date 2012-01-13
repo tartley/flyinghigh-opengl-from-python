@@ -44,7 +44,7 @@ class World(object):
         self.time.tick(dt)
         for item in self:
             if hasattr(item, 'move') and item.move:
-                item.position = item.move(self.time)
+                item.position = item.move(self.time, dt)
             if hasattr(item, 'spin') and item.spin:
-                item.orientation = item.spin(self.time)
+                item.orientation = item.spin(self.time, dt)
 

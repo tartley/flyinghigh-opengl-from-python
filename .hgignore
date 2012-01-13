@@ -4,3 +4,5 @@ glob:*.html
 glob:*.c
 glob:*.pyd
 glob:Comcepta_11_EnterpriseMetasearch.jpg
+glob:virtualenv
+

@@ -45,7 +45,7 @@ class Shape(object):
             face_colors = repeat(face_colors)
 
         # TODO: colors of koch_cube/tetra break if we remove this 'list'
-        # and set face_colors to the return of 'islice'. Don't know why.
+        # and set face_colors to return the 'islice'. Don't know why.
         self.face_colors = list(islice(cycle(face_colors), len(self.faces)))
 
 
