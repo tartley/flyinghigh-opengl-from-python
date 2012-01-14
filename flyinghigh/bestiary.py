@@ -21,7 +21,7 @@ from .component.color import (
 from .engine.gameitem import GameItem
 from .geometry.koch_cube import KochCube
 from .geometry.koch_tetra import KochTetra
-from .geometry.sierpinski_tetra import SierpinskiTetra
+#from .geometry.sierpinski_tetra import SierpinskiTetra
 from .geometry.orientation import Orientation
 from .geometry.vec3 import Origin, Vec3, XAxis
 
@@ -142,13 +142,13 @@ def get_bestiary(world):
         spin=Spinner(speed=0.2),
     )
 
-    bestiary[key.D] = GameItem(
-        shape=SierpinskiTetra(
-            Tetrahedron(240), 6, scale=0.52,
-            face_colors=[yellow],
-        ),
-        position=Origin,
-    )
+    #bestiary[key.D] = GameItem(
+        #shape=SierpinskiTetra(
+            #Tetrahedron(240), 6, scale=0.52,
+            #face_colors=[yellow],
+        #),
+        #position=Origin,
+    #)
 
     edge = 40
 
