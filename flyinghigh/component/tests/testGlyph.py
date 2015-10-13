@@ -1,15 +1,7 @@
-
 from itertools import chain, repeat
-
-try:
-    # Python 2.6 with unittest2 installed
-    from unittest2 import TestCase, main
-except:
-    # Python 2.7
-    from unittest import TestCase, main
+from unittest import TestCase, main
 
 from ... import gl
-
 from ...engine.shape import Shape
 from ..glyph import Glyph, tessellate
 
@@ -47,7 +39,7 @@ class testGlyph(TestCase):
     def test_get_num_glvertices(self):
         shape = self.get_shape()
         glyph = Glyph()
-        self.assertEquals(glyph.get_num_glvertices(shape.faces), 8)
+        self.assertEqual(glyph.get_num_glvertices(shape.faces), 8)
 
     def test_get_glindices(self):
         shape = self.get_shape()

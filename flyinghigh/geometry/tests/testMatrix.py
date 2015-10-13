@@ -1,10 +1,4 @@
-
-try:
-    # Python 2.6 with unittest2 installed
-    from unittest2 import TestCase, main
-except:
-    # Python 2.7
-    from unittest import TestCase, main
+from unittest import TestCase, main
 
 from ..orientation import Orientation
 from ..matrix import Matrix

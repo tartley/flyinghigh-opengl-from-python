@@ -1,12 +1,5 @@
-
-try:
-    # Python 2.6 with unittest2 installed
-    from unittest2 import TestCase, main
-except:
-    # Python 2.7
-    from unittest import TestCase, main
-
 from math import pi
+from unittest import TestCase, main
 
 from ... import gl
 
@@ -24,18 +17,18 @@ class testOrientation(TestCase):
 
     def testConstructionConvertsBareTuples(self):
         o = Orientation(XAxis, ZAxis)
-        self.assertEquals(o.forward, XAxis)
+        self.assertEqual(o.forward, XAxis)
         self.assertTrue(isinstance(o.forward, Vec3))
-        self.assertEquals(o.up, ZAxis)
+        self.assertEqual(o.up, ZAxis)
         self.assertTrue(isinstance(o.up, Vec3))
-        self.assertEquals(o.right, NegYAxis)
+        self.assertEqual(o.right, NegYAxis)
         self.assertTrue(isinstance(o.right, Vec3))
 
     def testConstructionNormalises(self):
         o = Orientation((1, 2, 3))
-        self.assertAlmostEquals(o.forward.length, 1, places=15)
-        self.assertAlmostEquals(o.up.length, 1, places=15)
-        self.assertAlmostEquals(o.right.length, 1, places=15)
+        self.assertAlmostEqual(o.forward.length, 1, places=15)
+        self.assertAlmostEqual(o.up.length, 1, places=15)
+        self.assertAlmostEqual(o.right.length, 1, places=15)
 
     def testConstructionBarfsOnNonOrthogonalVectors(self):
         self.assertRaises(AssertionError,
@@ -85,7 +78,7 @@ class testOrientation(TestCase):
 
     def testMatrix(self):
         o = Orientation((1, 2, 3))
-        self.assertEquals(type(o.matrix), gl.GLfloat * 16)
+        self.assertEqual(type(o.matrix), gl.GLfloat * 16)
         expected = [
             o.right.x,    o.right.y,    o.right.z,   0,
             o.up.x,       o.up.y,       o.up.z,      0,

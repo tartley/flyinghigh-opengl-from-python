@@ -1,12 +1,5 @@
-
-try:
-    # Python 2.6 with unittest2 installed
-    from unittest2 import TestCase, main
-except:
-    # Python 2.7
-    from unittest import TestCase, main
-
 from itertools import repeat
+from unittest import TestCase, main
 
 from ...component.shapes import Cube, Tetrahedron
 from ...geometry.orientation import Orientation
@@ -22,24 +15,24 @@ class testShape(TestCase):
         faces = [[0, 1, 2], [0, 1, 2]]
         red = (255, 0, 0, 255)
         shape = Shape(verts, faces, repeat(red))
-        self.assertEquals(shape.vertices, verts)
-        self.assertEquals(shape.faces, faces)
-        self.assertEquals(list(shape.face_colors), [red, red])
+        self.assertEqual(shape.vertices, verts)
+        self.assertEqual(shape.faces, faces)
+        self.assertEqual(list(shape.face_colors), [red, red])
 
     def testInitEmpty(self):
         verts = []
         faces = []
         shape = Shape(verts, faces)
-        self.assertEquals(shape.vertices, verts)
-        self.assertEquals(shape.faces, faces)
-        self.assertEquals(list(shape.face_colors), [])
+        self.assertEqual(shape.vertices, verts)
+        self.assertEqual(shape.faces, faces)
+        self.assertEqual(list(shape.face_colors), [])
 
     def testInitConvertsTupleVerts(self):
         verts = [(1, 2, 3), (4, 5, 6), (7, 8, 9)]
         shape = Shape(verts, [])
         for actual, expected in zip(shape.vertices, verts):
             self.assertTrue(isinstance(actual, Vec3))
-            self.assertEquals(actual, expected)
+            self.assertEqual(actual, expected)
 
     def testInitRaisesOnBadFaces(self):
         verts = [(1, 2, 3), (4, 5, 6), (7, 8, 9)]
@@ -60,7 +53,7 @@ class testShape(TestCase):
         faces = [[0, 1, 2]]
         white = (255, 255, 255, 255)
         shape = Shape(verts, faces)
-        self.assertEquals(list(shape.face_colors), [white])
+        self.assertEqual(list(shape.face_colors), [white])
 
     def testInitCreatesColorSequenceOfCorrectLength(self):
         verts = [(1, 2, 3), (4, 5, 6), (7, 8, 9)]
@@ -70,23 +63,23 @@ class testShape(TestCase):
 
         # short color sequences are cycled
         shape = Shape(verts, faces, repeat(red, 1))
-        self.assertEquals(list(shape.face_colors), [red, red, red])
+        self.assertEqual(list(shape.face_colors), [red, red, red])
 
         # short color lists are cycled
         shape = Shape(verts, faces, [red, blue])
-        self.assertEquals(list(shape.face_colors), [red, blue, red])
+        self.assertEqual(list(shape.face_colors), [red, blue, red])
 
         # normal case
         shape = Shape(verts, faces, repeat(red, 3))
-        self.assertEquals(list(shape.face_colors), [red, red, red])
+        self.assertEqual(list(shape.face_colors), [red, red, red])
 
         # long color sequences truncated
         shape = Shape(verts, faces, repeat(red, 4)) 
-        self.assertEquals(list(shape.face_colors), [red, red, red])
+        self.assertEqual(list(shape.face_colors), [red, red, red])
 
         # infinite color sequences truncated
         shape = Shape(verts, faces, repeat(red)) 
-        self.assertEquals(list(shape.face_colors), [red, red, red])
+        self.assertEqual(list(shape.face_colors), [red, red, red])
 
     def testBadInit(self):
         self.assertRaises(TypeError, lambda: Shape())
@@ -97,9 +90,9 @@ class testMultiShape(TestCase):
 
     def testInitEmpty(self):
         shape = MultiShape()
-        self.assertEquals(list(shape.vertices), [])
-        self.assertEquals(list(shape.faces), [])
-        self.assertEquals(list(shape.face_colors), [])
+        self.assertEqual(list(shape.vertices), [])
+        self.assertEqual(list(shape.faces), [])
+        self.assertEqual(list(shape.face_colors), [])
 
     def testAdd(self):
         verts = [(1, 2, 3), (4, 5, 6), (7, 8, 9)]
@@ -151,13 +144,13 @@ class testMultiShape(TestCase):
         multi.add(s1, OFFSET1)
         multi.add(s2, OFFSET2)
 
-        self.assertEquals(list(multi.vertices),
+        self.assertEqual(list(multi.vertices),
            [OFFSET1 + v for v in VERTS1] + [OFFSET2 + v for v in VERTS2]
         )
-        self.assertEquals(list(multi.faces),
+        self.assertEqual(list(multi.faces),
            [ [0, 1, 2], [1, 2, 3], [7, 6, 5], [6, 5, 4] ]
         )
-        self.assertEquals(list(multi.face_colors), [RED, YELLOW, GREEN, BLUE])
+        self.assertEqual(list(multi.face_colors), [RED, YELLOW, GREEN, BLUE])
 
     def testMuliShapeCopesWithInfiniteColorIterators(self):
         red = (255, 0, 0, 255)
@@ -167,7 +160,7 @@ class testMultiShape(TestCase):
         multi = MultiShape()
         multi.add(s1)
         multi.add(s2)
-        self.assertEquals(
+        self.assertEqual(
             list(multi.face_colors),
             [blue, blue, blue, blue, red, red, red, red, red, red])
 
@@ -176,11 +169,11 @@ class testMultiShape(TestCase):
 
         mInner = MultiShape()
         mInner.add(shape, position=Vec3(10, 20, 30))
-        self.assertEquals(list(mInner.vertices), [Vec3(11, 22, 33)])
+        self.assertEqual(list(mInner.vertices), [Vec3(11, 22, 33)])
                 
         mOuter = MultiShape()
         mOuter.add(mInner, position=Vec3(100, 200, 300))
-        self.assertEquals(list(mOuter.vertices), [Vec3(111, 222, 333)])
+        self.assertEqual(list(mOuter.vertices), [Vec3(111, 222, 333)])
         
 
 if __name__ == '__main__':

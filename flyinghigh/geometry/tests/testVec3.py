@@ -1,12 +1,6 @@
-
 from __future__ import division
 from math import sqrt, pi
-try:
-    # Python 2.6 with unittest2 installed
-    from unittest2 import TestCase, main
-except:
-    # Python 2.7
-    from unittest import TestCase, main
+from unittest import TestCase, main
 
 from ..vec3 import (
     EPSILON, NegXAxis, NegYAxis, NegZAxis, Vec3, XAxis, YAxis, ZAxis,
