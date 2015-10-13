@@ -21,7 +21,7 @@ shader_errors = {
 
 
 def load_source(fname):
-    with open(fname) as fp:
+    with open(fname, mode='r+b') as fp:
         src = fp.read()
     return src
 
@@ -31,7 +31,7 @@ class _Shader(object):
     shader_type = None
 
     def __init__(self, files):
-        if isinstance(files, basestring):
+        if isinstance(files, str):
             self.files = [files]
         else:
             self.files = files

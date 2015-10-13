@@ -15,7 +15,7 @@ class GameItem(object):
 
         # TODO: this should be in some event handler for world.add_item
         # so that GameItem doesn't need to frig with its attached components
-        for name, value in kwargs.iteritems():
+        for name, value in kwargs.items():
             if hasattr(value, 'item'):
                 setattr(value, 'item', self)
 

@@ -251,7 +251,7 @@ def CubeGlob(radius, number, colors):
     GAP = 20
     multi = MultiShape()
     cube = Cube(1, colors)
-    for _ in xrange(number):
+    for _ in range(number):
         pos = Vec3.Random(radius - GAP)
         gap = pos.normalized() * GAP
         pos = pos + gap
@@ -272,7 +272,7 @@ def CubeCluster(edge, positions):
 
 def RgbCubeCluster(edge, cluster_edge, cube_count, hole=0):
     cluster = MultiShape()
-    for _ in xrange(cube_count):
+    for _ in range(cube_count):
         while True:
             pos = Vec3(
                 randint(-cluster_edge, +cluster_edge),
@@ -297,8 +297,8 @@ def RgbCubeCluster(edge, cluster_edge, cube_count, hole=0):
 
 def CubeLattice(edge, cluster_edge, freq, color):
     shape = MultiShape()
-    for i in xrange(int(-cluster_edge/2), int(+cluster_edge/2+1), freq):
-        for j in xrange(int(-cluster_edge/2), int(+cluster_edge/2+1), freq):
+    for i in range(int(-cluster_edge/2), int(+cluster_edge/2+1), freq):
+        for j in range(int(-cluster_edge/2), int(+cluster_edge/2+1), freq):
             for pos in [
                 Vec3(i, j, -cluster_edge/2),
                 Vec3(i, j, +cluster_edge/2),

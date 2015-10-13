@@ -28,7 +28,7 @@ class World(object):
         self.camera = None
 
     def __iter__(self):
-        return self.items.itervalues()
+        return iter(self.items.values())
 
     def add(self, item):
         self.items[item.id] = item

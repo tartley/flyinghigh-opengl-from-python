@@ -84,7 +84,7 @@ def koch_cube_next(original, tip_color):
 def koch_outer(transform, shape, n, tip_color):
     multi = MultiShape()
     multi.add(shape)
-    for _ in xrange(n):
+    for _ in range(n):
         shape = transform(shape, tip_color)
         multi.add(shape)
     return multi

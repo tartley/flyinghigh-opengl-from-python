@@ -1,5 +1,5 @@
 
-from itertools import chain, izip, repeat
+from itertools import chain, repeat
 
 from .. import gl
 
@@ -24,7 +24,7 @@ def tessellate(face):
     '''
     return (
         [face[0], face[index], face[index + 1]]
-        for index in xrange(1, len(face) - 1)
+        for index in range(1, len(face) - 1)
     )
 
 
@@ -70,7 +70,7 @@ class Glyph(object):
         glindices = []
         face_offset = 0
         for face in faces:
-            indices = xrange(face_offset, face_offset + len(face))
+            indices = range(face_offset, face_offset + len(face))
             glindices.extend(chain(*tessellate(indices)))
             face_offset += len(face)
         self.glindex_type = self.get_glindex_type()
@@ -80,7 +80,7 @@ class Glyph(object):
     def get_glcolors(self, faces, face_colors):
         glcolors = chain.from_iterable(
             repeat(color, len(face))
-            for face, color in izip(faces, face_colors)
+            for face, color in zip(faces, face_colors)
         )
         return glarray(gl.GLubyte, chain(*glcolors), self.num_glvertices * 4) 
         
@@ -92,7 +92,7 @@ class Glyph(object):
         )
         glnormals = chain.from_iterable(
             repeat(normal, len(face))
-            for face, normal in izip(faces, normals)
+            for face, normal in zip(faces, normals)
         )
         return glarray(
             gl.GLfloat, chain(*glnormals), self.num_glvertices * 3) 

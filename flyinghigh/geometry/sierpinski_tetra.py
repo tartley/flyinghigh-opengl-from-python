@@ -22,7 +22,7 @@ def SierpinskiTetra(original, n, scale=0.5, **kwargs):
     fs = np.array(faces).reshape(1, len(faces), len(faces[0]))
 
     # Split tetras n times
-    for _ in xrange(n):
+    for _ in range(n):
         # Create new arrays with room for 4 child tetras for each tetra
         vs_next = np.zeros((vs.shape[0], CORNERS, vs.shape[-2], vs.shape[-1]))
         fs_next = np.zeros((fs.shape[0], CORNERS, fs.shape[-2], fs.shape[-1]), 

@@ -166,7 +166,7 @@ def get_bestiary(world):
     if 0:
         NUM_CUBES = 873
         SIZE = 16
-        for _ in xrange(NUM_CUBES):
+        for _ in range(NUM_CUBES):
             world.add( GameItem(
                 shape=Cube(
                     uniform(1, 1.2) ** 4,
