@@ -1,6 +1,6 @@
 
-The source code in this directory is an exploration of the ideas for a talk
-about using OpenGL from Python. Run the demo code using:
+An exploration of graphics / geometry ideas for a talk about using OpenGL from
+Python. Run the demo code using:
 
     python -O run.py [-f]
 
@@ -23,40 +23,30 @@ DEPENDENCIES
 
 To be able to run the demo, you'll first need:
 
-    Windows or Linux (maybe Macs too, I haven't tried)
-    Python 2.6 or 2.7
-    Pyglet 1.1.4
-    numpy 1.5.0.dev8477 (just used for sierpinski generation)
+    Linux or Windows (maybe Macs too, I haven't tried)
+    Python 3 (tested with 3.5.0)
 
-The version numbers for everything except Python probably aren't crucial, but
-those are the versions I'm running.
+    Python dependencies from requirements.txt
 
-I can't install numpy from source for Python2.7 (I can't succesfully
-configure distutils to use the mingw32 compiler instead of Visual Studio on
-Python 2.7) and there are not yet numpy binaries published for Python2.7, so
-I'm using an unofficial numpy binary from here:
+Optionally:
+
+    numpy 1.5.0.dev8477 - just used for sierpinski generation.
+
+Back when this project was Python2.7, I couldn't install numpy from source for
+Windows. I couldn't succesfully configure distutils to use the mingw32 compiler
+instead of Visual Studio. There are not yet numpy binaries published for
+Python2.7, so I used an unofficial numpy binary from here:
 http://www.lfd.uci.edu/~gohlke/pythonlibs/
-
+I don't know what the state of play is for Python 3 these days.
 
 DEVELOPMENT
 -----------
 
-For development, I'm also using:
-
-    unittest2 (not reqd for Python2.7)
-    nose
-
-running tests using 'nosetests' (unittest2 discovery has some wrinkles)
-
-Also I have some simple commands stored in a Makefile, which I run under Linux
+I have some simple commands stored in a Makefile, which I run under Linux
 or under Windows with Cygwin binaries on the PATH. If you're on Windows but
 don't have make or Cygwin, open up the Makefile and examine the targets. The
 commands they run are generally dead simple and you can easily figure out how
 to do the same thing on your own system.
-
-
-PROFILING
----------
 
 For profiling, I'm using the standard library cProfile, with 3rd party tool
 'RunSnakeRun' to draw the output graphically.
@@ -76,14 +66,14 @@ RunSnakeRun also needs:
  * wxPython from http://www.wxpython.org/download.php#binaries
 
 Currently runs under Windows at 60fps on my modest 2005-era Thinkpad laptop
-(with ATI Radeon X1400). I just fired it up under Ubuntu and got a
-disappointing 20fps. Haven't looked at why, but in the past similar code has
-tended to run faster under Linux on my hardware, so hopefully this is something
-easily fixable. 
-
+(with ATI Radeon X1400). Under Linux on a modest ASUS UX32A it gets hundres
+of frames per second.
 
 DESIGN NOTES
 ------------
+
+(Looking back at this project years later, this is all horrible/shameful.
+My apologies.)
 
 The hub of the design is the 'engine.GameLoop' class, which contains the
 main game loop and responds to pyglet window events such as update and
