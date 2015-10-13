@@ -1,6 +1,11 @@
+# Flying High
 
 An exploration of graphics / geometry ideas for a talk about using OpenGL from
-Python. Run the demo code using:
+Python. There are a bunch of screenshots at: http://tartley.com/?p=1207
+
+# Usage
+
+Run the demo code using:
 
     python -O run.py [-f]
 
@@ -18,8 +23,7 @@ Shift PageUp, Shift PageDown modifies the variability of the camera's distance
 from the origin (makes it automatically zoom in and out)
 
 
-DEPENDENCIES
-------------
+# Dependencies
 
 To be able to run the demo, you'll first need:
 
@@ -39,8 +43,7 @@ Python2.7, so I used an unofficial numpy binary from here:
 http://www.lfd.uci.edu/~gohlke/pythonlibs/
 I don't know what the state of play is for Python 3 these days.
 
-DEVELOPMENT
------------
+# Development
 
 I have some simple commands stored in a Makefile, which I run under Linux
 or under Windows with Cygwin binaries on the PATH. If you're on Windows but
@@ -69,11 +72,11 @@ Currently runs under Windows at 60fps on my modest 2005-era Thinkpad laptop
 (with ATI Radeon X1400). Under Linux on a modest ASUS UX32A it gets hundres
 of frames per second.
 
-DESIGN NOTES
-------------
+# Design notes
 
-(Looking back at this project years later, this is all horrible/shameful.
-My apologies.)
+(As always when looking back at years-old code, this is all horrible/shameful.
+My apologies. Even at the time, it was a bit of a rapid exploration producing
+throwaway code.)
 
 The hub of the design is the 'engine.GameLoop' class, which contains the
 main game loop and responds to pyglet window events such as update and
