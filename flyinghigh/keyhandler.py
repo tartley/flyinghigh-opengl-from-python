@@ -21,7 +21,14 @@ class KeyHandler(object):
     def on_key_press(self, symbol, modifiers):
         global image_no
 
-        if symbol in (key.PAGEUP, key.PAGEDOWN):
+        if symbol in self.bestiary:
+            item = self.bestiary[symbol]
+            if item in self.world:
+                self.world.remove( self.bestiary[symbol] )
+            else:
+                self.world.add( item )
+
+        elif symbol in (key.PAGEUP, key.PAGEDOWN):
 
             zoom = ZOOM_SPEED
             if symbol == key.PAGEDOWN:
@@ -36,24 +43,19 @@ class KeyHandler(object):
             itemid = max(i for i in self.world.items.keys())
             self.world.items.pop(itemid)
 
+        elif symbol == key.SPACE:
+            itemid = max(i for i in self.world.items.keys())
+            item = self.world.items[itemid]
+            if hasattr(item, 'old_move'):
+                item.move = item.old_move
+                del item.old_move
+            else:
+                item.old_move = getattr(item, 'move', None)
+                item.move = WobblyOrbit(4, 3)
+
         elif symbol == key.F12:
             image.get_buffer_manager().get_color_buffer().save(
                 'screenshot%02d.png' % (image_no,))
             image_no += 1
 
-        elif symbol in self.bestiary:
-            item = self.bestiary[symbol]
-            if item in self.world:
-                self.world.remove( self.bestiary[symbol] )
-            else:
-
-                if modifiers & key.MOD_SHIFT:
-                    if hasattr(item, 'move'):
-                        item.old_move = item.move
-                    item.move = WobblyOrbit(3, 1)
-                else:
-                    if hasattr(item, 'old_move'):
-                        item.move = item.old_move
-
-                self.world.add( item )
 
