@@ -33,7 +33,7 @@ class KeyHandler(object):
                 self.world.camera.move.desired_mean *= zoom
 
         elif symbol == key.BACKSPACE:
-            itemid = max(i for i in self.world.items.iterkeys())
+            itemid = max(i for i in self.world.items.keys())
             self.world.items.pop(itemid)
 
         elif symbol == key.F12:
