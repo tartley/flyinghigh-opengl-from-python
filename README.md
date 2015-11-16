@@ -3,6 +3,11 @@
 An exploration of graphics / geometry ideas for a talk about using OpenGL from
 Python. There are a bunch of screenshots at: http://tartley.com/?p=1207
 
+**Status**: This code works and creates some pretty shapes, but is less developed
+than its successor, 'Gloopy'. In particular, Gloopy adds some geometry
+manipulation (extrusion, stellation, etc) and fixes a bug in the shaders that
+means objects lighting really changes when the object rotates.
+
 # Usage
 
 Run the demo code using:
